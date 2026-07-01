@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="FIRE Kenya - Personalized Financial Independence & Retire Early tool for Kenyan investors. Track goals, investments, and retirement readiness.">
+    <title>FIRE Kenya - Financial Independence Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loader-content">
+            <div class="fire-icon-loader">🔥</div>
+            <h2>FIRE Kenya</h2>
+            <p>Building your financial future...</p>
+            <div class="loader-bar">
+                <div class="loader-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">🔥</span>
+            <span class="brand-text">FIRE<span class="brand-accent">Kenya</span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#overview" class="nav-link active" data-section="overview">
+                    <span class="nav-icon">📊</span><span class="nav-label">Overview</span>
+                </a></li>
+            <li><a href="#accounts" class="nav-link" data-section="accounts">
+                    <span class="nav-icon">💰</span><span class="nav-label">Accounts</span>
+                </a></li>
+            <li><a href="#timeline" class="nav-link" data-section="timeline">
+                    <span class="nav-icon">📅</span><span class="nav-label">Timeline</span>
+                </a></li>
+            <li><a href="#investments" class="nav-link" data-section="investments">
+                    <span class="nav-icon">📈</span><span class="nav-label">Investments</span>
+                </a></li>
+            <li><a href="#fire-calc" class="nav-link" data-section="fire-calc">
+                    <span class="nav-icon">🎯</span><span class="nav-label">FIRE Calc</span>
+                </a></li>
+            <li><a href="#simulator" class="nav-link" data-section="simulator">
+                    <span class="nav-icon">⚙️</span><span class="nav-label">Simulator</span>
+                </a></li>
+            <li><a href="#decision-lab" class="nav-link" data-section="decision-lab">
+                    <span class="nav-icon">🧪</span><span class="nav-label">Decision Lab</span>
+                </a></li>
+            <li><a href="#reverse-fire" class="nav-link" data-section="reverse-fire">
+                    <span class="nav-icon">🔄</span><span class="nav-label">Reverse FIRE</span>
+                </a></li>
+            <li><a href="#market-trends" class="nav-link" data-section="market-trends">
+                    <span class="nav-icon">🌍</span><span class="nav-label">Markets</span>
+                </a></li>
+            <li><a href="#protection" class="nav-link" data-section="protection">
+                    <span class="nav-icon">🛡️</span><span class="nav-label">Protection</span>
+                </a></li>
+            <li><a href="#advice" class="nav-link" data-section="advice">
+                    <span class="nav-icon">💡</span><span class="nav-label">Advice</span>
+                </a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <div class="user-badge">
+                <div class="user-avatar">CK</div>
+                <div class="user-info">
+                    <span class="user-name">Investor</span>
+                    <span class="user-age">Age 23 → 50</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Nav Toggle -->
+    <button id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Toggle Navigation">
+        <span></span><span></span><span></span>
+    </button>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- ==================== OVERVIEW SECTION ==================== -->
+        <section id="overview" class="section active">
+            <div class="section-header">
+                <div>
+                    <h1>Financial Overview</h1>
+                    <p class="section-subtitle">Your path to FIRE - retire at 50 with KES freedom</p>
+                </div>
+                <div class="header-date" id="currentDate"></div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card kpi-savings">
+                    <div class="kpi-icon">🏦</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Total Savings</span>
+                        <span class="kpi-value" id="kpiSavings">KES 173,000</span>
+                        <span class="kpi-change positive" id="kpiSavingsChange">All-time</span>
+                    </div>
+                </div>
+                <div class="kpi-card kpi-investment">
+                    <div class="kpi-icon">📈</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Investment Portfolio</span>
+                        <span class="kpi-value" id="kpiPortfolio">KES 0</span>
+                        <span class="kpi-change" id="kpiPortfolioTarget">Target: KES 1M by 2030</span>
+                    </div>
+                </div>
+                <div class="kpi-card kpi-income">
+                    <div class="kpi-icon">💵</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Current Monthly Income</span>
+                        <span class="kpi-value" id="kpiIncome">KES 15,480</span>
+                        <span class="kpi-change" id="kpiIncomeNote">Stipend</span>
+                    </div>
+                </div>
+                <div class="kpi-card kpi-fire">
+                    <div class="kpi-icon">🔥</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">FIRE Progress</span>
+                        <span class="kpi-value" id="kpiFire">0.8%</span>
+                        <span class="kpi-change" id="kpiFireNote">26 years to go</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card chart-card-large">
+                    <div class="chart-header">
+                        <h3>Net Worth Projection (2026 – 2052)</h3>
+                        <div class="chart-legend-custom">
+                            <span class="legend-item"><span class="legend-dot"
+                                    style="background: var(--accent-primary)"></span>Projected</span>
+                            <span class="legend-item"><span class="legend-dot"
+                                    style="background: var(--accent-success)"></span>FIRE Target</span>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="netWorthChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Monthly Budget Split</h3>
+                    </div>
+                    <div class="chart-body chart-body-doughnut">
+                        <canvas id="budgetDoughnut"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goal Progress -->
+            <div class="goals-section">
+                <h2 class="sub-heading">🎯 Goal Tracker</h2>
+                <div class="goals-grid" id="goalsGrid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== ACCOUNTS SECTION ==================== -->
+        <section id="accounts" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Account Structure</h1>
+                    <p class="section-subtitle">Four-bucket system: Income → Essentials → Investment → Entertainment</p>
+                </div>
+            </div>
+
+            <div class="accounts-grid">
+                <!-- Income Account -->
+                <div class="account-card account-income">
+                    <div class="account-header">
+                        <div class="account-icon">💵</div>
+                        <h3>Income Account</h3>
+                    </div>
+                    <div class="account-balance">
+                        <span class="balance-label">Current Balance</span>
+                        <span class="balance-value" id="incomeBalance">KES 15,480</span>
+                    </div>
+                    <div class="account-details">
+                        <div class="detail-row">
+                            <span>Monthly Inflow</span>
+                            <span id="incomeInflow">KES 15,480</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>From Sep 2026</span>
+                            <span>KES 59,000</span>
+                        </div>
+                    </div>
+                    <div class="account-allocation">
+                        <h4>Allocation Rules</h4>
+                        <div class="allocation-bar">
+                            <div class="alloc-segment alloc-essentials" style="width: 50%"><span>50% Essentials</span>
+                            </div>
+                            <div class="alloc-segment alloc-invest" style="width: 30%"><span>30% Invest</span></div>
+                            <div class="alloc-segment alloc-entertain" style="width: 20%"><span>20% Fun</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Essentials Account -->
+                <div class="account-card account-essentials">
+                    <div class="account-header">
+                        <div class="account-icon">🏠</div>
+                        <h3>Essentials Account</h3>
+                    </div>
+                    <div class="account-balance">
+                        <span class="balance-label">Monthly Budget</span>
+                        <span class="balance-value" id="essentialsBalance">KES 7,740</span>
+                    </div>
+                    <div class="account-details">
+                        <div class="detail-row"><span>Rent (from 2031)</span><span>KES 40,000</span></div>
+                        <div class="detail-row"><span>Food & Groceries</span><span>KES 8,000</span></div>
+                        <div class="detail-row"><span>Transport</span><span>KES 5,000</span></div>
+                        <div class="detail-row"><span>Utilities</span><span>KES 5,000</span></div>
+                    </div>
+                    <div class="account-note">
+                        <span class="note-icon">📌</span> Scales with income - currently living at home
+                    </div>
+                </div>
+
+                <!-- Investment Account -->
+                <div class="account-card account-invest">
+                    <div class="account-header">
+                        <div class="account-icon">📈</div>
+                        <h3>Investment Account</h3>
+                    </div>
+                    <div class="account-balance">
+                        <span class="balance-label">Portfolio Value</span>
+                        <span class="balance-value" id="investBalance">KES 0</span>
+                    </div>
+                    <div class="account-details">
+                        <div class="detail-row"><span>Weekly Savings (from Oct '26)</span><span>KES 350</span></div>
+                        <div class="detail-row"><span>Monthly Target</span><span>KES 17,700</span></div>
+                        <div class="detail-row"><span>Goal by Jan 2030</span><span>KES 1,000,000</span></div>
+                    </div>
+                    <div class="account-note">
+                        <span class="note-icon">🎯</span> KES 1M portfolio target by start of 2030
+                    </div>
+                </div>
+
+                <!-- Entertainment Account -->
+                <div class="account-card account-entertain">
+                    <div class="account-header">
+                        <div class="account-icon">🎮</div>
+                        <h3>Entertainment Account</h3>
+                    </div>
+                    <div class="account-balance">
+                        <span class="balance-label">Monthly Allowance</span>
+                        <span class="balance-value" id="entertainBalance">KES 3,096</span>
+                    </div>
+                    <div class="account-details">
+                        <div class="detail-row"><span>Social & Outings</span><span>KES 1,500</span></div>
+                        <div class="detail-row"><span>Subscriptions</span><span>KES 1,000</span></div>
+                        <div class="detail-row"><span>Miscellaneous</span><span>KES 596</span></div>
+                    </div>
+                    <div class="account-note">
+                        <span class="note-icon">⚡</span> Guilt-free spending - keep it under 20%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Flow Diagram -->
+            <div class="flow-section">
+                <h2 class="sub-heading">💸 Money Flow</h2>
+                <div class="flow-diagram">
+                    <div class="flow-node flow-source">
+                        <span class="flow-emoji">💰</span>
+                        <span>Income</span>
+                        <span class="flow-amount" id="flowIncome">KES 15,480</span>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-splits">
+                        <div class="flow-node flow-essential">
+                            <span class="flow-pct">50%</span>
+                            <span>Essentials</span>
+                            <span class="flow-amount" id="flowEssentials">KES 7,740</span>
+                        </div>
+                        <div class="flow-node flow-invest">
+                            <span class="flow-pct">30%</span>
+                            <span>Invest</span>
+                            <span class="flow-amount" id="flowInvest">KES 4,644</span>
+                        </div>
+                        <div class="flow-node flow-fun">
+                            <span class="flow-pct">20%</span>
+                            <span>Fun</span>
+                            <span class="flow-amount" id="flowFun">KES 3,096</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TIMELINE SECTION ==================== -->
+        <section id="timeline" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Life & Financial Timeline</h1>
+                    <p class="section-subtitle">Key milestones from age 23 to retirement at 50</p>
+                </div>
+            </div>
+
+            <div class="timeline-container" id="timelineContainer">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ==================== INVESTMENTS SECTION ==================== -->
+        <section id="investments" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Kenyan Investment Vehicles</h1>
+                    <p class="section-subtitle">Prioritized from low to high risk - tailored for your goals</p>
+                </div>
+            </div>
+
+            <!-- Investment Tiers -->
+            <div class="investment-tiers">
+                <!-- Tier 1: Low Risk -->
+                <div class="tier-card tier-low">
+                    <div class="tier-header">
+                        <span class="tier-badge tier-badge-low">LOW RISK</span>
+                        <h3>Government Securities & Money Markets</h3>
+                    </div>
+                    <div class="instrument-grid">
+                        <div class="instrument-card">
+                            <div class="instrument-icon">🏛️</div>
+                            <h4>Treasury Bills</h4>
+                            <div class="instrument-stats">
+                                <div class="stat"><span class="stat-label">Maturity</span><span
+                                        class="stat-value">91–364 days</span></div>
+                                <div class="stat"><span class="stat-label">Yield</span><span
+                                        class="stat-value highlight-green">8.5–8.8%</span></div>
+                                <div class="stat"><span class="stat-label">Min. Investment</span><span
+                                        class="stat-value">KES 50,000</span></div>
+                                <div class="stat"><span class="stat-label">Platform</span><span
+                                        class="stat-value">DhowCSD</span></div>
+                            </div>
+                            <p class="instrument-desc">Short-term, government-backed. Perfect for parking savings while
+                                building towards the KES 50K minimum. Weekly auctions via CBK.</p>
+                        </div>
+                        <div class="instrument-card">
+                            <div class="instrument-icon">🏦</div>
+                            <h4>Treasury Bonds</h4>
+                            <div class="instrument-stats">
+                                <div class="stat"><span class="stat-label">Maturity</span><span class="stat-value">1–30
+                                        years</span></div>
+                                <div class="stat"><span class="stat-label">Yield</span><span
+                                        class="stat-value highlight-green">11–14%</span></div>
+                                <div class="stat"><span class="stat-label">Min. Investment</span><span
+                                        class="stat-value">KES 50,000</span></div>
+                                <div class="stat"><span class="stat-label">Coupons</span><span
+                                        class="stat-value">Semi-annual</span></div>
+                            </div>
+                            <p class="instrument-desc">Medium-to-long term. Infrastructure bonds may be tax-exempt.
+                                Excellent for your 2030+ goals. Tradeable on NSE secondary market.</p>
+                        </div>
+                        <div class="instrument-card">
+                            <div class="instrument-icon">💵</div>
+                            <h4>Money Market Funds</h4>
+                            <div class="instrument-stats">
+                                <div class="stat"><span class="stat-label">Liquidity</span><span class="stat-value">1–7
+                                        days</span></div>
+                                <div class="stat"><span class="stat-label">Returns</span><span
+                                        class="stat-value highlight-green">9–12%</span></div>
+                                <div class="stat"><span class="stat-label">Min. Investment</span><span
+                                        class="stat-value">KES 100</span></div>
+                                <div class="stat"><span class="stat-label">Providers</span><span
+                                        class="stat-value">Cytonn, Britam</span></div>
+                            </div>
+                            <p class="instrument-desc">Ideal starting point. Start with as little as KES 100. Daily
+                                compounding. Best for emergency fund and short-term goals. CMA regulated.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier 2: Medium Risk -->
+                <div class="tier-card tier-medium">
+                    <div class="tier-header">
+                        <span class="tier-badge tier-badge-medium">MEDIUM RISK</span>
+                        <h3>Stocks, SACCOs & Unit Trusts</h3>
+                    </div>
+                    <div class="instrument-grid">
+                        <div class="instrument-card">
+                            <div class="instrument-icon">📊</div>
+                            <h4>NSE Stocks</h4>
+                            <div class="instrument-stats">
+                                <div class="stat"><span class="stat-label">2025 Return</span><span
+                                        class="stat-value highlight-blue">+51.1% (NASI)</span></div>
+                                <div class="stat"><span class="stat-label">Top Picks</span><span
+                                        class="stat-value">Safaricom, Equity, KCB</span></div>
+                                <div class="stat"><span class="stat-label">Platform</span><span class="stat-value">Ziidi
+                                        / NSE</span></div>
+                                <div class="stat"><span class="stat-label">Risk</span><span class="stat-value">Market
+                                        volatility</span></div>
+                            </div>
+                            <p class="instrument-desc">NSE returned 51%+ in 2025. Blue-chips like Safaricom, Equity
+                                Group, and KCB offer dividends + capital appreciation. Use Ziidi on M-Pesa.</p>
+                        </div>
+                        <div class="instrument-card">
+                            <div class="instrument-icon">🤝</div>
+                            <h4>SACCOs</h4>
+                            <div class="instrument-stats">
+                                <div class="stat"><span class="stat-label">Dividends</span><span
+                                        class="stat-value highlight-blue">10–18%</span></div>
+                                <div class="stat"><span class="stat-label">Loan Access</span><span class="stat-value">3x
+                                        share capital</span></div>
+                                <div class="stat"><span class="stat-label">Regulator</span><span
+                                        class="stat-value">SASRA</span></div>
+                                <div class="stat"><span class="stat-label">Best For</span><span
+                                        class="stat-value">Long-term + credit</span></div>
+                            </div>
+                            <p class="instrument-desc">Member-owned cooperatives. Great for building credit history and
+                                accessing affordable loans for your car/housing goals. SASRA-regulated.</p>
+                        </div>
+                        <div class="instrument-card">
+                            <div class="instrument-icon">🧺</div>
+                            <h4>Unit Trusts (Equity Funds)</h4>
+                            <div class="instrument-stats">
+                                <div class="stat"><span class="stat-label">Returns</span><span
+                                        class="stat-value highlight-blue">12–20%</span></div>
+                                <div class="stat"><span class="stat-label">Min. Investment</span><span
+                                        class="stat-value">KES 5,000</span></div>
+                                <div class="stat"><span class="stat-label">Diversification</span><span
+                                        class="stat-value">Automatic</span></div>
+                                <div class="stat"><span class="stat-label">Providers</span><span class="stat-value">Old
+                                        Mutual, Sanlam</span></div>
+                            </div>
+                            <p class="instrument-desc">Professionally managed diversified portfolios. Great if you want
+                                stock market exposure without picking individual stocks. CMA regulated.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier 3: High Risk -->
+                <div class="tier-card tier-high">
+                    <div class="tier-header">
+                        <span class="tier-badge tier-badge-high">HIGH RISK / HIGH REWARD</span>
+                        <h3>Private Equity & Alternative Investments</h3>
+                    </div>
+                    <div class="instrument-grid">
+                        <div class="instrument-card">
+                            <div class="instrument-icon">🏢</div>
+                            <h4>Private Equity / Real Estate</h4>
+                            <div class="instrument-stats">
+                                <div class="stat"><span class="stat-label">Target Returns</span><span
+                                        class="stat-value highlight-orange">18–25%+</span></div>
+                                <div class="stat"><span class="stat-label">Min. Investment</span><span
+                                        class="stat-value">KES 100,000+</span></div>
+                                <div class="stat"><span class="stat-label">Lock-up</span><span class="stat-value">3–7
+                                        years</span></div>
+                                <div class="stat"><span class="stat-label">Providers</span><span
+                                        class="stat-value">Cytonn, Acorn</span></div>
+                            </div>
+                            <p class="instrument-desc">Real estate structured products (like Cytonn High Yield Solutions
+                                or Acorn D-REIT). Higher returns but capital is locked for years. Best after 2030.</p>
+                        </div>
+                        <div class="instrument-card">
+                            <div class="instrument-icon">🚀</div>
+                            <h4>Growth / Small-Cap Stocks</h4>
+                            <div class="instrument-stats">
+                                <div class="stat"><span class="stat-label">2025 Examples</span><span
+                                        class="stat-value highlight-orange">+200% to +500%</span></div>
+                                <div class="stat"><span class="stat-label">Volatility</span><span
+                                        class="stat-value">Very High</span></div>
+                                <div class="stat"><span class="stat-label">Strategy</span><span
+                                        class="stat-value">Speculative</span></div>
+                                <div class="stat"><span class="stat-label">Allocation</span><span class="stat-value">Max
+                                        5–10%</span></div>
+                            </div>
+                            <p class="instrument-desc">Small-cap stocks like Uchumi (+506%) and Sameer Africa (+486%) in
+                                2025. Extremely volatile - only allocate money you can afford to lose entirely.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommended Portfolio Allocation Chart -->
+            <div class="charts-row" style="margin-top: 2rem;">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Recommended Portfolio Mix</h3>
+                        <span class="chart-subtitle">Age-appropriate allocation</span>
+                    </div>
+                    <div class="chart-body chart-body-doughnut">
+                        <canvas id="portfolioAllocationChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card chart-card-large">
+                    <div class="chart-header">
+                        <h3>Investment Growth by Vehicle (2026–2052)</h3>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="investmentGrowthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== FIRE CALCULATOR SECTION ==================== -->
+        <section id="fire-calc" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>FIRE Calculator</h1>
+                    <p class="section-subtitle">Financial Independence, Retire Early - Your personalized computation</p>
+                </div>
+            </div>
+
+            <!-- FIRE Metrics -->
+            <div class="fire-metrics-grid">
+                <div class="fire-metric-card">
+                    <div class="fire-metric-icon">🎯</div>
+                    <h3>FIRE Number</h3>
+                    <span class="fire-metric-value" id="fireNumber">KES 0</span>
+                    <span class="fire-metric-sub">Annual Expenses × 25</span>
+                </div>
+                <div class="fire-metric-card">
+                    <div class="fire-metric-icon">📆</div>
+                    <h3>Target Retirement</h3>
+                    <span class="fire-metric-value">Age 50</span>
+                    <span class="fire-metric-sub">September 2052</span>
+                </div>
+                <div class="fire-metric-card">
+                    <div class="fire-metric-icon">💰</div>
+                    <h3>Current Net Worth</h3>
+                    <span class="fire-metric-value" id="fireNetWorth">KES 173,000</span>
+                    <span class="fire-metric-sub" id="fireProgressPct">0%</span>
+                </div>
+                <div class="fire-metric-card">
+                    <div class="fire-metric-icon">⏱️</div>
+                    <h3>Years to FIRE</h3>
+                    <span class="fire-metric-value" id="fireYears">26</span>
+                    <span class="fire-metric-sub" id="fireOnTrack">On track ✅</span>
+                </div>
+            </div>
+
+            <!-- FIRE Inputs -->
+            <div class="fire-inputs-section">
+                <h2 class="sub-heading">🔧 Adjust Your FIRE Parameters</h2>
+                <div class="fire-inputs-grid">
+                    <div class="input-group">
+                        <label for="fireAnnualExpenses">Annual Expenses (KES)</label>
+                        <input type="number" id="fireAnnualExpenses" value="720000" min="0" step="10000">
+                        <span class="input-hint">KES 60,000/month × 12 for family of 5</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="fireWithdrawalRate">Withdrawal Rate (%)</label>
+                        <input type="number" id="fireWithdrawalRate" value="4" min="2" max="6" step="0.25">
+                        <span class="input-hint">4% standard, 3.25% conservative</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="fireExpectedReturn">Expected Annual Return (%)</label>
+                        <input type="number" id="fireExpectedReturn" value="12" min="4" max="25" step="0.5">
+                        <span class="input-hint">Blended return across your portfolio</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="fireInflation">Inflation Rate (%)</label>
+                        <input type="number" id="fireInflation" value="6" min="2" max="12" step="0.5">
+                        <span class="input-hint">Kenya avg ~6.4% in 2026</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="fireMonthlyInvest">Monthly Investment (KES)</label>
+                        <input type="number" id="fireMonthlyInvest" value="17700" min="0" step="1000">
+                        <span class="input-hint">30% of income allocated to investing</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="fireRetireAge">Retirement Age</label>
+                        <input type="number" id="fireRetireAge" value="50" min="30" max="70" step="1">
+                        <span class="input-hint">FIRE target age</span>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="recalculateFIRE()">🔥 Recalculate FIRE</button>
+            </div>
+
+            <!-- FIRE Projection Chart -->
+            <div class="chart-card" style="margin-top: 2rem;">
+                <div class="chart-header">
+                    <h3>FIRE Projection</h3>
+                    <div class="chart-legend-custom">
+                        <span class="legend-item"><span class="legend-dot"
+                                style="background: var(--accent-primary)"></span>Portfolio Growth</span>
+                        <span class="legend-item"><span class="legend-dot" style="background: #ef4444"></span>FIRE
+                            Number</span>
+                        <span class="legend-item"><span class="legend-dot"
+                                style="background: var(--accent-success)"></span>FIRE Achieved</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="fireProjectionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- FIRE Type -->
+            <div class="fire-type-section">
+                <h2 class="sub-heading">🔥 Your FIRE Type</h2>
+                <div class="fire-types-grid" id="fireTypesGrid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SIMULATOR SECTION ==================== -->
+        <section id="simulator" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Dynamic Simulator</h1>
+                    <p class="section-subtitle">Adjust income, expenses, and savings to see how your goals change</p>
+                </div>
+            </div>
+
+            <div class="simulator-layout">
+                <!-- Controls -->
+                <div class="sim-controls">
+                    <h2 class="sub-heading">⚙️ Scenario Controls</h2>
+
+                    <div class="sim-control-group">
+                        <label>Monthly Net Salary (KES)</label>
+                        <input type="range" id="simSalary" min="15000" max="500000" value="59000" step="1000">
+                        <div class="sim-range-labels">
+                            <span>KES 15K</span>
+                            <span class="sim-current-value" id="simSalaryValue">KES 59,000</span>
+                            <span>KES 500K</span>
+                        </div>
+                    </div>
+
+                    <div class="sim-control-group">
+                        <label>Savings Rate (%)</label>
+                        <input type="range" id="simSavingsRate" min="5" max="70" value="30" step="1">
+                        <div class="sim-range-labels">
+                            <span>5%</span>
+                            <span class="sim-current-value" id="simSavingsRateValue">30%</span>
+                            <span>70%</span>
+                        </div>
+                    </div>
+
+                    <div class="sim-control-group">
+                        <label>Monthly Rent (KES)</label>
+                        <input type="range" id="simRent" min="0" max="100000" value="0" step="5000">
+                        <div class="sim-range-labels">
+                            <span>KES 0</span>
+                            <span class="sim-current-value" id="simRentValue">KES 0</span>
+                            <span>KES 100K</span>
+                        </div>
+                    </div>
+
+                    <div class="sim-control-group">
+                        <label>Investment Return (%)</label>
+                        <input type="range" id="simReturn" min="5" max="25" value="12" step="0.5">
+                        <div class="sim-range-labels">
+                            <span>5%</span>
+                            <span class="sim-current-value" id="simReturnValue">12%</span>
+                            <span>25%</span>
+                        </div>
+                    </div>
+
+                    <div class="sim-control-group">
+                        <label>Annual Salary Growth (%)</label>
+                        <input type="range" id="simGrowth" min="0" max="20" value="8" step="1">
+                        <div class="sim-range-labels">
+                            <span>0%</span>
+                            <span class="sim-current-value" id="simGrowthValue">8%</span>
+                            <span>20%</span>
+                        </div>
+                    </div>
+
+                    <div class="sim-control-group">
+                        <label>Children (for expense scaling)</label>
+                        <input type="range" id="simChildren" min="0" max="5" value="3" step="1">
+                        <div class="sim-range-labels">
+                            <span>0</span>
+                            <span class="sim-current-value" id="simChildrenValue">3</span>
+                            <span>5</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary btn-full" onclick="runSimulation()">🚀 Run Simulation</button>
+                </div>
+
+                <!-- Results -->
+                <div class="sim-results">
+                    <div class="sim-result-cards">
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Monthly Savings</span>
+                            <span class="sim-result-value" id="simMonthlySavings">KES 17,700</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Portfolio at Age 50</span>
+                            <span class="sim-result-value" id="simPortfolioAt50">KES 0</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">FIRE Achieved?</span>
+                            <span class="sim-result-value" id="simFireAchieved">-</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">FIRE Age</span>
+                            <span class="sim-result-value" id="simFireAge">-</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" style="margin-top: 1.5rem;">
+                        <div class="chart-header">
+                            <h3>Simulated Wealth Trajectory</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="simChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Scenario Presets -->
+                    <div class="sim-presets">
+                        <h3>Quick Scenarios</h3>
+                        <div class="preset-buttons">
+                            <button class="btn-preset" onclick="loadPreset('current')">📌 Current Plan</button>
+                            <button class="btn-preset" onclick="loadPreset('aggressive')">🔥 Aggressive FIRE</button>
+                            <button class="btn-preset" onclick="loadPreset('moderate')">⚖️ Balanced Life</button>
+                            <button class="btn-preset" onclick="loadPreset('highEarner')">💎 High Earner</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== ADVICE SECTION ==================== -->
+        <section id="advice" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Investment Advice</h1>
+                    <p class="section-subtitle">Actionable strategies for the Kenyan market - phase by phase</p>
+                </div>
+            </div>
+
+            <div class="advice-phases">
+                <!-- Phase 1 -->
+                <div class="advice-card">
+                    <div class="advice-phase-badge">PHASE 1</div>
+                    <h3>Foundation (Jul 2026 – Sep 2026)</h3>
+                    <div class="advice-subtitle">Stipend period - KES 15,480/month</div>
+                    <ul class="advice-list">
+                        <li>
+                            <span class="advice-check">✅</span>
+                            <div>
+                                <strong>Open a Money Market Fund (MMF)</strong>
+                                <p>Start with Cytonn or Britam MMF. Deposit KES 5,000 from savings to begin earning ~10%
+                                    p.a. with daily compounding. Minimum KES 100 to start.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">✅</span>
+                            <div>
+                                <strong>Build Emergency Fund</strong>
+                                <p>Target 3 months of expenses (KES 45,000). Your current KES 173,000 savings covers
+                                    this - keep KES 50,000 liquid in MMF.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">✅</span>
+                            <div>
+                                <strong>Register on DhowCSD</strong>
+                                <p>Create your CBK Central Depository account now. This is free and prepares you to buy
+                                    T-Bills and bonds when you have KES 50,000+ to invest.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">✅</span>
+                            <div>
+                                <strong>Open CDS Account on NSE</strong>
+                                <p>Register on the Nairobi Securities Exchange via Ziidi (M-Pesa) to access stock
+                                    trading when ready.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="advice-card">
+                    <div class="advice-phase-badge phase-2">PHASE 2</div>
+                    <h3>Acceleration (Sep 2026 – Jun 2028)</h3>
+                    <div class="advice-subtitle">Job income - KES 59,000/month net</div>
+                    <ul class="advice-list">
+                        <li>
+                            <span class="advice-check">🎯</span>
+                            <div>
+                                <strong>Handle immediate purchases</strong>
+                                <p>Sept paycheck: Buy KES 6,995 suit. First paycheck + KES 21,000 top-up → KES 80,000
+                                    phone by October 2026.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🎯</span>
+                            <div>
+                                <strong>Start weekly KES 350 savings</strong>
+                                <p>From October 2026: KES 1,400/month into MMF. This builds the discipline for larger
+                                    amounts later.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🎯</span>
+                            <div>
+                                <strong>Invest in Treasury Bills</strong>
+                                <p>Once MMF balance reaches KES 50,000, roll KES 50K into 91-day T-Bills (8.5% yield).
+                                    Keep rolling every quarter.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🎯</span>
+                            <div>
+                                <strong>Start NSE stock purchases</strong>
+                                <p>Allocate KES 5,000/month to blue-chips: Safaricom, Equity Group, KCB. Use Ziidi app
+                                    for single-share trading.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🎯</span>
+                            <div>
+                                <strong>Join a SACCO</strong>
+                                <p>Begin with KES 2,000/month shares. By 2030, your SACCO balance can qualify you for a
+                                    car loan at lower rates.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="advice-card">
+                    <div class="advice-phase-badge phase-3">PHASE 3</div>
+                    <h3>Growth (Jun 2028 – Dec 2030)</h3>
+                    <div class="advice-subtitle">Career progression - target KES 80K–120K/month</div>
+                    <ul class="advice-list">
+                        <li>
+                            <span class="advice-check">📈</span>
+                            <div>
+                                <strong>Scale investments to 30%+ of income</strong>
+                                <p>With higher salary, invest KES 24K–36K/month. Diversify across T-Bonds (5-year),
+                                    stocks, and SACCO deposits.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">📈</span>
+                            <div>
+                                <strong>Buy Treasury Bonds (5–10 year)</strong>
+                                <p>Lock in 11–14% yields on bonds maturing in your early 30s. Semi-annual coupons
+                                    provide income stream.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">📈</span>
+                            <div>
+                                <strong>Hit KES 1M portfolio by Jan 2030</strong>
+                                <p>Combined MMF + T-Bills + Stocks + SACCO should approach KES 1 million with consistent
+                                    contributions + growth.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">📈</span>
+                            <div>
+                                <strong>Purchase first car (KES 1M–1.5M) by end 2030</strong>
+                                <p>Consider SACCO car loan (lower rates) or save + invest difference. Budget KES
+                                    10K/month for running costs.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">📈</span>
+                            <div>
+                                <strong>Move out - rent at KES 40,000/month</strong>
+                                <p>Budget shift: 50% essentials now includes rent. Adjust investment allocation to
+                                    maintain savings momentum.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Phase 4 -->
+                <div class="advice-card">
+                    <div class="advice-phase-badge phase-4">PHASE 4</div>
+                    <h3>Wealth Building (2031 – 2045)</h3>
+                    <div class="advice-subtitle">Family years - wife + 3 children</div>
+                    <ul class="advice-list">
+                        <li>
+                            <span class="advice-check">🏠</span>
+                            <div>
+                                <strong>Consider property purchase</strong>
+                                <p>Use accumulated SACCO savings for mortgage deposit. Property ownership eliminates
+                                    rent and builds equity.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🏠</span>
+                            <div>
+                                <strong>Diversify into Real Estate Investment</strong>
+                                <p>Explore D-REITs (like Acorn) or Cytonn structured products for real estate exposure
+                                    without full property purchase.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🏠</span>
+                            <div>
+                                <strong>Max out long-term bonds</strong>
+                                <p>20-year infrastructure bonds at 12–14% with tax exemption. These mature exactly
+                                    around retirement age.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🏠</span>
+                            <div>
+                                <strong>Children's education fund</strong>
+                                <p>Open separate unit trust accounts for each child's education. KES 3,000/child/month
+                                    from age 0 compounds significantly.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Phase 5 -->
+                <div class="advice-card">
+                    <div class="advice-phase-badge phase-5">PHASE 5</div>
+                    <h3>FIRE Glide Path (2045 – 2052)</h3>
+                    <div class="advice-subtitle">De-risk and prepare for retirement</div>
+                    <ul class="advice-list">
+                        <li>
+                            <span class="advice-check">🔥</span>
+                            <div>
+                                <strong>Shift to conservative allocation</strong>
+                                <p>Move from 60% equities to 70% bonds/fixed income. Preserve capital as retirement
+                                    nears.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🔥</span>
+                            <div>
+                                <strong>Build 2-year cash buffer</strong>
+                                <p>Keep 24 months of expenses in MMF/T-Bills to weather market downturns in early
+                                    retirement.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="advice-check">🔥</span>
+                            <div>
+                                <strong>Establish passive income streams</strong>
+                                <p>Rental income, bond coupons, stock dividends, and SACCO interest should cover 100% of
+                                    expenses by age 50.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DECISION LAB SECTION ==================== -->
+        <section id="decision-lab" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Decision Impact Lab</h1>
+                    <p class="section-subtitle">Model any financial decision and visualize its ripple effect on your wealth trajectory</p>
+                </div>
+            </div>
+
+            <!-- Decision Input -->
+            <div class="decision-input-area">
+                <h2 class="sub-heading">🧪 Enter a Financial Decision</h2>
+                <div class="decision-form">
+                    <div class="input-group">
+                        <label for="decisionName">Decision Description</label>
+                        <input type="text" id="decisionName" placeholder="e.g., Buy a phone for KES 90,000">
+                    </div>
+                    <div class="decision-form-row">
+                        <div class="input-group">
+                            <label for="decisionAmount">Amount (KES)</label>
+                            <input type="number" id="decisionAmount" value="90000" min="0" step="1000">
+                        </div>
+                        <div class="input-group">
+                            <label for="decisionType">Type</label>
+                            <select id="decisionType">
+                                <option value="expense">One-time Expense</option>
+                                <option value="monthly_expense">Monthly Recurring Expense</option>
+                                <option value="investment">One-time Investment</option>
+                                <option value="monthly_invest">Monthly Investment</option>
+                                <option value="asset">Asset Purchase (depreciating)</option>
+                                <option value="income_change">Income Change</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="decisionAge">At Age</label>
+                            <input type="number" id="decisionAge" value="24" min="23" max="55" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="decisionDuration">Duration (years, for recurring)</label>
+                            <input type="number" id="decisionDuration" value="1" min="1" max="30" step="1">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="analyzeDecision()">🔍 Analyze Impact</button>
+                </div>
+            </div>
+
+            <!-- Decision Log -->
+            <div class="decision-log-section">
+                <h2 class="sub-heading">📋 Decision Log</h2>
+                <div id="decisionLog" class="decision-log">
+                    <div class="decision-empty">No decisions modeled yet. Add one above to see the impact.</div>
+                </div>
+            </div>
+
+            <!-- Impact Visualization -->
+            <div class="charts-row" style="margin-top: 1.5rem;">
+                <div class="chart-card chart-card-large">
+                    <div class="chart-header">
+                        <h3>Wealth Trajectory: With vs Without Decision</h3>
+                        <div class="chart-legend-custom">
+                            <span class="legend-item"><span class="legend-dot" style="background: var(--accent-primary)"></span>Baseline</span>
+                            <span class="legend-item"><span class="legend-dot" style="background: var(--accent-warning)"></span>With Decision</span>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="decisionChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Impact Summary</h3>
+                    </div>
+                    <div class="decision-impact-summary" id="decisionImpactSummary">
+                        <div class="impact-metric">
+                            <span class="impact-label">Immediate Cost</span>
+                            <span class="impact-value" id="impactCost">-</span>
+                        </div>
+                        <div class="impact-metric">
+                            <span class="impact-label">Opportunity Cost (by age 50)</span>
+                            <span class="impact-value" id="impactOpportunity">-</span>
+                        </div>
+                        <div class="impact-metric">
+                            <span class="impact-label">FIRE Delay</span>
+                            <span class="impact-value" id="impactFireDelay">-</span>
+                        </div>
+                        <div class="impact-metric">
+                            <span class="impact-label">Portfolio Impact at 50</span>
+                            <span class="impact-value" id="impactPortfolio50">-</span>
+                        </div>
+                        <div class="impact-advice" id="impactAdvice">
+                            <span class="note-icon">💡</span>
+                            <span>Enter a decision above to see personalized analysis.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Decision Templates -->
+            <div class="decision-templates">
+                <h2 class="sub-heading">⚡ Quick Scenarios</h2>
+                <div class="preset-buttons">
+                    <button class="btn-preset" onclick="loadDecision('phone')">📱 Phone KES 90K</button>
+                    <button class="btn-preset" onclick="loadDecision('laptop')">💻 Laptop KES 150K</button>
+                    <button class="btn-preset" onclick="loadDecision('sideHustle')">💼 Side Hustle +KES 20K/mo</button>
+                    <button class="btn-preset" onclick="loadDecision('carUpgrade')">🚗 Car Upgrade KES 2M</button>
+                    <button class="btn-preset" onclick="loadDecision('wedding')">💍 Wedding KES 500K</button>
+                    <button class="btn-preset" onclick="loadDecision('vacation')">✈️ Vacation KES 200K</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== REVERSE FIRE SECTION ==================== -->
+        <section id="reverse-fire" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Reverse FIRE Engineering</h1>
+                    <p class="section-subtitle">Working backward from age 50 to determine exactly what you need today</p>
+                </div>
+            </div>
+
+            <!-- Reverse FIRE Inputs -->
+            <div class="fire-inputs-section">
+                <h2 class="sub-heading">🔄 Set Your Retirement Vision</h2>
+                <div class="fire-inputs-grid">
+                    <div class="input-group">
+                        <label for="revRetireAge">Retirement Age</label>
+                        <input type="number" id="revRetireAge" value="50" min="35" max="65" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="revMonthlyExpenseRetire">Monthly Expenses in Retirement (KES)</label>
+                        <input type="number" id="revMonthlyExpenseRetire" value="150000" min="30000" step="5000">
+                        <span class="input-hint">Family of 5 comfortable lifestyle</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="revWithdrawalRate">Safe Withdrawal Rate (%)</label>
+                        <input type="number" id="revWithdrawalRate" value="3.5" min="2" max="5" step="0.25">
+                        <span class="input-hint">3.5% conservative for 40+ year retirement</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="revInflation">Expected Inflation (%)</label>
+                        <input type="number" id="revInflation" value="6" min="2" max="12" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="revExpectedReturn">Portfolio Return (%)</label>
+                        <input type="number" id="revExpectedReturn" value="12" min="5" max="20" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="revCurrentAge">Current Age</label>
+                        <input type="number" id="revCurrentAge" value="23" min="18" max="50" step="1">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="reverseEngineerFIRE()">🔄 Reverse Engineer</button>
+            </div>
+
+            <!-- Reverse FIRE Results -->
+            <div class="reverse-results" id="reverseResults">
+                <h2 class="sub-heading">📊 Your Cascade of Required Figures</h2>
+                <div class="reverse-cascade">
+                    <div class="cascade-card cascade-target">
+                        <div class="cascade-step">TARGET</div>
+                        <div class="cascade-icon">🎯</div>
+                        <h3>FIRE Number</h3>
+                        <span class="cascade-value" id="revFireNumber">-</span>
+                        <span class="cascade-sub" id="revFireNumberSub">Total portfolio needed at retirement</span>
+                    </div>
+                    <div class="cascade-arrow">↑</div>
+                    <div class="cascade-card">
+                        <div class="cascade-step">YEAR 5</div>
+                        <div class="cascade-icon">📅</div>
+                        <h3>Portfolio at Age 28</h3>
+                        <span class="cascade-value" id="revAge28">-</span>
+                        <span class="cascade-sub">Required portfolio value in 5 years</span>
+                    </div>
+                    <div class="cascade-arrow">↑</div>
+                    <div class="cascade-card">
+                        <div class="cascade-step">MONTHLY</div>
+                        <div class="cascade-icon">💰</div>
+                        <h3>Required Monthly Savings</h3>
+                        <span class="cascade-value" id="revMonthlySavings">-</span>
+                        <span class="cascade-sub" id="revSavingsRateSub">As % of projected income</span>
+                    </div>
+                    <div class="cascade-arrow">↑</div>
+                    <div class="cascade-card">
+                        <div class="cascade-step">MAX SPEND</div>
+                        <div class="cascade-icon">🛑</div>
+                        <h3>Max Monthly Expenditure</h3>
+                        <span class="cascade-value" id="revMaxExpense">-</span>
+                        <span class="cascade-sub">Maximum you can spend and still hit FIRE</span>
+                    </div>
+                    <div class="cascade-arrow">↑</div>
+                    <div class="cascade-card">
+                        <div class="cascade-step">NOW</div>
+                        <div class="cascade-icon">📍</div>
+                        <h3>Required Annual Return</h3>
+                        <span class="cascade-value" id="revRequiredReturn">-</span>
+                        <span class="cascade-sub">Minimum portfolio CAGR to reach FIRE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reverse FIRE Chart -->
+            <div class="chart-card" style="margin-top: 2rem;">
+                <div class="chart-header">
+                    <h3>Reverse-Engineered Wealth Path</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="reverseFIREChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Buy vs Rent Analysis -->
+            <div class="buy-vs-rent-section">
+                <h2 class="sub-heading">🏠 Buy vs Rent Analysis</h2>
+                <div class="bvr-grid">
+                    <div class="bvr-card bvr-rent">
+                        <h3>🏘️ Renting</h3>
+                        <div class="bvr-inputs">
+                            <div class="input-group">
+                                <label for="bvrRentMonthly">Monthly Rent (KES)</label>
+                                <input type="number" id="bvrRentMonthly" value="40000" min="10000" step="5000">
+                            </div>
+                            <div class="input-group">
+                                <label for="bvrRentGrowth">Annual Rent Increase (%)</label>
+                                <input type="number" id="bvrRentGrowth" value="5" min="0" max="15" step="1">
+                            </div>
+                        </div>
+                        <div class="bvr-result" id="bvrRentResult">
+                            <span class="bvr-total-label">Total Rent Paid (20 years)</span>
+                            <span class="bvr-total-value" id="bvrRentTotal">-</span>
+                        </div>
+                    </div>
+                    <div class="bvr-vs">VS</div>
+                    <div class="bvr-card bvr-buy">
+                        <h3>🏡 Buying</h3>
+                        <div class="bvr-inputs">
+                            <div class="input-group">
+                                <label for="bvrPropertyPrice">Property Price (KES)</label>
+                                <input type="number" id="bvrPropertyPrice" value="8000000" min="1000000" step="500000">
+                            </div>
+                            <div class="input-group">
+                                <label for="bvrDownPayment">Down Payment (%)</label>
+                                <input type="number" id="bvrDownPayment" value="20" min="5" max="50" step="5">
+                            </div>
+                            <div class="input-group">
+                                <label for="bvrMortgageRate">Mortgage Rate (%)</label>
+                                <input type="number" id="bvrMortgageRate" value="13" min="8" max="20" step="0.5">
+                            </div>
+                            <div class="input-group">
+                                <label for="bvrMortgageTerm">Mortgage Term (years)</label>
+                                <input type="number" id="bvrMortgageTerm" value="20" min="5" max="30" step="5">
+                            </div>
+                        </div>
+                        <div class="bvr-result" id="bvrBuyResult">
+                            <span class="bvr-total-label">Total Cost of Ownership</span>
+                            <span class="bvr-total-value" id="bvrBuyTotal">-</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="analyzeBuyVsRent()" style="margin-top:1rem;">📊 Compare</button>
+                <div class="bvr-verdict" id="bvrVerdict"></div>
+            </div>
+        </section>
+
+        <!-- ==================== MARKET TRENDS SECTION ==================== -->
+        <section id="market-trends" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Market Trend Analysis</h1>
+                    <p class="section-subtitle">Input external data to simulate impacts on your wealth trajectory</p>
+                </div>
+            </div>
+
+            <!-- Market Data Inputs -->
+            <div class="market-input-section">
+                <h2 class="sub-heading">📊 Input Market Data</h2>
+                <div class="market-grid">
+                    <div class="market-input-card">
+                        <div class="market-input-header">
+                            <span>📈</span>
+                            <h4>NSE Stocks (NASI)</h4>
+                        </div>
+                        <div class="input-group">
+                            <label for="mktNSE">Expected Annual Return (%)</label>
+                            <input type="number" id="mktNSE" value="15" min="-50" max="100" step="1">
+                        </div>
+                        <span class="input-hint">2025 actual: +51.1%</span>
+                    </div>
+                    <div class="market-input-card">
+                        <div class="market-input-header">
+                            <span>🏛️</span>
+                            <h4>Treasury Bonds</h4>
+                        </div>
+                        <div class="input-group">
+                            <label for="mktTBond">Yield (%)</label>
+                            <input type="number" id="mktTBond" value="12.5" min="5" max="20" step="0.5">
+                        </div>
+                        <span class="input-hint">Current: 11-14%</span>
+                    </div>
+                    <div class="market-input-card">
+                        <div class="market-input-header">
+                            <span>💵</span>
+                            <h4>Money Market Funds</h4>
+                        </div>
+                        <div class="input-group">
+                            <label for="mktMMF">Annual Yield (%)</label>
+                            <input type="number" id="mktMMF" value="10" min="3" max="20" step="0.5">
+                        </div>
+                        <span class="input-hint">Current: 9-12%</span>
+                    </div>
+                    <div class="market-input-card">
+                        <div class="market-input-header">
+                            <span>🏢</span>
+                            <h4>Green / USD I-REITs</h4>
+                        </div>
+                        <div class="input-group">
+                            <label for="mktREIT">Expected Return (%)</label>
+                            <input type="number" id="mktREIT" value="8" min="0" max="30" step="1">
+                        </div>
+                        <span class="input-hint">USD-denominated, adds FX diversification</span>
+                    </div>
+                    <div class="market-input-card">
+                        <div class="market-input-header">
+                            <span>🤝</span>
+                            <h4>SACCOs</h4>
+                        </div>
+                        <div class="input-group">
+                            <label for="mktSACCO">Dividend + Rebate (%)</label>
+                            <input type="number" id="mktSACCO" value="14" min="5" max="25" step="1">
+                        </div>
+                        <span class="input-hint">Top-performing: 10-18%</span>
+                    </div>
+                    <div class="market-input-card">
+                        <div class="market-input-header">
+                            <span>📉</span>
+                            <h4>Inflation Rate</h4>
+                        </div>
+                        <div class="input-group">
+                            <label for="mktInflation">Annual Inflation (%)</label>
+                            <input type="number" id="mktInflation" value="6" min="0" max="20" step="0.5">
+                        </div>
+                        <span class="input-hint">June 2026: 6.4%</span>
+                    </div>
+                </div>
+
+                <!-- Portfolio Allocation Sliders -->
+                <h2 class="sub-heading" style="margin-top: 2rem;">🎛️ Your Allocation Mix</h2>
+                <div class="alloc-sliders" id="allocSliders">
+                    <div class="alloc-slider-row">
+                        <label>NSE Stocks</label>
+                        <input type="range" id="allocNSE" min="0" max="60" value="25" step="5" oninput="updateAllocDisplay()">
+                        <span class="alloc-pct" id="allocNSEPct">25%</span>
+                    </div>
+                    <div class="alloc-slider-row">
+                        <label>Treasury Bonds</label>
+                        <input type="range" id="allocTBond" min="0" max="60" value="25" step="5" oninput="updateAllocDisplay()">
+                        <span class="alloc-pct" id="allocTBondPct">25%</span>
+                    </div>
+                    <div class="alloc-slider-row">
+                        <label>MMF</label>
+                        <input type="range" id="allocMMF" min="0" max="60" value="20" step="5" oninput="updateAllocDisplay()">
+                        <span class="alloc-pct" id="allocMMFPct">20%</span>
+                    </div>
+                    <div class="alloc-slider-row">
+                        <label>I-REITs / Real Estate</label>
+                        <input type="range" id="allocREIT" min="0" max="30" value="10" step="5" oninput="updateAllocDisplay()">
+                        <span class="alloc-pct" id="allocREITPct">10%</span>
+                    </div>
+                    <div class="alloc-slider-row">
+                        <label>SACCOs</label>
+                        <input type="range" id="allocSACCO" min="0" max="30" value="15" step="5" oninput="updateAllocDisplay()">
+                        <span class="alloc-pct" id="allocSACCOPct">15%</span>
+                    </div>
+                    <div class="alloc-slider-row">
+                        <label>Cash / T-Bills</label>
+                        <input type="range" id="allocCash" min="0" max="30" value="5" step="5" oninput="updateAllocDisplay()">
+                        <span class="alloc-pct" id="allocCashPct">5%</span>
+                    </div>
+                    <div class="alloc-total" id="allocTotal">Total: 100%</div>
+                </div>
+                <button class="btn-primary" onclick="simulateMarketScenario()" style="margin-top:1rem;">🌍 Simulate Market Scenario</button>
+            </div>
+
+            <!-- Market Simulation Chart -->
+            <div class="chart-card" style="margin-top: 2rem;">
+                <div class="chart-header">
+                    <h3>Portfolio Growth Under Custom Market Conditions</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="marketSimChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Blended Return Display -->
+            <div class="market-result-cards" id="marketResults">
+                <div class="sim-result-card">
+                    <span class="sim-result-label">Blended Nominal Return</span>
+                    <span class="sim-result-value" id="mktBlendedReturn">-</span>
+                </div>
+                <div class="sim-result-card">
+                    <span class="sim-result-label">Real Return (after inflation)</span>
+                    <span class="sim-result-value" id="mktRealReturn">-</span>
+                </div>
+                <div class="sim-result-card">
+                    <span class="sim-result-label">Portfolio at Age 50</span>
+                    <span class="sim-result-value" id="mktPortfolio50">-</span>
+                </div>
+                <div class="sim-result-card">
+                    <span class="sim-result-label">FIRE Feasibility</span>
+                    <span class="sim-result-value" id="mktFIREFeasibility">-</span>
+                </div>
+            </div>
+
+            <!-- Wealth Avenues Advice -->
+            <div class="wealth-avenues" style="margin-top: 2rem;">
+                <h2 class="sub-heading">🏆 Proven Wealth-Building Avenues for Kenya</h2>
+                <div class="avenue-grid" id="avenueGrid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PROTECTION & EDUCATION SECTION ==================== -->
+        <section id="protection" class="section">
+            <div class="section-header">
+                <div>
+                    <h1>Protection & Education Planning</h1>
+                    <p class="section-subtitle">Insurance, risk mitigation, and tuition forecasting for your family</p>
+                </div>
+            </div>
+
+            <!-- Insurance Section -->
+            <div class="insurance-section">
+                <h2 class="sub-heading">🛡️ Insurance Planning</h2>
+                <div class="insurance-grid">
+                    <div class="insurance-card">
+                        <div class="insurance-header">
+                            <span class="insurance-icon">🏥</span>
+                            <h3>Health Insurance (NHIF/SHA + Private)</h3>
+                        </div>
+                        <div class="insurance-inputs">
+                            <div class="input-group">
+                                <label for="insNHIF">NHIF/SHA Monthly (KES)</label>
+                                <input type="number" id="insNHIF" value="1700" min="500" step="100">
+                            </div>
+                            <div class="input-group">
+                                <label for="insPrivateHealth">Private Health (Monthly KES)</label>
+                                <input type="number" id="insPrivateHealth" value="5000" min="0" step="500">
+                                <span class="input-hint">Family cover from age 30+</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="insHealthStartAge">Private Cover Start Age</label>
+                                <input type="number" id="insHealthStartAge" value="28" min="23" max="40" step="1">
+                            </div>
+                        </div>
+                        <div class="insurance-note">
+                            <span class="note-icon">💡</span>
+                            <span>NHIF/SHA is mandatory. Private cover recommended once you have dependents. Budget KES 60K-120K/year for family cover.</span>
+                        </div>
+                    </div>
+
+                    <div class="insurance-card">
+                        <div class="insurance-header">
+                            <span class="insurance-icon">🚗</span>
+                            <h3>Motor Vehicle Insurance</h3>
+                        </div>
+                        <div class="insurance-inputs">
+                            <div class="input-group">
+                                <label for="insCarValue">Car Value (KES)</label>
+                                <input type="number" id="insCarValue" value="1250000" min="0" step="50000">
+                            </div>
+                            <div class="input-group">
+                                <label for="insCarRate">Comprehensive Premium Rate (%)</label>
+                                <input type="number" id="insCarRate" value="5" min="3" max="8" step="0.5">
+                                <span class="input-hint">Typically 4-6% of car value annually</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="insCarStartAge">Car Purchase Age</label>
+                                <input type="number" id="insCarStartAge" value="28" min="23" max="40" step="1">
+                            </div>
+                        </div>
+                        <div class="insurance-note">
+                            <span class="note-icon">💡</span>
+                            <span>Third-party is minimum legal requirement (~KES 7,500/yr). Comprehensive recommended for new cars to cover theft and accidents.</span>
+                        </div>
+                    </div>
+
+                    <div class="insurance-card">
+                        <div class="insurance-header">
+                            <span class="insurance-icon">🛡️</span>
+                            <h3>Life & Income Protection</h3>
+                        </div>
+                        <div class="insurance-inputs">
+                            <div class="input-group">
+                                <label for="insLifeMonthly">Term Life Monthly (KES)</label>
+                                <input type="number" id="insLifeMonthly" value="3000" min="0" step="500">
+                                <span class="input-hint">10x annual income coverage</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="insLifeStartAge">Start Age</label>
+                                <input type="number" id="insLifeStartAge" value="30" min="25" max="40" step="1">
+                            </div>
+                        </div>
+                        <div class="insurance-note">
+                            <span class="note-icon">💡</span>
+                            <span>Essential once you have dependents. Term life is cheapest option. Budget KES 36K-60K/year.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="calculateInsuranceImpact()" style="margin-top: 1rem;">🛡️ Calculate Insurance Impact on FIRE</button>
+
+                <!-- Insurance Impact Results -->
+                <div class="insurance-results" id="insuranceResults">
+                    <div class="sim-result-cards" style="margin-top: 1rem;">
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Monthly Insurance Cost</span>
+                            <span class="sim-result-value" id="insTotalMonthly">-</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Annual Insurance Spend</span>
+                            <span class="sim-result-value" id="insTotalAnnual">-</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Lifetime Cost to FIRE</span>
+                            <span class="sim-result-value" id="insLifetimeCost">-</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">FIRE Delay from Insurance</span>
+                            <span class="sim-result-value" id="insFireDelay">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tuition Forecasting -->
+            <div class="tuition-section" style="margin-top: 3rem;">
+                <h2 class="sub-heading">🎓 Tuition Fee Forecasting</h2>
+                <p class="section-subtitle" style="margin-bottom: 1.5rem;">Estimate education costs for 3 children with flexible inputs - update as you get concrete figures</p>
+
+                <div class="tuition-grid">
+                    <div class="tuition-child-card" id="tuitionChild1">
+                        <h3>👶 Child 1</h3>
+                        <div class="tuition-inputs">
+                            <div class="input-group">
+                                <label for="child1BirthYear">Expected Birth Year</label>
+                                <input type="number" id="child1BirthYear" value="2032" min="2028" max="2040" step="1">
+                            </div>
+                            <div class="input-group">
+                                <label for="child1PrimaryAnnual">Primary School (Annual KES)</label>
+                                <input type="number" id="child1PrimaryAnnual" value="150000" min="0" step="10000">
+                                <span class="input-hint">8 years, ages 6-13</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="child1SecondaryAnnual">Secondary School (Annual KES)</label>
+                                <input type="number" id="child1SecondaryAnnual" value="250000" min="0" step="10000">
+                                <span class="input-hint">4 years, ages 14-17</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="child1UniAnnual">University (Annual KES)</label>
+                                <input type="number" id="child1UniAnnual" value="400000" min="0" step="10000">
+                                <span class="input-hint">4 years, ages 18-21</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tuition-child-card" id="tuitionChild2">
+                        <h3>👶 Child 2</h3>
+                        <div class="tuition-inputs">
+                            <div class="input-group">
+                                <label for="child2BirthYear">Expected Birth Year</label>
+                                <input type="number" id="child2BirthYear" value="2034" min="2028" max="2042" step="1">
+                            </div>
+                            <div class="input-group">
+                                <label for="child2PrimaryAnnual">Primary School (Annual KES)</label>
+                                <input type="number" id="child2PrimaryAnnual" value="150000" min="0" step="10000">
+                            </div>
+                            <div class="input-group">
+                                <label for="child2SecondaryAnnual">Secondary School (Annual KES)</label>
+                                <input type="number" id="child2SecondaryAnnual" value="250000" min="0" step="10000">
+                            </div>
+                            <div class="input-group">
+                                <label for="child2UniAnnual">University (Annual KES)</label>
+                                <input type="number" id="child2UniAnnual" value="400000" min="0" step="10000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tuition-child-card" id="tuitionChild3">
+                        <h3>👶 Child 3</h3>
+                        <div class="tuition-inputs">
+                            <div class="input-group">
+                                <label for="child3BirthYear">Expected Birth Year</label>
+                                <input type="number" id="child3BirthYear" value="2036" min="2028" max="2044" step="1">
+                            </div>
+                            <div class="input-group">
+                                <label for="child3PrimaryAnnual">Primary School (Annual KES)</label>
+                                <input type="number" id="child3PrimaryAnnual" value="150000" min="0" step="10000">
+                            </div>
+                            <div class="input-group">
+                                <label for="child3SecondaryAnnual">Secondary School (Annual KES)</label>
+                                <input type="number" id="child3SecondaryAnnual" value="250000" min="0" step="10000">
+                            </div>
+                            <div class="input-group">
+                                <label for="child3UniAnnual">University (Annual KES)</label>
+                                <input type="number" id="child3UniAnnual" value="400000" min="0" step="10000">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tuition-inflation-note">
+                    <div class="input-group" style="max-width:300px;">
+                        <label for="tuitionInflation">Education Inflation Rate (%)</label>
+                        <input type="number" id="tuitionInflation" value="8" min="3" max="15" step="1">
+                        <span class="input-hint">Education inflation typically exceeds CPI by 2-3%</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="forecastTuition()" style="margin-top: 1rem;">🎓 Forecast Tuition Costs</button>
+
+                <!-- Tuition Results -->
+                <div class="tuition-results" id="tuitionResults" style="margin-top: 1.5rem;">
+                    <div class="sim-result-cards">
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Total Education Cost (3 children)</span>
+                            <span class="sim-result-value" id="tuitionTotal">-</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Inflation-Adjusted Total</span>
+                            <span class="sim-result-value" id="tuitionInflatedTotal">-</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Required Monthly Savings (from now)</span>
+                            <span class="sim-result-value" id="tuitionMonthlySavings">-</span>
+                        </div>
+                        <div class="sim-result-card">
+                            <span class="sim-result-label">Peak Annual Fee Year</span>
+                            <span class="sim-result-value" id="tuitionPeakYear">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tuition Timeline Chart -->
+                <div class="chart-card" style="margin-top: 1.5rem;">
+                    <div class="chart-header">
+                        <h3>Education Cost Timeline by Year</h3>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="tuitionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
