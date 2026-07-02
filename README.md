@@ -114,7 +114,7 @@ Once running locally, the dashboard loads with a cinematic loading animation and
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/FIRE-Kenya.git
+   git clone https://github.com/CalKK/FIRE-Kenya.git
    cd FIRE-Kenya
    ```
 
