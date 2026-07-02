@@ -617,6 +617,3 @@ SOFTWARE.
 
 ---
 
-<p align="center">
-  Built with 🔥 for the Kenyan investor pursuing Financial Independence
-</p>
