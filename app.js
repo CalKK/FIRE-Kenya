@@ -1767,124 +1767,141 @@ async function exportToPDF() {
     const progress = document.getElementById('exportProgress');
     const progressFill = document.getElementById('exportProgressFill');
     const progressText = document.getElementById('exportProgressText');
-    const titleInput = document.getElementById('pdfTitle').value || 'FIRE Kenya - Financial Independence Report';
+    const titleInput = document.getElementById('pdfTitle');
 
-    btn.disabled = true;
-    progress.style.display = 'block';
+    // Fallback in case the input doesn't exist in the DOM
+    const titleText = titleInput && titleInput.value ? titleInput.value : 'FIRE Kenya - Financial Independence Report';
 
-    // Setup jsPDF
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
+    // FIX 1: Dependency Validation
+    // Immediately abort and notify the user if required libraries are missing
+    if (!window.jspdf || !window.html2canvas) {
+        alert("Required libraries (jsPDF or html2canvas) failed to load. Please check your connection and refresh.");
+        return;
+    }
 
-    // Add Cover Page
-    doc.setFillColor(10, 14, 26); // var(--bg-primary)
-    doc.rect(0, 0, pageWidth, pageHeight, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(24);
-    doc.text(titleInput, pageWidth / 2, 100, { align: 'center' });
-    doc.setFontSize(14);
-    doc.text('Personalized Financial Projection & FIRE Plan', pageWidth / 2, 115, { align: 'center' });
-    doc.setFontSize(10);
-    doc.setTextColor(139, 146, 168);
-    const dateStr = new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    doc.text(`Generated on ${dateStr}`, pageWidth / 2, 280, { align: 'center' });
+    // Lock UI
+    if (btn) btn.disabled = true;
+    if (progress) progress.style.display = 'block';
 
-    // Section checklist mapping
-    const checklistMapping = [
-        { id: 'overview', chkId: 'chk-overview', label: 'Overview & KPIs' },
-        { id: 'accounts', chkId: 'chk-accounts', label: 'Account Balances' },
-        { id: 'timeline', chkId: 'chk-timeline', label: 'Financial Timeline' },
-        { id: 'investments', chkId: 'chk-investments', label: 'Investment Vehicles' },
-        { id: 'fire-calc', chkId: 'chk-fire-calc', label: 'FIRE Calculator' },
-        { id: 'simulator', chkId: 'chk-simulator', label: 'Scenario Simulator' },
-        { id: 'decision-lab', chkId: 'chk-decision-lab', label: 'Decision Lab' },
-        { id: 'reverse-fire', chkId: 'chk-reverse-fire', label: 'Reverse FIRE' },
-        { id: 'market-trends', chkId: 'chk-markets', label: 'Market Trends' },
-        { id: 'protection', chkId: 'chk-protection', label: 'Protection & Education' }
-    ];
+    // FIX 2: Global Try...Catch...Finally block
+    // Ensures the UI is ALWAYS unlocked, even if a fatal error occurs
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
 
-    // Filter checked sections
-    const sectionsToCapture = checklistMapping.filter(item => {
-        const chk = document.getElementById(item.chkId);
-        return chk ? chk.checked : true;
-    });
+        // Add Cover Page
+        doc.setFillColor(10, 14, 26);
+        doc.rect(0, 0, pageWidth, pageHeight, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.text(titleText, pageWidth / 2, 100, { align: 'center' });
+        doc.setFontSize(14);
+        doc.text('Personalized Financial Projection & FIRE Plan', pageWidth / 2, 115, { align: 'center' });
+        doc.setFontSize(10);
+        doc.setTextColor(139, 146, 168);
+        const dateStr = new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        doc.text(`Generated on ${dateStr}`, pageWidth / 2, 280, { align: 'center' });
 
-    let currentStep = 0;
+        const checklistMapping = [
+            { id: 'overview', chkId: 'chk-overview', label: 'Overview & KPIs' },
+            { id: 'accounts', chkId: 'chk-accounts', label: 'Account Balances' },
+            { id: 'timeline', chkId: 'chk-timeline', label: 'Financial Timeline' },
+            { id: 'investments', chkId: 'chk-investments', label: 'Investment Vehicles' },
+            { id: 'fire-calc', chkId: 'chk-fire-calc', label: 'FIRE Calculator' },
+            { id: 'simulator', chkId: 'chk-simulator', label: 'Scenario Simulator' },
+            { id: 'decision-lab', chkId: 'chk-decision-lab', label: 'Decision Lab' },
+            { id: 'reverse-fire', chkId: 'chk-reverse-fire', label: 'Reverse FIRE' },
+            { id: 'market-trends', chkId: 'chk-markets', label: 'Market Trends' },
+            { id: 'protection', chkId: 'chk-protection', label: 'Protection & Education' }
+        ];
 
-    for (const section of sectionsToCapture) {
-        progressText.textContent = `Capturing section: ${section.label}...`;
-        progressFill.style.width = `${(currentStep / sectionsToCapture.length) * 100}%`;
+        const sectionsToCapture = checklistMapping.filter(item => {
+            const chk = document.getElementById(item.chkId);
+            return chk ? chk.checked : true;
+        });
 
-        const element = document.getElementById(section.id);
-        if (element) {
-            const wasActive = element.classList.contains('active');
+        let currentStep = 0;
 
-            if (!wasActive) {
-                document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-                element.style.display = 'block';
+        // FIX 3: Store the originally active section to restore it cleanly later
+        const originalActiveSection = document.querySelector('.section.active');
+
+        for (const section of sectionsToCapture) {
+            if (progressText) progressText.textContent = `Capturing section: ${section.label}...`;
+            if (progressFill) progressFill.style.width = `${(currentStep / sectionsToCapture.length) * 100}%`;
+
+            const element = document.getElementById(section.id);
+
+            if (element) {
+                // FIX 4: Use native class toggling instead of inline styles
+                // This prevents Chart.js canvases from collapsing to 0x0
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                element.classList.add('active');
+
+                // Increase timeout slightly to guarantee Chart.js resize animations complete
+                await new Promise(r => setTimeout(r, 350));
+
+                try {
+                    const canvas = await html2canvas(element, {
+                        scale: 1.5,
+                        useCORS: true,
+                        backgroundColor: '#0a0e1a',
+                        logging: false,
+                        // FIX 5: Explicitly define width and height to prevent overflow clipping
+                        width: element.scrollWidth,
+                        height: element.scrollHeight
+                    });
+
+                    doc.addPage();
+                    doc.setFillColor(17, 24, 39);
+                    doc.rect(0, 0, pageWidth, 20, 'F');
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(10);
+                    doc.text('FIRE Kenya | Financial Independence Plan', 10, 13);
+
+                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                    const imgWidth = pageWidth - 20;
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                    const finalHeight = Math.min(imgHeight, pageHeight - 35);
+                    const finalWidth = (canvas.width * finalHeight) / canvas.height;
+                    const xOffset = (pageWidth - finalWidth) / 2;
+
+                    doc.addImage(imgData, 'JPEG', xOffset, 25, finalWidth, finalHeight);
+
+                    doc.setFontSize(8);
+                    doc.setTextColor(139, 146, 168);
+                    doc.text(`Page ${doc.internal.getNumberOfPages()}`, pageWidth - 15, pageHeight - 10, { align: 'right' });
+                } catch (err) {
+                    console.error(`Error capturing ${section.id}:`, err);
+                    // Continues to the next section rather than breaking the entire export
+                }
             }
-
-            // Wait for charts/rendering
-            await new Promise(r => setTimeout(r, 200));
-
-            try {
-                const canvas = await html2canvas(element, {
-                    scale: 1.5,
-                    useCORS: true,
-                    backgroundColor: '#0a0e1a', // Match theme bg
-                    logging: false
-                });
-
-                doc.addPage();
-
-                // Add header to each page
-                doc.setFillColor(17, 24, 39);
-                doc.rect(0, 0, pageWidth, 20, 'F');
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(10);
-                doc.text('FIRE Kenya | Financial Independence Plan', 10, 13);
-
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                const imgWidth = pageWidth - 20; // 10mm margins
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-                const finalHeight = Math.min(imgHeight, pageHeight - 35);
-                const finalWidth = (canvas.width * finalHeight) / canvas.height;
-                const xOffset = (pageWidth - finalWidth) / 2;
-
-                doc.addImage(imgData, 'JPEG', xOffset, 25, finalWidth, finalHeight);
-
-                doc.setFontSize(8);
-                doc.setTextColor(139, 146, 168);
-                doc.text(`Page ${doc.internal.getNumberOfPages()}`, pageWidth - 15, pageHeight - 10, { align: 'right' });
-            } catch (err) {
-                console.error(`Error capturing ${section.id}:`, err);
-            }
-
-            if (!wasActive) {
-                element.style.display = '';
-                document.querySelectorAll('.section').forEach(s => s.style.display = '');
-            }
+            currentStep++;
         }
-        currentStep++;
-    }
 
-    // Ensure the currently active section is visible again
-    const activeLink = document.querySelector('.nav-link.active');
-    if (activeLink) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(activeLink.dataset.section).classList.add('active');
-    }
+        // Restore the original UI state safely
+        if (originalActiveSection) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            originalActiveSection.classList.add('active');
+        }
 
-    progressText.textContent = "Finalizing PDF...";
-    progressFill.style.width = '100%';
+        if (progressText) progressText.textContent = "Finalizing PDF...";
+        if (progressFill) progressFill.style.width = '100%';
 
-    // Download
-    setTimeout(() => {
-        doc.save(titleInput.toLowerCase().replace(/\s+/g, '-') + '.pdf');
+        // Allow UI to repaint the progress bar to 100% before triggering the blocking save dialog
+        await new Promise(r => setTimeout(r, 200));
+        doc.save(titleText.toLowerCase().replace(/\s+/g, '-') + '.pdf');
+
+    } catch (error) {
+        // Catch any fatal errors (e.g., memory limits exceeded, corrupted DOM)
+        console.error("Critical error during PDF generation:", error);
+        alert("An unexpected error occurred while generating the PDF. Please check the console for details.");
+    } finally {
+        // FIX 6: The Finally Block
+        // This guarantees the UI releases its loading state, breaking the indefinite hang.
+        if (btn) btn.disabled = false;
         closeExportModal();
-        btn.disabled = false;
-    }, 500);
+    }
 }
