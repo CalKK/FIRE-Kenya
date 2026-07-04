@@ -23,12 +23,12 @@ const PERSONAL = {
     jobStartDate: '2026-09',
     jobEndDate: '2028-06',
     jobSalary: 59000,
-    
+
     // Purchases
     suitCost: 6995,        // with next (first job) salary
     phoneCost: 80000,      // by Oct 2026 (first paycheck + 21K top-up)
     phoneTopUp: 21000,
-    
+
     // Housing
     moveOutDate: '2030-12',
     monthlyRent: 40000,
@@ -42,6 +42,7 @@ const PERSONAL = {
     // Savings strategy
     weeklySavingsStart: '2026-10',
     weeklySavings: 350,
+    monthlyAirtime: 1000,
 
     // Kenya Economic Context
     inflation: 6.0,
@@ -52,6 +53,41 @@ const PERSONAL = {
     nseReturn: 15,
     privateEquityReturn: 20,
 };
+
+// ==================== OFF-BOOK INCOME ====================
+let offBookIncome = 0;
+let offBookType = 'monthly';
+
+function announceToScreenReader(msg) {
+    const el = document.getElementById('announcement-region');
+    if (el) {
+        el.textContent = msg;
+    }
+}
+
+function applyOffBookIncome() {
+    const amount = parseFloat(document.getElementById('offBookAmount').value) || 0;
+    offBookType = document.getElementById('offBookType').value;
+    offBookIncome = amount;
+
+    if (offBookType === 'onetime') {
+        document.getElementById('offBookDisplay').textContent = formatKES(offBookIncome) + ' (One-time)';
+    } else {
+        document.getElementById('offBookDisplay').textContent = formatKES(offBookIncome) + '/mo';
+    }
+
+    // Announce for screen readers
+    announceToScreenReader(`Off the book income applied: ${formatKES(offBookIncome)} (${offBookType === 'onetime' ? 'one-time' : 'monthly recurring'})`);
+
+    // Re-trigger all calculations and charts
+    updateFlowAmounts(PERSONAL.currentStipend);
+    initBudgetDoughnut();
+    initNetWorthChart();
+    recalculateFIRE();
+    runSimulation();
+    reverseEngineerFIRE();
+    simulateMarketScenario();
+}
 
 // ==================== FORMATTING HELPERS ====================
 function formatKES(amount, compact = false) {
@@ -79,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateFireTypes();
     initSimulatorSliders();
     populateWealthAvenues();
-    
+
     // Initialize all charts after a small delay to ensure DOM is ready
     setTimeout(() => {
         initNetWorthChart();
@@ -103,14 +139,18 @@ function initLoadingScreen() {
 
 function initNavigation() {
     const links = document.querySelectorAll('.nav-link');
-    links.forEach(link => {
+    links.forEach((link, idx) => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const sectionId = link.dataset.section;
-            
+
             // Update active link
-            links.forEach(l => l.classList.remove('active'));
+            links.forEach(l => {
+                l.classList.remove('active');
+                l.removeAttribute('aria-current');
+            });
             link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
 
             // Show section
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -121,10 +161,33 @@ function initNavigation() {
                 target.style.animation = 'none';
                 target.offsetHeight;
                 target.style.animation = '';
+
+                // Move focus to section for screen readers
+                target.setAttribute('tabindex', '-1');
+                target.focus();
             }
 
             // Close mobile nav
             document.getElementById('sidebar').classList.remove('open');
+        });
+
+        // Keyboard navigation (arrow keys to move focus)
+        link.addEventListener('keydown', (e) => {
+            let targetIdx = -1;
+            if (e.key === 'ArrowDown') {
+                targetIdx = (idx + 1) % links.length;
+            } else if (e.key === 'ArrowUp') {
+                targetIdx = (idx - 1 + links.length) % links.length;
+            } else if (e.key === 'Home') {
+                targetIdx = 0;
+            } else if (e.key === 'End') {
+                targetIdx = links.length - 1;
+            }
+
+            if (targetIdx !== -1) {
+                e.preventDefault();
+                links[targetIdx].focus();
+            }
         });
     });
 }
@@ -234,7 +297,7 @@ function populateTimeline() {
     const events = [
         { date: 'Jul 2026', title: '📍 Now - Current Position', desc: 'Stipend income of KES 15,480/month. Total savings: KES 173,000. Investment portfolio: KES 0.', amount: 'Savings: KES 173,000', type: 'current' },
         { date: 'Sep 2026', title: '💼 Start Job', desc: 'Net salary: KES 59,000/month. Buy KES 6,995 suit from first paycheck.', amount: 'Salary: KES 59,000/mo', type: 'milestone' },
-        { date: 'Oct 2026', title: '📱 Buy Phone', desc: 'KES 80,000 phone. First paycheck (KES 59,000) + KES 21,000 top-up from savings. Start weekly KES 350 savings.', amount: 'Phone: KES 80,000', type: 'milestone' },
+        { date: 'Oct 2026', title: '📱 Buy Phone', desc: 'KES 80,000 phone. First paycheck (KES 59,000) + KES 21,000 top-up from savings. Start weekly KES 350 savings to MMF.', amount: 'Phone: KES 80,000', type: 'milestone' },
         { date: 'Oct 2026', title: '💰 Weekly Savings Begin', desc: 'KES 350/week = KES 1,400/month deposited into Money Market Fund.', amount: 'KES 350/week', type: '' },
         { date: 'Jan 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
         { date: 'Mar 2027', title: '📊 First T-Bill Purchase', desc: 'MMF balance reaches KES 50,000. Roll into 91-day Treasury Bills at ~8.5% yield.', amount: 'T-Bill: KES 50,000', type: '' },
@@ -305,13 +368,18 @@ let netWorthChart, budgetDoughnutChart, portfolioAllocChart, investGrowthChart, 
 
 // ---- Net Worth Projection ----
 function initNetWorthChart() {
-    const ctx = document.getElementById('netWorthChart').getContext('2d');
+    const canvas = document.getElementById('netWorthChart');
+    if (!canvas) return;
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) existingChart.destroy();
+
+    const ctx = canvas.getContext('2d');
     const { labels, projected, fireTarget } = projectNetWorth();
-    
+
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
     gradient.addColorStop(0, 'rgba(99, 102, 241, 0.25)');
     gradient.addColorStop(1, 'rgba(99, 102, 241, 0.01)');
-    
+
     netWorthChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -360,17 +428,19 @@ function projectNetWorth() {
     const labels = [];
     const projected = [];
     const fireTarget = [];
-    
+
     let netWorth = PERSONAL.currentSavings;
+    if (offBookType === 'onetime') netWorth += offBookIncome;
+
     let monthlySalary = PERSONAL.currentStipend;
     let savingsRate = 0.30;
     let investReturn = 0.12;
     let rent = 0;
     const fireNum = 18000000;
-    
+
     for (let year = 2026; year <= 2052; year++) {
         labels.push(year.toString());
-        
+
         // Adjust salary/phases
         if (year >= 2026 && year < 2028) {
             if (year >= 2027) monthlySalary = PERSONAL.jobSalary;
@@ -389,10 +459,11 @@ function projectNetWorth() {
             monthlySalary = 450000;
         }
 
+        const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
         // Annual investment growth + monthly contributions
-        const annualContribution = (monthlySalary - rent) * savingsRate * 12;
-        netWorth = netWorth * (1 + investReturn) + annualContribution;
-        
+        const annualContribution = (monthlySalary + activeOffBook - rent) * savingsRate * 12;
+        netWorth = netWorth * (1 + investReturn) + annualContribution - (PERSONAL.monthlyAirtime * 12);
+
         // Big purchases
         if (year === 2026) netWorth -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (year === 2030) netWorth -= 1250000; // car
@@ -400,14 +471,19 @@ function projectNetWorth() {
         projected.push(Math.max(0, Math.round(netWorth)));
         fireTarget.push(fireNum);
     }
-    
+
     return { labels, projected, fireTarget };
 }
 
 // ---- Budget Doughnut ----
 function initBudgetDoughnut() {
-    const ctx = document.getElementById('budgetDoughnut').getContext('2d');
-    
+    const canvas = document.getElementById('budgetDoughnut');
+    if (!canvas) return;
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) existingChart.destroy();
+
+    const ctx = canvas.getContext('2d');
+
     budgetDoughnutChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -441,7 +517,7 @@ function initBudgetDoughnut() {
                     ...chartDefaults.plugins.tooltip,
                     callbacks: {
                         label: ctx => {
-                            const income = PERSONAL.currentStipend;
+                            const income = PERSONAL.currentStipend + (offBookType === 'onetime' ? offBookIncome / 12 : offBookIncome);
                             const val = Math.round(income * ctx.parsed / 100);
                             return ctx.label + ': ' + formatKES(val);
                         }
@@ -454,8 +530,13 @@ function initBudgetDoughnut() {
 
 // ---- Portfolio Allocation ----
 function initPortfolioAllocationChart() {
-    const ctx = document.getElementById('portfolioAllocationChart').getContext('2d');
-    
+    const canvas = document.getElementById('portfolioAllocationChart');
+    if (!canvas) return;
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) existingChart.destroy();
+
+    const ctx = canvas.getContext('2d');
+
     portfolioAllocChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -502,18 +583,23 @@ function initPortfolioAllocationChart() {
 
 // ---- Investment Growth by Vehicle ----
 function initInvestmentGrowthChart() {
-    const ctx = document.getElementById('investmentGrowthChart').getContext('2d');
-    
+    const canvas = document.getElementById('investmentGrowthChart');
+    if (!canvas) return;
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) existingChart.destroy();
+
+    const ctx = canvas.getContext('2d');
+
     const years = [];
     for (let y = 2026; y <= 2052; y++) years.push(y.toString());
-    
+
     // Simulate growth of each vehicle
     const mmf = growAsset(years, 5000, 200, 0.10);
     const tbills = growAsset(years, 0, 300, 0.085, 2027);
     const tbonds = growAsset(years, 0, 500, 0.125, 2027);
     const stocks = growAsset(years, 0, 400, 0.15, 2027);
     const sacco = growAsset(years, 0, 200, 0.14, 2027);
-    
+
     investGrowthChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -556,7 +642,7 @@ function initInvestmentGrowthChart() {
 function growAsset(years, initialInvest, monthlyAdd, annualRate, startYear = 2026) {
     const data = [];
     let balance = 0;
-    
+
     years.forEach((y, i) => {
         const yr = parseInt(y);
         if (yr < startYear) {
@@ -573,11 +659,11 @@ function growAsset(years, initialInvest, monthlyAdd, annualRate, startYear = 202
         if (yr >= 2035) monthly *= 2.5;
         if (yr >= 2040) monthly *= 3;
         if (yr >= 2045) monthly *= 3.5;
-        
+
         balance = balance * (1 + annualRate) + monthly * 12;
         data.push(Math.round(balance));
     });
-    
+
     return data;
 }
 
@@ -589,56 +675,60 @@ function recalculateFIRE() {
     const inflationRate = parseFloat(document.getElementById('fireInflation').value) / 100 || 0.06;
     const monthlyInvest = parseFloat(document.getElementById('fireMonthlyInvest').value) || 17700;
     const retireAge = parseInt(document.getElementById('fireRetireAge').value) || 50;
-    
+
     // FIRE Number = Annual Expenses / Withdrawal Rate
     // Adjust for inflation to retirement
     const yearsToRetire = retireAge - PERSONAL.currentAge;
     const inflatedExpenses = annualExpenses * Math.pow(1 + inflationRate, yearsToRetire);
     const fireNumber = inflatedExpenses / withdrawalRate;
-    
+
     // Update FIRE metrics
+    const activeNetWorth = PERSONAL.currentSavings + (offBookType === 'onetime' ? offBookIncome : 0);
     document.getElementById('fireNumber').textContent = formatKES(Math.round(fireNumber));
-    document.getElementById('fireNetWorth').textContent = formatKES(PERSONAL.currentSavings);
-    const progress = (PERSONAL.currentSavings / fireNumber) * 100;
+    document.getElementById('fireNetWorth').textContent = formatKES(activeNetWorth);
+    const progress = (activeNetWorth / fireNumber) * 100;
     document.getElementById('fireProgressPct').textContent = formatPct(progress) + ' of FIRE';
     document.getElementById('fireYears').textContent = yearsToRetire;
-    
+
     // Update overview KPI
     document.getElementById('kpiFire').textContent = formatPct(progress);
     document.getElementById('kpiFireNote').textContent = `${yearsToRetire} years to FIRE`;
-    
+
     // Simulate year-by-year to find FIRE crossover
     const labels = [];
     const portfolioData = [];
     const fireTargetData = [];
     let portfolio = PERSONAL.currentSavings;
+    if (offBookType === 'onetime') portfolio += offBookIncome;
     let monthlySaving = monthlyInvest;
     let fireAchievedAge = null;
     const realReturn = (1 + expectedReturn) / (1 + inflationRate) - 1;
-    
+
     for (let age = PERSONAL.currentAge; age <= Math.max(retireAge + 5, 55); age++) {
         labels.push(`Age ${age}`);
-        
+
         // Scale monthly savings with career growth (rough model)
         if (age >= 26) monthlySaving = monthlyInvest * 1.3;
         if (age >= 28) monthlySaving = monthlyInvest * 2;
         if (age >= 32) monthlySaving = monthlyInvest * 3;
         if (age >= 38) monthlySaving = monthlyInvest * 4;
         if (age >= 44) monthlySaving = monthlyInvest * 5;
-        
-        portfolio = portfolio * (1 + expectedReturn) + monthlySaving * 12;
-        
+
+        const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
+        const activeMonthlySaving = monthlySaving + (activeOffBook * 0.30);
+        portfolio = portfolio * (1 + expectedReturn) + activeMonthlySaving * 12 - (PERSONAL.monthlyAirtime * 12);
+
         // Adjust FIRE number for inflation each year
         const yearlyFireNum = (annualExpenses * Math.pow(1 + inflationRate, age - PERSONAL.currentAge)) / withdrawalRate;
-        
+
         portfolioData.push(Math.round(portfolio));
         fireTargetData.push(Math.round(yearlyFireNum));
-        
+
         if (!fireAchievedAge && portfolio >= yearlyFireNum) {
             fireAchievedAge = age;
         }
     }
-    
+
     // Update on-track status
     const onTrackEl = document.getElementById('fireOnTrack');
     if (fireAchievedAge && fireAchievedAge <= retireAge) {
@@ -651,21 +741,21 @@ function recalculateFIRE() {
         onTrackEl.textContent = 'Increase savings or returns ❌';
         onTrackEl.style.color = 'var(--accent-danger)';
     }
-    
+
     // Update FIRE Projection Chart
     updateFireProjectionChart(labels, portfolioData, fireTargetData, fireAchievedAge);
-    
+
     // Update FIRE Types
     updateFireTypes(annualExpenses, fireNumber);
 }
 
 function updateFireProjectionChart(labels, portfolioData, fireTargetData, fireAchievedAge) {
     const ctx = document.getElementById('fireProjectionChart').getContext('2d');
-    
+
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
     gradient.addColorStop(0, 'rgba(99, 102, 241, 0.2)');
     gradient.addColorStop(1, 'rgba(99, 102, 241, 0.01)');
-    
+
     // Color portfolio green after FIRE is achieved
     const borderColors = labels.map((_, i) => {
         if (fireAchievedAge) {
@@ -674,9 +764,9 @@ function updateFireProjectionChart(labels, portfolioData, fireTargetData, fireAc
         }
         return '#6366f1';
     });
-    
+
     if (fireProjectionChart) fireProjectionChart.destroy();
-    
+
     fireProjectionChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -801,74 +891,76 @@ function runSimulation() {
     const annualReturn = parseFloat(document.getElementById('simReturn').value) / 100;
     const salaryGrowth = parseFloat(document.getElementById('simGrowth').value) / 100;
     const children = parseInt(document.getElementById('simChildren').value);
-    
-    const monthlyInvest = (salary - rent) * savingsRate;
+
+    const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
+    const monthlyInvest = (salary + activeOffBook - rent) * savingsRate;
     document.getElementById('simMonthlySavings').textContent = formatKES(Math.round(monthlyInvest));
-    
+
     // Simulate year by year
     let portfolio = PERSONAL.currentSavings;
+    if (offBookType === 'onetime') portfolio += offBookIncome;
     let currentSalary = salary;
     let currentRent = rent;
     const labels = [];
     const data = [];
     const fireData = [];
     let fireAge = null;
-    
+
     // Expenses model (family of 5 baseline scaled by children)
     const baseMonthlyExpense = 60000 + (children * 15000);
     const annualExpense = baseMonthlyExpense * 12;
     const fireNum = annualExpense * 25;
-    
+
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
         labels.push(`Age ${age}`);
-        
-        const yearlyContrib = Math.max(0, (currentSalary - currentRent) * savingsRate * 12);
-        portfolio = portfolio * (1 + annualReturn) + yearlyContrib;
-        
+
+        const yearlyContrib = Math.max(0, (currentSalary + activeOffBook - currentRent) * savingsRate * 12);
+        portfolio = portfolio * (1 + annualReturn) + yearlyContrib - (PERSONAL.monthlyAirtime * 12);
+
         // Deductions
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000; // car
-        
+
         data.push(Math.round(Math.max(0, portfolio)));
-        
+
         // Inflation-adjusted FIRE number
         const inflAdjFireNum = fireNum * Math.pow(1.06, age - PERSONAL.currentAge);
         fireData.push(Math.round(inflAdjFireNum));
-        
+
         if (!fireAge && portfolio >= inflAdjFireNum) fireAge = age;
-        
+
         // Salary growth
         currentSalary *= (1 + salaryGrowth);
         // Rent growth
         if (currentRent > 0) currentRent *= 1.05;
     }
-    
+
     // Update results
     const atRetire = data[PERSONAL.retireAge - PERSONAL.currentAge] || data[data.length - 1];
     document.getElementById('simPortfolioAt50').textContent = formatKES(atRetire, true);
-    
+
     const fireNumAt50 = fireData[PERSONAL.retireAge - PERSONAL.currentAge] || fireData[fireData.length - 1];
     const achieved = atRetire >= fireNumAt50;
-    
+
     document.getElementById('simFireAchieved').textContent = achieved ? '✅ Yes!' : '❌ Not yet';
     document.getElementById('simFireAchieved').style.color = achieved ? 'var(--accent-success)' : 'var(--accent-danger)';
-    
+
     document.getElementById('simFireAge').textContent = fireAge ? `Age ${fireAge}` : '> 55';
     document.getElementById('simFireAge').style.color = fireAge && fireAge <= 50 ? 'var(--accent-success)' : 'var(--accent-warning)';
-    
+
     // Chart
     updateSimChart(labels, data, fireData);
 }
 
 function updateSimChart(labels, data, fireData) {
     const ctx = document.getElementById('simChart').getContext('2d');
-    
+
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
     gradient.addColorStop(0, 'rgba(99, 102, 241, 0.2)');
     gradient.addColorStop(1, 'rgba(99, 102, 241, 0.01)');
-    
+
     if (simChart) simChart.destroy();
-    
+
     simChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -956,19 +1048,23 @@ function loadPreset(name) {
 // ==================== UPDATE FLOW AMOUNTS ====================
 // Updates when account section is shown
 function updateFlowAmounts(income) {
-    const essentials = Math.round(income * 0.50);
-    const invest = Math.round(income * 0.30);
-    const fun = Math.round(income * 0.20);
-    
-    document.getElementById('flowIncome').textContent = formatKES(income);
-    document.getElementById('flowEssentials').textContent = formatKES(essentials);
+    const flowOffBook = (offBookType === 'onetime') ? (offBookIncome / 12) : offBookIncome;
+    const totalIncome = income + flowOffBook;
+    const essentialsRaw = Math.round(totalIncome * 0.50);
+    const essentials = essentialsRaw - PERSONAL.monthlyAirtime;
+    const invest = Math.round(totalIncome * 0.30);
+    const fun = Math.round(totalIncome * 0.20);
+
+    document.getElementById('flowIncome').textContent = formatKES(totalIncome);
+    document.getElementById('flowEssentials').innerHTML = `${formatKES(essentialsRaw)} <span style="font-size:0.75rem;opacity:0.8;">(incl. KES 1K Airtime)</span>`;
     document.getElementById('flowInvest').textContent = formatKES(invest);
     document.getElementById('flowFun').textContent = formatKES(fun);
-    
-    document.getElementById('incomeBalance').textContent = formatKES(income);
-    document.getElementById('incomeInflow').textContent = formatKES(income);
+
+    document.getElementById('incomeBalance').textContent = formatKES(totalIncome);
+    document.getElementById('incomeInflow').textContent = formatKES(totalIncome);
     document.getElementById('essentialsBalance').textContent = formatKES(essentials);
     document.getElementById('entertainBalance').textContent = formatKES(fun);
+    document.getElementById('investMonthlyAlloc').textContent = formatKES(invest);
 }
 
 // ==================== 1. DECISION IMPACT LAB ====================
@@ -977,11 +1073,13 @@ let decisionChart;
 
 function computeBaselineTrajectory() {
     let portfolio = PERSONAL.currentSavings;
+    if (offBookType === 'onetime') portfolio += offBookIncome;
+
     let salary = PERSONAL.currentStipend;
     const data = [];
     const returnRate = 0.12;
     const savingsRate = 0.30;
-    
+
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
         if (age >= 24) salary = PERSONAL.jobSalary;
         if (age >= 26) salary = 100000;
@@ -989,16 +1087,17 @@ function computeBaselineTrajectory() {
         if (age >= 33) salary = 250000;
         if (age >= 38) salary = 350000;
         if (age >= 44) salary = 450000;
-        
+
         let rent = 0;
         if (age >= 28) rent = 40000;
         if (age >= 38) rent = 0; // own property
-        
-        portfolio = portfolio * (1 + returnRate) + Math.max(0, (salary - rent)) * savingsRate * 12;
-        
+
+        const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
+        portfolio = portfolio * (1 + returnRate) + Math.max(0, (salary + activeOffBook - rent)) * savingsRate * 12 - (PERSONAL.monthlyAirtime * 12);
+
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000;
-        
+
         data.push({ age, value: Math.max(0, Math.round(portfolio)) });
     }
     return data;
@@ -1010,20 +1109,24 @@ function analyzeDecision() {
     const type = document.getElementById('decisionType').value;
     const atAge = parseInt(document.getElementById('decisionAge').value) || 24;
     const duration = parseInt(document.getElementById('decisionDuration').value) || 1;
-    
+
     decisionLog.push({ name, amount, type, atAge, duration });
     renderDecisionLog();
-    
+    calculateDecisionImpact();
+}
+
+function calculateDecisionImpact() {
     // Compute baseline
     const baseline = computeBaselineTrajectory();
-    
+
     // Compute with all decisions applied
     let portfolio = PERSONAL.currentSavings;
+    if (offBookType === 'onetime') portfolio += offBookIncome;
     let salary = PERSONAL.currentStipend;
     const withDecision = [];
     const returnRate = 0.12;
     const savingsRate = 0.30;
-    
+
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
         if (age >= 24) salary = PERSONAL.jobSalary;
         if (age >= 26) salary = 100000;
@@ -1031,11 +1134,11 @@ function analyzeDecision() {
         if (age >= 33) salary = 250000;
         if (age >= 38) salary = 350000;
         if (age >= 44) salary = 450000;
-        
+
         let rent = 0;
         if (age >= 28) rent = 40000;
         if (age >= 38) rent = 0;
-        
+
         // Apply all logged decisions
         decisionLog.forEach(d => {
             if (d.type === 'expense' && age === d.atAge) {
@@ -1052,45 +1155,51 @@ function analyzeDecision() {
                 salary += d.amount;
             }
         });
-        
-        portfolio = portfolio * (1 + returnRate) + Math.max(0, (salary - rent)) * savingsRate * 12;
-        
+
+        const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
+        portfolio = portfolio * (1 + returnRate) + Math.max(0, (salary + activeOffBook - rent)) * savingsRate * 12 - (PERSONAL.monthlyAirtime * 12);
+
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000;
-        
+
         withDecision.push({ age, value: Math.max(0, Math.round(portfolio)) });
     }
-    
+
     // Update chart
     const labels = baseline.map(d => `Age ${d.age}`);
     const baselineData = baseline.map(d => d.value);
     const decisionData = withDecision.map(d => d.value);
-    
-    const ctx = document.getElementById('decisionChart').getContext('2d');
-    if (decisionChart) decisionChart.destroy();
-    
-    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.15)');
-    gradient.addColorStop(1, 'rgba(99, 102, 241, 0.01)');
-    
-    decisionChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [
-                { label: 'Baseline', data: baselineData, borderColor: '#6366f1', backgroundColor: gradient, borderWidth: 2.5, fill: true, tension: 0.4, pointRadius: 0 },
-                { label: 'With Decision', data: decisionData, borderColor: '#fbbf24', borderWidth: 2.5, fill: false, tension: 0.4, pointRadius: 0, borderDash: [5, 3] }
-            ]
-        },
-        options: {
-            ...chartDefaults,
-            plugins: {
-                ...chartDefaults.plugins,
-                tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: ctx => ctx.dataset.label + ': ' + formatKES(ctx.parsed.y, true) } }
+
+    const canvas = document.getElementById('decisionChart');
+    if (canvas) {
+        const existingChart = Chart.getChart(canvas);
+        if (existingChart) existingChart.destroy();
+
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.15)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0.01)');
+
+        decisionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    { label: 'Baseline', data: baselineData, borderColor: '#6366f1', backgroundColor: gradient, borderWidth: 2.5, fill: true, tension: 0.4, pointRadius: 0 },
+                    { label: 'With Decision', data: decisionData, borderColor: '#fbbf24', borderWidth: 2.5, fill: false, tension: 0.4, pointRadius: 0, borderDash: [5, 3] }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                plugins: {
+                    ...chartDefaults.plugins,
+                    legend: { display: true, position: 'top', align: 'end', labels: { color: '#8b92a8', font: { family: 'Inter', size: 11 }, padding: 16, usePointStyle: true } },
+                    tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: ctx => ctx.dataset.label + ': ' + formatKES(ctx.parsed.y, true) } }
+                }
             }
-        }
-    });
-    
+        });
+    }
+
     // Impact summary
     const at50Idx = 50 - PERSONAL.currentAge;
     const baseAt50 = baselineData[at50Idx] || baselineData[baselineData.length - 1];
@@ -1101,7 +1210,7 @@ function analyzeDecision() {
         if (d.type === 'monthly_expense') return sum + d.amount * 12 * d.duration;
         return sum;
     }, 0);
-    
+
     // Find FIRE age for both
     const annualExpenses = 720000;
     let baseFIREAge = null, decFIREAge = null;
@@ -1111,7 +1220,7 @@ function analyzeDecision() {
         if (!decFIREAge && decisionData[i] >= fireNum) decFIREAge = PERSONAL.currentAge + i;
     }
     const fireDelay = (decFIREAge || 60) - (baseFIREAge || 60);
-    
+
     document.getElementById('impactCost').textContent = formatKES(totalDirectCost);
     document.getElementById('impactCost').style.color = totalDirectCost > 0 ? 'var(--accent-danger)' : 'var(--accent-success)';
     document.getElementById('impactOpportunity').textContent = formatKES(Math.abs(diff), true);
@@ -1119,22 +1228,24 @@ function analyzeDecision() {
     document.getElementById('impactFireDelay').textContent = fireDelay > 0 ? `+${fireDelay} year${fireDelay > 1 ? 's' : ''}` : fireDelay < 0 ? `${fireDelay} years (earlier!)` : 'No change';
     document.getElementById('impactFireDelay').style.color = fireDelay > 0 ? 'var(--accent-danger)' : fireDelay < 0 ? 'var(--accent-success)' : 'var(--text-primary)';
     document.getElementById('impactPortfolio50').textContent = formatKES(decAt50, true);
-    
+
     // Generate contextual advice
-    let advice = '';
-    const lastDecision = decisionLog[decisionLog.length - 1];
-    if (lastDecision.type === 'expense' || lastDecision.type === 'asset') {
-        const oppCost = Math.round(lastDecision.amount * Math.pow(1.12, 50 - lastDecision.atAge));
-        advice = `💡 This KES ${lastDecision.amount.toLocaleString()} spent at age ${lastDecision.atAge} has an opportunity cost of ${formatKES(oppCost, true)} by age 50 (at 12% returns). `;
-        if (lastDecision.amount > 100000) {
-            advice += 'Consider financing through a SACCO loan to preserve invested capital, or spread the purchase over 2-3 months.';
-        } else {
-            advice += 'Manageable impact - ensure it comes from the entertainment bucket, not the investment allocation.';
+    let advice = 'No active decisions. Model some above to see how they impact your trajectory.';
+    if (decisionLog.length > 0) {
+        const lastDecision = decisionLog[decisionLog.length - 1];
+        if (lastDecision.type === 'expense' || lastDecision.type === 'asset') {
+            const oppCost = Math.round(lastDecision.amount * Math.pow(1.12, 50 - lastDecision.atAge));
+            advice = `💡 This KES ${lastDecision.amount.toLocaleString()} spent at age ${lastDecision.atAge} has an opportunity cost of ${formatKES(oppCost, true)} by age 50 (at 12% returns). `;
+            if (lastDecision.amount > 100000) {
+                advice += 'Consider financing through a SACCO loan to preserve invested capital, or spread the purchase over 2-3 months.';
+            } else {
+                advice += 'Manageable impact - ensure it comes from the entertainment bucket, not the investment allocation.';
+            }
+        } else if (lastDecision.type === 'income_change') {
+            advice = `💡 Additional income of ${formatKES(lastDecision.amount)}/month accelerates FIRE significantly. Invest at least 50% of the increase to maximize compounding.`;
+        } else if (lastDecision.type === 'monthly_expense') {
+            advice = `💡 Recurring expense of ${formatKES(lastDecision.amount)}/month for ${lastDecision.duration} years totals ${formatKES(lastDecision.amount * 12 * lastDecision.duration)}. Review annually to ensure continued value.`;
         }
-    } else if (lastDecision.type === 'income_change') {
-        advice = `💡 Additional income of ${formatKES(lastDecision.amount)}/month accelerates FIRE significantly. Invest at least 50% of the increase to maximize compounding.`;
-    } else if (lastDecision.type === 'monthly_expense') {
-        advice = `💡 Recurring expense of ${formatKES(lastDecision.amount)}/month for ${lastDecision.duration} years totals ${formatKES(lastDecision.amount * 12 * lastDecision.duration)}. Review annually to ensure continued value.`;
     }
     document.getElementById('impactAdvice').innerHTML = `<span class="note-icon">💡</span><span>${advice}</span>`;
 }
@@ -1149,7 +1260,7 @@ function renderDecisionLog() {
         <div class="decision-log-item">
             <span class="dl-name">${d.name}</span>
             <span class="dl-amount">${d.type.includes('invest') || d.type === 'income_change' ? '+' : '-'}${formatKES(d.amount)}${d.type.includes('monthly') ? '/mo' : ''}</span>
-            <button class="dl-remove" onclick="removeDecision(${i})">✕</button>
+            <button class="dl-remove" onclick="removeDecision(${i})" aria-label="Remove decision: ${d.name}">✕</button>
         </div>
     `).join('');
 }
@@ -1157,7 +1268,7 @@ function renderDecisionLog() {
 function removeDecision(index) {
     decisionLog.splice(index, 1);
     renderDecisionLog();
-    if (decisionLog.length > 0) analyzeDecision(); // re-analyze with remaining
+    calculateDecisionImpact();
 }
 
 function loadDecision(preset) {
@@ -1190,11 +1301,11 @@ function reverseEngineerFIRE() {
     const expectedReturn = parseFloat(document.getElementById('revExpectedReturn').value) / 100 || 0.12;
     const currentAge = parseInt(document.getElementById('revCurrentAge').value) || 23;
     const yearsToRetire = retireAge - currentAge;
-    
+
     // Step 1: Calculate FIRE Number (inflation-adjusted)
     const inflatedAnnualExpenses = monthlyExpenseRetire * 12 * Math.pow(1 + inflation, yearsToRetire);
     const fireNumber = inflatedAnnualExpenses / withdrawalRate;
-    
+
     // Step 2: Required monthly savings (using future value of annuity formula)
     // FV = PMT * [((1+r)^n - 1) / r] + PV * (1+r)^n
     // Solve for PMT: PMT = (FV - PV*(1+r)^n) / [((1+r)^n - 1) / r]
@@ -1203,18 +1314,18 @@ function reverseEngineerFIRE() {
     const pvGrown = PERSONAL.currentSavings * Math.pow(1 + monthlyRate, months);
     const annuityFactor = (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
     const requiredMonthly = Math.max(0, (fireNumber - pvGrown) / annuityFactor);
-    
+
     // Step 3: Portfolio at age 28 (reverse interpolation)
     const yearsTo28 = 28 - currentAge;
     const monthsTo28 = yearsTo28 * 12;
     const pvAt28 = PERSONAL.currentSavings * Math.pow(1 + monthlyRate, monthsTo28);
     const contributionsTo28 = requiredMonthly * ((Math.pow(1 + monthlyRate, monthsTo28) - 1) / monthlyRate);
     const portfolioAt28 = pvAt28 + contributionsTo28;
-    
+
     // Step 4: Max monthly expenditure
     const avgSalary = 59000; // starting salary as benchmark
     const maxExpense = avgSalary - requiredMonthly;
-    
+
     // Step 5: Required return if only saving current rate
     const currentMonthlySaving = PERSONAL.currentStipend * 0.30;
     // Solve: FV = PMT * [((1+r)^n - 1)/r] + PV*(1+r)^n = fireNumber
@@ -1228,45 +1339,51 @@ function reverseEngineerFIRE() {
         if (Math.abs(error) < 1000) break;
     }
     const requiredAnnualReturn = ((1 + Math.max(0, rGuess)) ** 12 - 1) * 100;
-    
+
     // Update display
     document.getElementById('revFireNumber').textContent = formatKES(Math.round(fireNumber));
-    document.getElementById('revFireNumberSub').textContent = `${formatKES(Math.round(inflatedAnnualExpenses))}/year × ${(1/withdrawalRate).toFixed(0)}x`;
+    document.getElementById('revFireNumberSub').textContent = `${formatKES(Math.round(inflatedAnnualExpenses))}/year × ${(1 / withdrawalRate).toFixed(0)}x`;
     document.getElementById('revAge28').textContent = formatKES(Math.round(portfolioAt28));
     document.getElementById('revMonthlySavings').textContent = formatKES(Math.round(requiredMonthly));
     document.getElementById('revSavingsRateSub').textContent = `${(requiredMonthly / avgSalary * 100).toFixed(1)}% of KES ${avgSalary.toLocaleString()} salary`;
     document.getElementById('revMaxExpense').textContent = formatKES(Math.round(Math.max(0, maxExpense)));
     document.getElementById('revRequiredReturn').textContent = requiredAnnualReturn.toFixed(1) + '% p.a.';
-    
+
     // Build chart data - required path
     const labels = [];
     const requiredPath = [];
     const actualPath = [];
     let reqPortfolio = PERSONAL.currentSavings;
     let actPortfolio = PERSONAL.currentSavings;
-    
+    if (offBookType === 'onetime') {
+        reqPortfolio += offBookIncome;
+        actPortfolio += offBookIncome;
+    }
+
     for (let age = currentAge; age <= retireAge; age++) {
         labels.push(`Age ${age}`);
-        reqPortfolio = reqPortfolio * (1 + expectedReturn) + requiredMonthly * 12;
+        let activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
+
+        reqPortfolio = reqPortfolio * (1 + expectedReturn) + requiredMonthly * 12 - (PERSONAL.monthlyAirtime * 12);
         requiredPath.push(Math.round(reqPortfolio));
-        
+
         // Actual path with current savings rate
         let actSalary = PERSONAL.currentStipend;
         if (age >= 24) actSalary = PERSONAL.jobSalary;
         if (age >= 26) actSalary = 100000;
         if (age >= 28) actSalary = 150000;
         if (age >= 33) actSalary = 250000;
-        actPortfolio = actPortfolio * (1 + expectedReturn) + actSalary * 0.30 * 12;
+        actPortfolio = actPortfolio * (1 + expectedReturn) + (actSalary + activeOffBook) * 0.30 * 12 - (PERSONAL.monthlyAirtime * 12);
         actualPath.push(Math.round(actPortfolio));
     }
-    
+
     const ctx = document.getElementById('reverseFIREChart').getContext('2d');
     if (reverseFIREChart) reverseFIREChart.destroy();
-    
+
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
     gradient.addColorStop(0, 'rgba(251, 191, 36, 0.15)');
     gradient.addColorStop(1, 'rgba(251, 191, 36, 0.01)');
-    
+
     reverseFIREChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1296,7 +1413,7 @@ function analyzeBuyVsRent() {
     const downPaymentPct = parseFloat(document.getElementById('bvrDownPayment').value) / 100 || 0.20;
     const mortgageRate = parseFloat(document.getElementById('bvrMortgageRate').value) / 100 || 0.13;
     const mortgageTerm = parseInt(document.getElementById('bvrMortgageTerm').value) || 20;
-    
+
     // Calculate total rent over 20 years
     let totalRent = 0;
     let currentRent = monthlyRent;
@@ -1304,7 +1421,7 @@ function analyzeBuyVsRent() {
         totalRent += currentRent * 12;
         currentRent *= (1 + rentGrowth);
     }
-    
+
     // Calculate mortgage
     const downPayment = propertyPrice * downPaymentPct;
     const loanAmount = propertyPrice - downPayment;
@@ -1313,36 +1430,36 @@ function analyzeBuyVsRent() {
     const monthlyMortgage = loanAmount * (monthlyMortgageRate * Math.pow(1 + monthlyMortgageRate, nPayments)) / (Math.pow(1 + monthlyMortgageRate, nPayments) - 1);
     const totalMortgagePayments = monthlyMortgage * nPayments;
     const totalBuyCost = downPayment + totalMortgagePayments;
-    
+
     // Property appreciation (5% p.a.)
     const propertyValueAfter20 = propertyPrice * Math.pow(1.05, 20);
     const netBuyCost = totalBuyCost - propertyValueAfter20;
-    
+
     // Opportunity cost of down payment if invested
     const downPaymentOpportunityCost = downPayment * Math.pow(1.12, 20);
-    
+
     document.getElementById('bvrRentTotal').textContent = formatKES(Math.round(totalRent));
     document.getElementById('bvrBuyTotal').textContent = formatKES(Math.round(totalBuyCost));
-    
+
     // Verdict
     const investDifference = (monthlyMortgage - monthlyRent) * 12; // annual difference if renting is cheaper
     const rentAdvantage = totalRent < netBuyCost;
-    
+
     let verdict = `<strong>📊 Analysis Results:</strong><br><br>`;
     verdict += `<strong>Monthly mortgage payment:</strong> ${formatKES(Math.round(monthlyMortgage))} vs rent of ${formatKES(monthlyRent)}<br>`;
     verdict += `<strong>Total rent paid (20 years):</strong> ${formatKES(Math.round(totalRent))}<br>`;
     verdict += `<strong>Total mortgage cost:</strong> ${formatKES(Math.round(totalBuyCost))} (incl. ${formatKES(Math.round(downPayment))} down payment)<br>`;
     verdict += `<strong>Property value after 20 years:</strong> ${formatKES(Math.round(propertyValueAfter20), true)}<br>`;
     verdict += `<strong>Net cost of buying:</strong> ${formatKES(Math.round(netBuyCost), true)} (total paid minus property value)<br><br>`;
-    
+
     if (monthlyMortgage > monthlyRent * 2) {
         verdict += `⚠️ <strong>Recommendation: Continue renting until income exceeds KES ${formatKES(Math.round(monthlyMortgage * 3.33))}/month.</strong> Your mortgage would be ${formatKES(Math.round(monthlyMortgage))}/month - more than double your rent. Optimal buying age: <strong>35-38</strong> when income supports the payment comfortably.<br><br>`;
     } else {
         verdict += `✅ <strong>Buying could work</strong> if you have the down payment of ${formatKES(Math.round(downPayment))} and stable income exceeding ${formatKES(Math.round(monthlyMortgage * 3))}/month.<br><br>`;
     }
-    
-    verdict += `💡 <strong>Pro Tip:</strong> With Kenyan mortgage rates at ${(mortgageRate*100).toFixed(1)}%, consider a SACCO mortgage (typically 10-12% vs bank 13-14%). Alternatively, invest the down payment in T-Bonds (12-14%) while renting - the returns may outpace property appreciation.`;
-    
+
+    verdict += `💡 <strong>Pro Tip:</strong> With Kenyan mortgage rates at ${(mortgageRate * 100).toFixed(1)}%, consider a SACCO mortgage (typically 10-12% vs bank 13-14%). Alternatively, invest the down payment in T-Bonds (12-14%) while renting - the returns may outpace property appreciation.`;
+
     document.getElementById('bvrVerdict').innerHTML = verdict;
 }
 
@@ -1369,30 +1486,31 @@ function simulateMarketScenario() {
     const reitReturn = parseFloat(document.getElementById('mktREIT').value) / 100;
     const saccoReturn = parseFloat(document.getElementById('mktSACCO').value) / 100;
     const inflation = parseFloat(document.getElementById('mktInflation').value) / 100;
-    
+
     const allocNSE = parseInt(document.getElementById('allocNSE').value) / 100;
     const allocTBond = parseInt(document.getElementById('allocTBond').value) / 100;
     const allocMMF = parseInt(document.getElementById('allocMMF').value) / 100;
     const allocREIT = parseInt(document.getElementById('allocREIT').value) / 100;
     const allocSACCO = parseInt(document.getElementById('allocSACCO').value) / 100;
     const allocCash = parseInt(document.getElementById('allocCash').value) / 100;
-    
+
     // Blended return
     const blendedReturn = allocNSE * nseReturn + allocTBond * tBondReturn + allocMMF * mmfReturn + allocREIT * reitReturn + allocSACCO * saccoReturn + allocCash * 0.085;
     const realReturn = (1 + blendedReturn) / (1 + inflation) - 1;
-    
+
     document.getElementById('mktBlendedReturn').textContent = (blendedReturn * 100).toFixed(1) + '%';
     document.getElementById('mktRealReturn').textContent = (realReturn * 100).toFixed(1) + '%';
     document.getElementById('mktRealReturn').style.color = realReturn > 0 ? 'var(--accent-success)' : 'var(--accent-danger)';
-    
+
     // Simulate portfolio growth
     let portfolio = PERSONAL.currentSavings;
+    if (offBookType === 'onetime') portfolio += offBookIncome;
     let salary = PERSONAL.currentStipend;
     const labels = [];
     const nominalData = [];
     const realData = [];
     const savingsRate = 0.30;
-    
+
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
         labels.push(`Age ${age}`);
         if (age >= 24) salary = PERSONAL.jobSalary;
@@ -1401,36 +1519,37 @@ function simulateMarketScenario() {
         if (age >= 33) salary = 250000;
         if (age >= 38) salary = 350000;
         if (age >= 44) salary = 450000;
-        
+
         let rent = 0;
         if (age >= 28) rent = 40000;
         if (age >= 38) rent = 0;
-        
-        portfolio = portfolio * (1 + blendedReturn) + Math.max(0, (salary - rent)) * savingsRate * 12;
+
+        const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
+        portfolio = portfolio * (1 + blendedReturn) + Math.max(0, (salary + activeOffBook - rent)) * savingsRate * 12 - (PERSONAL.monthlyAirtime * 12);
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000;
-        
+
         nominalData.push(Math.round(Math.max(0, portfolio)));
         realData.push(Math.round(Math.max(0, portfolio / Math.pow(1 + inflation, age - PERSONAL.currentAge))));
     }
-    
+
     const at50Idx = 50 - PERSONAL.currentAge;
     const portfolioAt50 = nominalData[at50Idx] || nominalData[nominalData.length - 1];
     document.getElementById('mktPortfolio50').textContent = formatKES(portfolioAt50, true);
-    
+
     const fireNum = 720000 * 25 * Math.pow(1 + inflation, 27);
     const feasible = portfolioAt50 >= fireNum;
     document.getElementById('mktFIREFeasibility').textContent = feasible ? '✅ Achievable' : '⚠️ Gap exists';
     document.getElementById('mktFIREFeasibility').style.color = feasible ? 'var(--accent-success)' : 'var(--accent-warning)';
-    
+
     // Chart
     const ctx = document.getElementById('marketSimChart').getContext('2d');
     if (marketSimChart) marketSimChart.destroy();
-    
+
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
     gradient.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
     gradient.addColorStop(1, 'rgba(16, 185, 129, 0.01)');
-    
+
     marketSimChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1463,7 +1582,7 @@ function populateWealthAvenues() {
         { icon: '💰', name: 'Treasury Bills Laddering', tag: 'SAFE', tagClass: 'safe', desc: 'Stagger 91-day, 182-day, and 364-day T-Bills for regular maturity income. 8.5-8.8% risk-free returns via DhowCSD.' },
         { icon: '🏗️', name: 'Land Banking', tag: 'GROWTH', tagClass: 'growth', desc: 'Buy land in satellite towns (Kitengela, Ruiru, Athi River) before infrastructure development. 15-30% appreciation in growth corridors.' },
     ];
-    
+
     const grid = document.getElementById('avenueGrid');
     grid.innerHTML = avenues.map(a => `
         <div class="avenue-card">
@@ -1484,40 +1603,40 @@ function calculateInsuranceImpact() {
     const carStartAge = parseInt(document.getElementById('insCarStartAge').value) || 28;
     const lifeMonthly = parseFloat(document.getElementById('insLifeMonthly').value) || 3000;
     const lifeStartAge = parseInt(document.getElementById('insLifeStartAge').value) || 30;
-    
+
     // Calculate total insurance cost to age 50
     let totalInsurance = 0;
     let currentMonthly = 0;
     let currentAnnual = 0;
-    
+
     for (let age = PERSONAL.currentAge; age <= 50; age++) {
         let yearlyIns = nhifMonthly * 12; // NHIF always
-        
+
         if (age >= healthStartAge) yearlyIns += privateHealthMonthly * 12;
         if (age >= carStartAge) yearlyIns += carValue * carRate * Math.pow(0.90, age - carStartAge); // car depreciates 10%/yr
         if (age >= lifeStartAge) yearlyIns += lifeMonthly * 12;
-        
+
         totalInsurance += yearlyIns;
-        
+
         if (age === PERSONAL.currentAge) {
             currentMonthly = nhifMonthly;
             currentAnnual = nhifMonthly * 12;
         }
     }
-    
+
     // Current monthly insurance cost (at current age)
     currentMonthly = nhifMonthly;
     let peakMonthly = nhifMonthly + privateHealthMonthly + lifeMonthly + Math.round(carValue * carRate / 12);
-    
+
     document.getElementById('insTotalMonthly').textContent = formatKES(currentMonthly) + ' → ' + formatKES(peakMonthly);
     document.getElementById('insTotalAnnual').textContent = formatKES(currentMonthly * 12) + ' → ' + formatKES(peakMonthly * 12);
     document.getElementById('insLifetimeCost').textContent = formatKES(Math.round(totalInsurance), true);
-    
+
     // FIRE delay: opportunity cost of insurance spending
     const oppCost = totalInsurance * 0.5; // rough estimate: half could have been invested
     const fireDelay = Math.round(oppCost / (PERSONAL.jobSalary * 0.3 * 12)); // months worth of investing
     const delayYears = (fireDelay / 12).toFixed(1);
-    
+
     document.getElementById('insFireDelay').textContent = `~${delayYears} years`;
     document.getElementById('insFireDelay').style.color = parseFloat(delayYears) > 2 ? 'var(--accent-warning)' : 'var(--accent-success)';
 }
@@ -1528,21 +1647,21 @@ let tuitionChart;
 function forecastTuition() {
     const eduInflation = parseFloat(document.getElementById('tuitionInflation').value) / 100 || 0.08;
     const currentYear = 2026;
-    
+
     const children = [1, 2, 3].map(i => ({
         birthYear: parseInt(document.getElementById(`child${i}BirthYear`).value),
         primary: parseFloat(document.getElementById(`child${i}PrimaryAnnual`).value) || 0,
         secondary: parseFloat(document.getElementById(`child${i}SecondaryAnnual`).value) || 0,
         uni: parseFloat(document.getElementById(`child${i}UniAnnual`).value) || 0,
     }));
-    
+
     // Calculate yearly education costs
     const yearlyFees = {};
     let totalNominal = 0;
     let totalInflated = 0;
     let peakYear = currentYear;
     let peakAmount = 0;
-    
+
     children.forEach(child => {
         // Primary: ages 6-13 (8 years)
         for (let y = 0; y < 8; y++) {
@@ -1575,7 +1694,7 @@ function forecastTuition() {
             totalInflated += inflatedFee;
         }
     });
-    
+
     // Find peak year
     Object.entries(yearlyFees).forEach(([year, amount]) => {
         if (amount > peakAmount) {
@@ -1583,27 +1702,27 @@ function forecastTuition() {
             peakYear = parseInt(year);
         }
     });
-    
+
     // Required monthly savings: invest in education fund earning 10% to cover total
     const firstFeeYear = Math.min(...Object.keys(yearlyFees).map(Number));
     const monthsUntilFirst = Math.max(1, (firstFeeYear - currentYear) * 12);
     const eduFundReturn = 0.10 / 12;
     const fvFactor = (Math.pow(1 + eduFundReturn, monthsUntilFirst) - 1) / eduFundReturn;
     const requiredMonthly = totalInflated / fvFactor;
-    
+
     document.getElementById('tuitionTotal').textContent = formatKES(Math.round(totalNominal));
     document.getElementById('tuitionInflatedTotal').textContent = formatKES(Math.round(totalInflated));
     document.getElementById('tuitionMonthlySavings').textContent = formatKES(Math.round(requiredMonthly));
     document.getElementById('tuitionPeakYear').textContent = `${peakYear} (${formatKES(Math.round(peakAmount))})`;
-    
+
     // Chart
     const sortedYears = Object.keys(yearlyFees).map(Number).sort((a, b) => a - b);
     const labels = sortedYears.map(y => y.toString());
     const data = sortedYears.map(y => Math.round(yearlyFees[y]));
-    
+
     const ctx = document.getElementById('tuitionChart').getContext('2d');
     if (tuitionChart) tuitionChart.destroy();
-    
+
     tuitionChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -1630,4 +1749,142 @@ function forecastTuition() {
             }
         }
     });
+}
+
+// ==================== PDF EXPORT ====================
+function openExportModal() {
+    document.getElementById('pdfExportModal').classList.add('active');
+    document.getElementById('exportProgress').style.display = 'none';
+    document.getElementById('btnGeneratePDF').disabled = false;
+}
+
+function closeExportModal() {
+    document.getElementById('pdfExportModal').classList.remove('active');
+}
+
+async function exportToPDF() {
+    const btn = document.getElementById('btnGeneratePDF');
+    const progress = document.getElementById('exportProgress');
+    const progressFill = document.getElementById('exportProgressFill');
+    const progressText = document.getElementById('exportProgressText');
+    const titleInput = document.getElementById('pdfTitle').value || 'FIRE Kenya - Financial Independence Report';
+
+    btn.disabled = true;
+    progress.style.display = 'block';
+
+    // Setup jsPDF
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    // Add Cover Page
+    doc.setFillColor(10, 14, 26); // var(--bg-primary)
+    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.text(titleInput, pageWidth / 2, 100, { align: 'center' });
+    doc.setFontSize(14);
+    doc.text('Personalized Financial Projection & FIRE Plan', pageWidth / 2, 115, { align: 'center' });
+    doc.setFontSize(10);
+    doc.setTextColor(139, 146, 168);
+    const dateStr = new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    doc.text(`Generated on ${dateStr}`, pageWidth / 2, 280, { align: 'center' });
+
+    // Section checklist mapping
+    const checklistMapping = [
+        { id: 'overview', chkId: 'chk-overview', label: 'Overview & KPIs' },
+        { id: 'accounts', chkId: 'chk-accounts', label: 'Account Balances' },
+        { id: 'timeline', chkId: 'chk-timeline', label: 'Financial Timeline' },
+        { id: 'investments', chkId: 'chk-investments', label: 'Investment Vehicles' },
+        { id: 'fire-calc', chkId: 'chk-fire-calc', label: 'FIRE Calculator' },
+        { id: 'simulator', chkId: 'chk-simulator', label: 'Scenario Simulator' },
+        { id: 'decision-lab', chkId: 'chk-decision-lab', label: 'Decision Lab' },
+        { id: 'reverse-fire', chkId: 'chk-reverse-fire', label: 'Reverse FIRE' },
+        { id: 'market-trends', chkId: 'chk-markets', label: 'Market Trends' },
+        { id: 'protection', chkId: 'chk-protection', label: 'Protection & Education' }
+    ];
+
+    // Filter checked sections
+    const sectionsToCapture = checklistMapping.filter(item => {
+        const chk = document.getElementById(item.chkId);
+        return chk ? chk.checked : true;
+    });
+
+    let currentStep = 0;
+
+    for (const section of sectionsToCapture) {
+        progressText.textContent = `Capturing section: ${section.label}...`;
+        progressFill.style.width = `${(currentStep / sectionsToCapture.length) * 100}%`;
+
+        const element = document.getElementById(section.id);
+        if (element) {
+            const wasActive = element.classList.contains('active');
+
+            if (!wasActive) {
+                document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+                element.style.display = 'block';
+            }
+
+            // Wait for charts/rendering
+            await new Promise(r => setTimeout(r, 200));
+
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 1.5,
+                    useCORS: true,
+                    backgroundColor: '#0a0e1a', // Match theme bg
+                    logging: false
+                });
+
+                doc.addPage();
+
+                // Add header to each page
+                doc.setFillColor(17, 24, 39);
+                doc.rect(0, 0, pageWidth, 20, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(10);
+                doc.text('FIRE Kenya | Financial Independence Plan', 10, 13);
+
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const imgWidth = pageWidth - 20; // 10mm margins
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                const finalHeight = Math.min(imgHeight, pageHeight - 35);
+                const finalWidth = (canvas.width * finalHeight) / canvas.height;
+                const xOffset = (pageWidth - finalWidth) / 2;
+
+                doc.addImage(imgData, 'JPEG', xOffset, 25, finalWidth, finalHeight);
+
+                doc.setFontSize(8);
+                doc.setTextColor(139, 146, 168);
+                doc.text(`Page ${doc.internal.getNumberOfPages()}`, pageWidth - 15, pageHeight - 10, { align: 'right' });
+            } catch (err) {
+                console.error(`Error capturing ${section.id}:`, err);
+            }
+
+            if (!wasActive) {
+                element.style.display = '';
+                document.querySelectorAll('.section').forEach(s => s.style.display = '');
+            }
+        }
+        currentStep++;
+    }
+
+    // Ensure the currently active section is visible again
+    const activeLink = document.querySelector('.nav-link.active');
+    if (activeLink) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(activeLink.dataset.section).classList.add('active');
+    }
+
+    progressText.textContent = "Finalizing PDF...";
+    progressFill.style.width = '100%';
+
+    // Download
+    setTimeout(() => {
+        doc.save(titleInput.toLowerCase().replace(/\s+/g, '-') + '.pdf');
+        closeExportModal();
+        btn.disabled = false;
+    }, 500);
 }

@@ -15,10 +15,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script
         src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+    <!-- Skip to Content (WCAG 2.1) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Loading Screen -->
     <div id="loadingScreen" class="loading-screen">
         <div class="loader-content">
@@ -32,7 +37,7 @@
     </div>
 
     <!-- Sidebar Navigation -->
-    <nav id="sidebar" class="sidebar">
+    <nav id="sidebar" class="sidebar" role="navigation" aria-label="Main Navigation">
         <div class="sidebar-brand">
             <span class="brand-icon">🔥</span>
             <span class="brand-text">FIRE<span class="brand-accent">Kenya</span></span>
@@ -73,6 +78,10 @@
                 </a></li>
         </ul>
         <div class="sidebar-footer">
+            <button class="btn-export btn-full" onclick="openExportModal()" aria-label="Export report as PDF"
+                style="margin-bottom: 0.75rem;">
+                <span>📄</span> Export PDF
+            </button>
             <div class="user-badge">
                 <div class="user-avatar">CK</div>
                 <div class="user-info">
@@ -89,15 +98,20 @@
     </button>
 
     <!-- Main Content Area -->
-    <main class="main-content">
+    <main class="main-content" id="main-content" role="main">
         <!-- ==================== OVERVIEW SECTION ==================== -->
-        <section id="overview" class="section active">
+        <section id="overview" class="section active" aria-label="Financial Overview">
             <div class="section-header">
                 <div>
                     <h1>Financial Overview</h1>
                     <p class="section-subtitle">Your path to FIRE - retire at 50 with KES freedom</p>
                 </div>
-                <div class="header-date" id="currentDate"></div>
+                <div class="header-actions">
+                    <button class="btn-export" onclick="openExportModal()" aria-label="Export report as PDF">
+                        <span>📄</span> Export PDF
+                    </button>
+                    <div class="header-date" id="currentDate"></div>
+                </div>
             </div>
 
             <!-- KPI Cards -->
@@ -172,10 +186,10 @@
         </section>
 
         <!-- ==================== ACCOUNTS SECTION ==================== -->
-        <section id="accounts" class="section">
+        <section id="accounts" class="section" aria-label="Account Management">
             <div class="section-header">
                 <div>
-                    <h1>Account Structure</h1>
+                    <h1>Account Management</h1>
                     <p class="section-subtitle">Four-bucket system: Income → Essentials → Investment → Entertainment</p>
                 </div>
             </div>
@@ -212,6 +226,37 @@
                     </div>
                 </div>
 
+                <!-- Off the Book Income -->
+                <div class="account-card account-offbook">
+                    <div class="account-header">
+                        <div class="account-icon">💼</div>
+                        <h3>Off the Book Income</h3>
+                    </div>
+                    <div class="offbook-form">
+                        <div class="input-group">
+                            <label for="offBookAmount">Amount (KES)</label>
+                            <input type="number" id="offBookAmount" value="0" min="0" step="500"
+                                aria-label="Off the book income amount in KES">
+                        </div>
+                        <div class="input-group">
+                            <label for="offBookType">Frequency</label>
+                            <select id="offBookType" aria-label="Off the book income frequency">
+                                <option value="monthly">Monthly Recurring</option>
+                                <option value="onetime">One-time</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary btn-sm" onclick="applyOffBookIncome()"
+                            aria-label="Apply off the book income">Apply</button>
+                    </div>
+                    <div class="account-balance">
+                        <span class="balance-label">Active Off-Book Income</span>
+                        <span class="balance-value" id="offBookDisplay">KES 0</span>
+                    </div>
+                    <div class="account-note">
+                        <span class="note-icon">🔒</span> Additional income not reflected in formal payslips
+                    </div>
+                </div>
+
                 <!-- Essentials Account -->
                 <div class="account-card account-essentials">
                     <div class="account-header">
@@ -227,6 +272,7 @@
                         <div class="detail-row"><span>Food & Groceries</span><span>KES 8,000</span></div>
                         <div class="detail-row"><span>Transport</span><span>KES 5,000</span></div>
                         <div class="detail-row"><span>Utilities</span><span>KES 5,000</span></div>
+                        <div class="detail-row"><span>Airtime</span><span>KES 1,000/mo</span></div>
                     </div>
                     <div class="account-note">
                         <span class="note-icon">📌</span> Scales with income - currently living at home
@@ -244,8 +290,8 @@
                         <span class="balance-value" id="investBalance">KES 0</span>
                     </div>
                     <div class="account-details">
-                        <div class="detail-row"><span>Weekly Savings (from Oct '26)</span><span>KES 350</span></div>
-                        <div class="detail-row"><span>Monthly Target</span><span>KES 17,700</span></div>
+                        <div class="detail-row"><span>Monthly Allocation (30%)</span><span id="investMonthlyAlloc">KES
+                                4,644</span></div>
                         <div class="detail-row"><span>Goal by Jan 2030</span><span>KES 1,000,000</span></div>
                     </div>
                     <div class="account-note">
@@ -964,7 +1010,8 @@
             <div class="section-header">
                 <div>
                     <h1>Decision Impact Lab</h1>
-                    <p class="section-subtitle">Model any financial decision and visualize its ripple effect on your wealth trajectory</p>
+                    <p class="section-subtitle">Model any financial decision and visualize its ripple effect on your
+                        wealth trajectory</p>
                 </div>
             </div>
 
@@ -1019,8 +1066,10 @@
                     <div class="chart-header">
                         <h3>Wealth Trajectory: With vs Without Decision</h3>
                         <div class="chart-legend-custom">
-                            <span class="legend-item"><span class="legend-dot" style="background: var(--accent-primary)"></span>Baseline</span>
-                            <span class="legend-item"><span class="legend-dot" style="background: var(--accent-warning)"></span>With Decision</span>
+                            <span class="legend-item"><span class="legend-dot"
+                                    style="background: var(--accent-primary)"></span>Baseline</span>
+                            <span class="legend-item"><span class="legend-dot"
+                                    style="background: var(--accent-warning)"></span>With Decision</span>
                         </div>
                     </div>
                     <div class="chart-body">
@@ -1075,7 +1124,8 @@
             <div class="section-header">
                 <div>
                     <h1>Reverse FIRE Engineering</h1>
-                    <p class="section-subtitle">Working backward from age 50 to determine exactly what you need today</p>
+                    <p class="section-subtitle">Working backward from age 50 to determine exactly what you need today
+                    </p>
                 </div>
             </div>
 
@@ -1308,37 +1358,44 @@
                 <div class="alloc-sliders" id="allocSliders">
                     <div class="alloc-slider-row">
                         <label>NSE Stocks</label>
-                        <input type="range" id="allocNSE" min="0" max="60" value="25" step="5" oninput="updateAllocDisplay()">
+                        <input type="range" id="allocNSE" min="0" max="60" value="25" step="5"
+                            oninput="updateAllocDisplay()">
                         <span class="alloc-pct" id="allocNSEPct">25%</span>
                     </div>
                     <div class="alloc-slider-row">
                         <label>Treasury Bonds</label>
-                        <input type="range" id="allocTBond" min="0" max="60" value="25" step="5" oninput="updateAllocDisplay()">
+                        <input type="range" id="allocTBond" min="0" max="60" value="25" step="5"
+                            oninput="updateAllocDisplay()">
                         <span class="alloc-pct" id="allocTBondPct">25%</span>
                     </div>
                     <div class="alloc-slider-row">
                         <label>MMF</label>
-                        <input type="range" id="allocMMF" min="0" max="60" value="20" step="5" oninput="updateAllocDisplay()">
+                        <input type="range" id="allocMMF" min="0" max="60" value="20" step="5"
+                            oninput="updateAllocDisplay()">
                         <span class="alloc-pct" id="allocMMFPct">20%</span>
                     </div>
                     <div class="alloc-slider-row">
                         <label>I-REITs / Real Estate</label>
-                        <input type="range" id="allocREIT" min="0" max="30" value="10" step="5" oninput="updateAllocDisplay()">
+                        <input type="range" id="allocREIT" min="0" max="30" value="10" step="5"
+                            oninput="updateAllocDisplay()">
                         <span class="alloc-pct" id="allocREITPct">10%</span>
                     </div>
                     <div class="alloc-slider-row">
                         <label>SACCOs</label>
-                        <input type="range" id="allocSACCO" min="0" max="30" value="15" step="5" oninput="updateAllocDisplay()">
+                        <input type="range" id="allocSACCO" min="0" max="30" value="15" step="5"
+                            oninput="updateAllocDisplay()">
                         <span class="alloc-pct" id="allocSACCOPct">15%</span>
                     </div>
                     <div class="alloc-slider-row">
                         <label>Cash / T-Bills</label>
-                        <input type="range" id="allocCash" min="0" max="30" value="5" step="5" oninput="updateAllocDisplay()">
+                        <input type="range" id="allocCash" min="0" max="30" value="5" step="5"
+                            oninput="updateAllocDisplay()">
                         <span class="alloc-pct" id="allocCashPct">5%</span>
                     </div>
                     <div class="alloc-total" id="allocTotal">Total: 100%</div>
                 </div>
-                <button class="btn-primary" onclick="simulateMarketScenario()" style="margin-top:1rem;">🌍 Simulate Market Scenario</button>
+                <button class="btn-primary" onclick="simulateMarketScenario()" style="margin-top:1rem;">🌍 Simulate
+                    Market Scenario</button>
             </div>
 
             <!-- Market Simulation Chart -->
@@ -1415,7 +1472,8 @@
                         </div>
                         <div class="insurance-note">
                             <span class="note-icon">💡</span>
-                            <span>NHIF/SHA is mandatory. Private cover recommended once you have dependents. Budget KES 60K-120K/year for family cover.</span>
+                            <span>NHIF/SHA is mandatory. Private cover recommended once you have dependents. Budget KES
+                                60K-120K/year for family cover.</span>
                         </div>
                     </div>
 
@@ -1441,7 +1499,8 @@
                         </div>
                         <div class="insurance-note">
                             <span class="note-icon">💡</span>
-                            <span>Third-party is minimum legal requirement (~KES 7,500/yr). Comprehensive recommended for new cars to cover theft and accidents.</span>
+                            <span>Third-party is minimum legal requirement (~KES 7,500/yr). Comprehensive recommended
+                                for new cars to cover theft and accidents.</span>
                         </div>
                     </div>
 
@@ -1463,12 +1522,14 @@
                         </div>
                         <div class="insurance-note">
                             <span class="note-icon">💡</span>
-                            <span>Essential once you have dependents. Term life is cheapest option. Budget KES 36K-60K/year.</span>
+                            <span>Essential once you have dependents. Term life is cheapest option. Budget KES
+                                36K-60K/year.</span>
                         </div>
                     </div>
                 </div>
 
-                <button class="btn-primary" onclick="calculateInsuranceImpact()" style="margin-top: 1rem;">🛡️ Calculate Insurance Impact on FIRE</button>
+                <button class="btn-primary" onclick="calculateInsuranceImpact()" style="margin-top: 1rem;">🛡️ Calculate
+                    Insurance Impact on FIRE</button>
 
                 <!-- Insurance Impact Results -->
                 <div class="insurance-results" id="insuranceResults">
@@ -1496,7 +1557,8 @@
             <!-- Tuition Forecasting -->
             <div class="tuition-section" style="margin-top: 3rem;">
                 <h2 class="sub-heading">🎓 Tuition Fee Forecasting</h2>
-                <p class="section-subtitle" style="margin-bottom: 1.5rem;">Estimate education costs for 3 children with flexible inputs - update as you get concrete figures</p>
+                <p class="section-subtitle" style="margin-bottom: 1.5rem;">Estimate education costs for 3 children with
+                    flexible inputs - update as you get concrete figures</p>
 
                 <div class="tuition-grid">
                     <div class="tuition-child-card" id="tuitionChild1">
@@ -1577,7 +1639,8 @@
                     </div>
                 </div>
 
-                <button class="btn-primary" onclick="forecastTuition()" style="margin-top: 1rem;">🎓 Forecast Tuition Costs</button>
+                <button class="btn-primary" onclick="forecastTuition()" style="margin-top: 1rem;">🎓 Forecast Tuition
+                    Costs</button>
 
                 <!-- Tuition Results -->
                 <div class="tuition-results" id="tuitionResults" style="margin-top: 1.5rem;">
@@ -1614,6 +1677,62 @@
         </section>
     </main>
 
+    <!-- PDF Export Modal -->
+    <div id="pdfExportModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Export PDF Report">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📄 Export Full Report</h2>
+                <button class="modal-close" onclick="closeExportModal()"
+                    aria-label="Close export dialog">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Generate a comprehensive PDF report of your FIRE Kenya financial plan.</p>
+                <div class="export-options">
+                    <div class="input-group">
+                        <label for="pdfTitle">Report Title</label>
+                        <input type="text" id="pdfTitle" value="FIRE Kenya - Financial Independence Report"
+                            aria-label="PDF report title">
+                    </div>
+                </div>
+                <div class="export-sections">
+                    <h4>Included Sections</h4>
+                    <div class="section-checklist">
+                        <label class="check-item"><input type="checkbox" id="chk-overview" checked> Overview &
+                            KPIs</label>
+                        <label class="check-item"><input type="checkbox" id="chk-accounts" checked> Account
+                            Balances</label>
+                        <label class="check-item"><input type="checkbox" id="chk-timeline" checked> Financial
+                            Timeline</label>
+                        <label class="check-item"><input type="checkbox" id="chk-investments" checked> Investment
+                            Vehicles</label>
+                        <label class="check-item"><input type="checkbox" id="chk-fire-calc" checked> FIRE
+                            Calculator</label>
+                        <label class="check-item"><input type="checkbox" id="chk-simulator" checked> Scenario
+                            Simulator</label>
+                        <label class="check-item"><input type="checkbox" id="chk-decision-lab" checked> Decision
+                            Lab</label>
+                        <label class="check-item"><input type="checkbox" id="chk-reverse-fire" checked> Reverse
+                            FIRE</label>
+                        <label class="check-item"><input type="checkbox" id="chk-markets" checked> Market Trends</label>
+                        <label class="check-item"><input type="checkbox" id="chk-protection" checked> Protection &
+                            Education</label>
+                    </div>
+                </div>
+                <div class="export-progress" id="exportProgress" style="display:none;">
+                    <div class="loader-bar">
+                        <div class="loader-fill" id="exportProgressFill"></div>
+                    </div>
+                    <span id="exportProgressText">Generating report...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeExportModal()">Cancel</button>
+                <button class="btn-primary" id="btnGeneratePDF" onclick="exportToPDF()">📄 Generate PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="announcement-region" class="sr-only" aria-live="polite"></div>
     <script src="app.js"></script>
 </body>
 
