@@ -1149,8 +1149,239 @@ body {
     color: var(--text-secondary);
     line-height: 1.5;
 }
+/* --- Global ETFs & Index Funds Section --- */
+.etf-section-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    border: 1px solid var(--border-color-light);
+}
+
+.etf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 992px) {
+    .etf-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.etf-subcard {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    border: 1px solid var(--border-color-light);
+}
+
+.etf-subcard h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    border-left: 3px solid var(--accent-info);
+    padding-left: 0.5rem;
+}
+
+.etf-benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.etf-benefits-list li {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* Fee Drag Calculator inside Dashboard */
+.fee-calculator-card {
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.fee-calculator-card h4 {
+    border-left-color: var(--accent-secondary);
+}
+
+.calc-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.input-row-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.input-row label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.input-row input[type="number"] {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color-light);
+    color: var(--text-primary);
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+}
+
+.slider-input {
+    width: 100%;
+    accent-color: var(--accent-secondary);
+    height: 6px;
+    border-radius: 3px;
+    background: var(--bg-card);
+    cursor: pointer;
+}
+
+.slider-val {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-secondary);
+    align-self: flex-end;
+    margin-top: -0.25rem;
+    font-family: var(--font-mono);
+}
+
+.calc-results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.result-box {
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border-color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.result-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.result-value {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+/* Custom Table */
+.custom-table-container {
+    overflow-x: auto;
+    margin-top: 0.5rem;
+}
+
+.custom-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    text-align: left;
+}
+
+.custom-data-table th, 
+.custom-data-table td {
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.custom-data-table th {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.custom-data-table td {
+    color: var(--text-secondary);
+}
+
+.custom-data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Platform Cards */
+.platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.platform-item {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    border: 1px solid var(--border-color-light);
+    transition: all var(--transition-fast);
+}
+
+.platform-item:hover {
+    border-color: var(--border-color);
+    transform: translateY(-2px);
+}
+
+.platform-logo {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.platform-item h5 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    color: var(--text-primary);
+}
+
+.platform-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    margin-bottom: 0.3rem;
+}
+
+.platform-detail span {
+    color: var(--text-muted);
+}
+
+.platform-detail strong {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+.platform-notes {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.6rem;
+    line-height: 1.4;
+    border-top: 1px dashed var(--border-color-light);
+    padding-top: 0.5rem;
+}
 
 /* --- FIRE Calculator Section --- */
+
 .fire-metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

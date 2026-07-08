@@ -535,6 +535,224 @@
                 </div>
             </div>
 
+            <!-- Global Opportunities: ETFs & Index Funds -->
+            <div class="etf-section-card" style="margin-top: 2rem;">
+                <div class="tier-header" style="margin-bottom: 1.5rem;">
+                    <span class="tier-badge" style="background: rgba(99, 102, 241, 0.15); color: var(--accent-info); border: 1px solid rgba(99, 102, 241, 0.3);">GLOBAL EXPOSURE</span>
+                    <h3>Exchange-Traded Funds (ETFs) & Index Funds</h3>
+                </div>
+                
+                <p class="section-desc" style="margin-bottom: 1.5rem; color: var(--text-secondary); line-height: 1.6;">
+                    Exchange-Traded Funds (ETFs) and Index Funds are passive investment vehicles tracking an index. They offer low fees, broad diversification, and a proven long-term track record. For Kenyan investors, offshore ETFs provide a crucial currency hedge against KES depreciation (~3–5% p.a. historically) and access to global corporate growth.
+                </p>
+
+                <div class="etf-grid">
+                    <!-- Left: Why ETFs Matter & Interactive Fee Drag Calculator -->
+                    <div class="etf-left-col">
+                        <div class="etf-subcard">
+                            <h4>Why ETFs Matter for Kenyan FIRE</h4>
+                            <ul class="etf-benefits-list">
+                                <li>
+                                    <strong>🌍 Global Diversification:</strong> Broad stock indexes (like S&P 500 or MSCI World) distribute your risk across hundreds or thousands of world-class companies.
+                                </li>
+                                <li>
+                                    <strong>💵 Currency Hedge:</strong> USD-denominated investments guard your wealth. A 10.5% S&P 500 return translates to ~13-16% in KES terms when currency depreciation is factored in.
+                                </li>
+                                <li>
+                                    <strong>📈 Long-Term Track Record:</strong> Passively managed indices have survived world wars, inflation spikes, and financial crashes, outperforming most actively managed funds over a 10+ year horizon.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Interactive Fee Drag Calculator -->
+                        <div class="etf-subcard fee-calculator-card" style="margin-top: 1.25rem;">
+                            <div class="fee-calculator-header" style="margin-bottom: 1rem;">
+                                <h4>Interactive Fee Drag Calculator</h4>
+                                <p class="card-subtitle">See how fees compound and erode your wealth over time</p>
+                            </div>
+                            <div class="calc-inputs">
+                                <div class="input-row">
+                                    <label for="feeCalcPrincipal">Initial Principal (KES)</label>
+                                    <input type="number" id="feeCalcPrincipal" value="100000" step="10000">
+                                </div>
+                                <div class="input-row">
+                                    <label for="feeCalcYears">Investment Horizon: <span id="feeCalcYearsVal" style="color: var(--accent-secondary); font-weight: bold;">27 Years</span></label>
+                                    <input type="range" id="feeCalcYears" min="5" max="40" value="27" class="slider-input">
+                                </div>
+                                <div class="input-row">
+                                    <label for="feeCalcReturn">Gross Annual Return: <span id="feeCalcReturnVal" style="color: var(--accent-secondary); font-weight: bold;">12%</span></label>
+                                    <input type="range" id="feeCalcReturn" min="4" max="20" value="12" class="slider-input">
+                                </div>
+                                <div class="input-row-grid">
+                                    <div class="input-row">
+                                        <label for="feeCalcEtfFee">ETF Expense Ratio (%)</label>
+                                        <input type="number" id="feeCalcEtfFee" value="0.03" step="0.01" min="0" max="2">
+                                    </div>
+                                    <div class="input-row">
+                                        <label for="feeCalcActiveFee">Active Fund Fee (%)</label>
+                                        <input type="number" id="feeCalcActiveFee" value="2.00" step="0.1" min="0" max="5">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="calc-results" style="margin-top: 1.25rem;">
+                                <div class="result-box etf-result">
+                                    <span class="result-label">Low-Cost ETF Net Yield</span>
+                                    <span id="feeResultEtf" class="result-value highlight-green">KES 2,125,502</span>
+                                </div>
+                                <div class="result-box active-result">
+                                    <span class="result-label">Active Fund Net Yield</span>
+                                    <span id="feeResultActive" class="result-value highlight-blue">KES 1,310,999</span>
+                                </div>
+                                <div class="result-box drag-result" style="border-color: rgba(239, 68, 68, 0.3);">
+                                    <span class="result-label">Wealth Lost to Fees (Drag)</span>
+                                    <span id="feeResultDrag" class="result-value highlight-orange">KES 814,503 (38.3%)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Performance & Recommended Portfolio -->
+                    <div class="etf-right-col">
+                        <div class="etf-subcard">
+                            <h4>Historical Performance of Major Global Indices</h4>
+                            <div class="custom-table-container">
+                                <table class="custom-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Index / ETF</th>
+                                            <th>Return (USD)</th>
+                                            <th>Period</th>
+                                            <th>Focus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>S&P 500 (VOO/SPY)</td>
+                                            <td class="highlight-green">10.5%</td>
+                                            <td>1957–2025</td>
+                                            <td>500 largest US corps</td>
+                                        </tr>
+                                        <tr>
+                                            <td>MSCI World (IWDA)</td>
+                                            <td class="highlight-green">8.8%</td>
+                                            <td>1987–2025</td>
+                                            <td>Developed markets global</td>
+                                        </tr>
+                                        <tr>
+                                            <td>MSCI Emerging Markets</td>
+                                            <td class="highlight-green">9.2%</td>
+                                            <td>2000–2025</td>
+                                            <td>EM incl. Asia & Africa</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nasdaq-100 (QQQ)</td>
+                                            <td class="highlight-green">14.2%</td>
+                                            <td>2000–2025</td>
+                                            <td>Tech-heavy, high volatility</td>
+                                        </tr>
+                                        <tr>
+                                            <td>FTSE All-World (VWRA)</td>
+                                            <td class="highlight-green">8.5%</td>
+                                            <td>2005–2025</td>
+                                            <td>Global all-cap</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vanguard Total Bond</td>
+                                            <td class="highlight-blue">4.1%</td>
+                                            <td>2007–2025</td>
+                                            <td>US inv-grade bonds</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="etf-subcard" style="margin-top: 1.25rem;">
+                            <h4>Recommended ETF Portfolio Allocation (Growth Phase)</h4>
+                            <div class="custom-table-container">
+                                <table class="custom-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Asset Category</th>
+                                            <th>Recommended ETF</th>
+                                            <th>Allocation</th>
+                                            <th>Key Rationale</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Core Equities</strong></td>
+                                            <td>Vanguard S&P 500 (VOO)</td>
+                                            <td class="highlight-blue">50%</td>
+                                            <td>US large cap, ultra-low fee (0.03%)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Global Developed</strong></td>
+                                            <td>iShares MSCI World (IWDA)</td>
+                                            <td class="highlight-blue">25%</td>
+                                            <td>Diversifies outside the US</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Emerging Markets</strong></td>
+                                            <td>Vanguard FTSE EM (VWO)</td>
+                                            <td class="highlight-blue">15%</td>
+                                            <td>Growth exposure in emerging nations</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Fixed Income</strong></td>
+                                            <td>iShares Global Agg Bond (AGGU)</td>
+                                            <td class="highlight-blue">10%</td>
+                                            <td>Stability and defensive buffer</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Access Platforms Section -->
+                <div class="etf-platforms" style="margin-top: 1.5rem;">
+                    <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);">How to Invest in Global ETFs from Kenya</h4>
+                    <p class="card-subtitle" style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.8rem;">Use reputable international brokerages to access overseas exchanges</p>
+                    <div class="platform-grid">
+                        <div class="platform-item">
+                            <div class="platform-logo">🌐</div>
+                            <h5>Interactive Brokers</h5>
+                            <div class="platform-detail"><span>Min. Deposit</span><strong>USD 0</strong></div>
+                            <div class="platform-detail"><span>ETFs</span><strong>13,000+</strong></div>
+                            <div class="platform-detail"><span>Fee</span><strong>~USD 1 / trade</strong></div>
+                            <p class="platform-notes">Gold standard for global access. Extremely low transaction costs.</p>
+                        </div>
+                        <div class="platform-item">
+                            <div class="platform-logo">🇩🇰</div>
+                            <h5>Saxo Bank</h5>
+                            <div class="platform-detail"><span>Min. Deposit</span><strong>USD 2,000</strong></div>
+                            <div class="platform-detail"><span>ETFs</span><strong>7,000+</strong></div>
+                            <div class="platform-detail"><span>Fee</span><strong>~USD 3 / trade</strong></div>
+                            <p class="platform-notes">Very secure and robust, but higher entry barrier and custody fees.</p>
+                        </div>
+                        <div class="platform-item">
+                            <div class="platform-logo">🦅</div>
+                            <h5>Charles Schwab Intl</h5>
+                            <div class="platform-detail"><span>Min. Deposit</span><strong>USD 25,000</strong></div>
+                            <div class="platform-detail"><span>ETFs</span><strong>4,000+ US</strong></div>
+                            <div class="platform-detail"><span>Fee</span><strong>USD 0 commission</strong></div>
+                            <p class="platform-notes">For high net worth individuals. Premium US brokerage service.</p>
+                        </div>
+                        <div class="platform-item">
+                            <div class="platform-logo">🐂</div>
+                            <h5>eToro</h5>
+                            <div class="platform-detail"><span>Min. Deposit</span><strong>USD 50</strong></div>
+                            <div class="platform-detail"><span>ETFs</span><strong>250+</strong></div>
+                            <div class="platform-detail"><span>Fee</span><strong>0% commission</strong></div>
+                            <p class="platform-notes">User-friendly interface, ideal for beginners with smaller capital.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Recommended Portfolio Allocation Chart -->
             <div class="charts-row" style="margin-top: 2rem;">
                 <div class="chart-card">

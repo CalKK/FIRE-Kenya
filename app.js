@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateFireTypes();
     initSimulatorSliders();
     populateWealthAvenues();
+    initFeeDragCalculator();
 
     // Initialize all charts after a small delay to ensure DOM is ready
     setTimeout(() => {
@@ -136,6 +137,55 @@ function initLoadingScreen() {
         document.getElementById('loadingScreen').classList.add('hidden');
     }, 2200);
 }
+
+function initFeeDragCalculator() {
+    const principalInput = document.getElementById('feeCalcPrincipal');
+    const yearsSlider = document.getElementById('feeCalcYears');
+    const returnSlider = document.getElementById('feeCalcReturn');
+    const etfFeeInput = document.getElementById('feeCalcEtfFee');
+    const activeFeeInput = document.getElementById('feeCalcActiveFee');
+
+    const yearsVal = document.getElementById('feeCalcYearsVal');
+    const returnVal = document.getElementById('feeCalcReturnVal');
+    
+    const resultEtf = document.getElementById('feeResultEtf');
+    const resultActive = document.getElementById('feeResultActive');
+    const resultDrag = document.getElementById('feeResultDrag');
+
+    if (!principalInput || !yearsSlider || !returnSlider || !etfFeeInput || !activeFeeInput) return;
+
+    function update() {
+        const principal = parseFloat(principalInput.value) || 0;
+        const years = parseInt(yearsSlider.value) || 0;
+        const grossReturn = (parseFloat(returnSlider.value) || 0) / 100;
+        const etfFee = (parseFloat(etfFeeInput.value) || 0) / 100;
+        const activeFee = (parseFloat(activeFeeInput.value) || 0) / 100;
+
+        if (yearsVal) yearsVal.textContent = `${years} Years`;
+        if (returnVal) returnVal.textContent = `${(grossReturn * 100).toFixed(0)}%`;
+
+        const etfNetRate = grossReturn - etfFee;
+        const activeNetRate = grossReturn - activeFee;
+
+        const etfYield = principal * Math.pow(1 + etfNetRate, years);
+        const activeYield = principal * Math.pow(1 + activeNetRate, years);
+        const drag = etfYield - activeYield;
+        const dragPct = etfYield > 0 ? (drag / etfYield) * 100 : 0;
+
+        if (resultEtf) resultEtf.textContent = formatKES(etfYield);
+        if (resultActive) resultActive.textContent = formatKES(activeYield);
+        if (resultDrag) resultDrag.textContent = `${formatKES(drag)} (${dragPct.toFixed(1)}%)`;
+    }
+
+    principalInput.addEventListener('input', update);
+    yearsSlider.addEventListener('input', update);
+    returnSlider.addEventListener('input', update);
+    etfFeeInput.addEventListener('input', update);
+    activeFeeInput.addEventListener('input', update);
+
+    update();
+}
+
 
 function initNavigation() {
     const links = document.querySelectorAll('.nav-link');
