@@ -2717,3 +2717,129 @@ body {
     justify-content: flex-end;
     gap: 0.75rem;
 }
+
+/* ==================== TIER 4: CASH-FLOW BUSINESSES ==================== */
+
+.tier-business {
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.04) 0%, rgba(234, 88, 12, 0.04) 100%);
+}
+
+.tier-badge-business {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.15));
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.instrument-grid-5 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+/* ==================== CAREER PAYSLIP TABLE ==================== */
+
+.career-trajectory-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.career-payslip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    min-width: 750px;
+}
+
+.career-payslip-table thead {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.career-payslip-table th {
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+    white-space: nowrap;
+}
+
+.career-payslip-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+
+.career-payslip-table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.career-payslip-table .mono-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+}
+
+.career-payslip-table .deduction {
+    color: var(--accent-danger, #ef4444);
+    opacity: 0.8;
+}
+
+.career-payslip-table .highlight-green {
+    color: var(--accent-success, #10b981);
+}
+
+.career-stage-badge {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--accent-primary, #6366f1);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.04em;
+}
+
+.career-age {
+    font-size: 0.72rem;
+    color: var(--text-muted, #5a6178);
+    margin-top: 0.15rem;
+}
+
+.payslip-footnotes {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.payslip-footnotes p {
+    font-size: 0.7rem;
+    color: var(--text-muted, #5a6178);
+    line-height: 1.5;
+    margin: 0.15rem 0;
+}
+
+@media (max-width: 768px) {
+    .instrument-grid-5 {
+        grid-template-columns: 1fr;
+    }
+    
+    .career-payslip-table {
+        font-size: 0.75rem;
+    }
+    
+    .career-payslip-table th,
+    .career-payslip-table td {
+        padding: 0.45rem 0.5rem;
+    }
+}

@@ -54,6 +54,184 @@ const PERSONAL = {
     privateEquityReturn: 20,
 };
 
+// ==================== KENYA 2026 PAYROLL TAX ENGINE ====================
+// Source: KRA Finance Act 2023, NSSF Act 2013 (Year 4, Feb 2026+), SHA Act 2023
+
+function computeNetSalary(grossMonthly) {
+    // 1. NSSF (6% employee, Tier I + Tier II)
+    const nssf_tier1 = Math.min(grossMonthly, 9000) * 0.06;                          // max 540
+    const nssf_tier2 = Math.max(0, Math.min(grossMonthly, 108000) - 9000) * 0.06;    // max 5,940
+    const nssf = Math.round(nssf_tier1 + nssf_tier2);                                 // max 6,480
+
+    // 2. SHIF (2.75% of gross, min KES 300, no cap)
+    const shif = Math.max(300, Math.round(grossMonthly * 0.0275));
+
+    // 3. Housing Levy (1.5% of gross, NOT tax-deductible since Dec 2024)
+    const housingLevy = Math.round(grossMonthly * 0.015);
+
+    // 4. Taxable Income = Gross - NSSF (NSSF is tax-deductible; SHIF & Housing Levy are NOT)
+    const taxableIncome = grossMonthly - nssf;
+
+    // 5. PAYE (progressive bands on monthly taxable income)
+    let paye = 0;
+    let remaining = taxableIncome;
+
+    const bands = [
+        { limit: 24000,  rate: 0.10 },
+        { limit: 8333,   rate: 0.25 },
+        { limit: 467667, rate: 0.30 },
+        { limit: 300000, rate: 0.325 },
+        { limit: Infinity, rate: 0.35 },
+    ];
+
+    for (const band of bands) {
+        const taxable = Math.min(remaining, band.limit);
+        paye += taxable * band.rate;
+        remaining -= taxable;
+        if (remaining <= 0) break;
+    }
+    paye = Math.round(paye);
+
+    // 6. Personal Relief (KES 2,400/month)
+    const personalRelief = 2400;
+    const payeAfterRelief = Math.max(0, paye - personalRelief);
+
+    // 7. Net Pay
+    const totalDeductions = payeAfterRelief + nssf + shif + housingLevy;
+    const netPay = grossMonthly - totalDeductions;
+
+    return {
+        gross: grossMonthly,
+        nssf,
+        shif,
+        housingLevy,
+        taxableIncome,
+        payeGross: paye,
+        personalRelief,
+        paye: payeAfterRelief,
+        totalDeductions,
+        netPay,
+        effectiveTaxRate: ((totalDeductions / grossMonthly) * 100).toFixed(1),
+    };
+}
+
+// Career stages with gross salary benchmarks
+const CAREER_STAGES = [
+    { stage: 1, role: 'Intern / Attachment',     gross: 15480,  ageRange: '23',    phase: 'Stipend',    note: 'Below PAYE threshold — minimal deductions' },
+    { stage: 2, role: 'Entry-Level Professional', gross: 59000,  ageRange: '24–25', phase: 'Foundation',  note: 'First formal employment — full statutory deductions apply' },
+    { stage: 3, role: 'Specialist / Team Lead',   gross: 120000, ageRange: '26–29', phase: 'Acceleration', note: 'NSSF Tier II maxes out — career growth accelerates savings' },
+    { stage: 4, role: 'Manager / Senior Engineer', gross: 250000, ageRange: '30–35', phase: 'Wealth Building', note: 'Peak earning growth — 30% PAYE band captures most income' },
+    { stage: 5, role: 'Director / Dept. Head',    gross: 450000, ageRange: '36–44', phase: 'Scaling',     note: 'NSSF capped — marginal tax rate 30%. Business income diversifies' },
+    { stage: 6, role: 'C-Suite / Founder',        gross: 800000, ageRange: '45–50', phase: 'FIRE Glide',  note: '32.5% band begins — tax optimization becomes critical' },
+];
+
+function populateCareerTrajectory() {
+    const container = document.getElementById('careerTrajectoryTable');
+    if (!container) return;
+
+    const rows = CAREER_STAGES.map(s => {
+        const p = computeNetSalary(s.gross);
+        return `
+        <tr>
+            <td><span class="career-stage-badge">S${s.stage}</span></td>
+            <td>
+                <strong>${s.role}</strong>
+                <div class="career-age">${s.ageRange}</div>
+            </td>
+            <td class="mono-num">${formatKES(p.gross)}</td>
+            <td class="mono-num deduction">${formatKES(p.nssf)}</td>
+            <td class="mono-num deduction">${formatKES(p.shif)}</td>
+            <td class="mono-num deduction">${formatKES(p.housingLevy)}</td>
+            <td class="mono-num deduction">${formatKES(p.paye)}</td>
+            <td class="mono-num highlight-green"><strong>${formatKES(p.netPay)}</strong></td>
+            <td class="mono-num">${p.effectiveTaxRate}%</td>
+        </tr>`;
+    }).join('');
+
+    container.innerHTML = `
+        <table class="career-payslip-table">
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Role</th>
+                    <th>Gross/mo</th>
+                    <th>NSSF</th>
+                    <th>SHIF</th>
+                    <th>Housing</th>
+                    <th>PAYE</th>
+                    <th>Net Pay</th>
+                    <th>Eff. Tax</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+        <div class="payslip-footnotes">
+            <p>PAYE: Finance Act 2023 progressive bands (10% / 25% / 30% / 32.5% / 35%) — Personal Relief KES 2,400/mo applied</p>
+            <p>NSSF: Year 4 (Feb 2026+) Tier I (6% up to KES 9K) + Tier II (6% of KES 9K–108K) — Employee portion only</p>
+            <p>SHIF: 2.75% of gross (min KES 300, no cap) · Housing Levy: 1.5% of gross (not tax-deductible)</p>
+        </div>
+    `;
+}
+
+// Business Investment Constants
+const BUSINESS_INVESTMENTS = [
+    {
+        name: 'Car Wash',
+        icon: '🚗',
+        capital: { min: 300000, max: 500000 },
+        monthlyRevenue: { min: 80000, max: 200000 },
+        netMargin: 0.40,
+        breakEvenMonths: 9,
+        riskLevel: 'Low-Medium',
+        entryPhase: 'Phase 2 (Age 26+)',
+        keySuccess: 'Location near residential estates or petrol stations',
+    },
+    {
+        name: 'Laundromat',
+        icon: '👔',
+        capital: { min: 500000, max: 1500000 },
+        monthlyRevenue: { min: 250000, max: 400000 },
+        netMargin: 0.35,
+        breakEvenMonths: 15,
+        riskLevel: 'Low-Medium',
+        entryPhase: 'Phase 3 (Age 28+)',
+        keySuccess: 'High-density urban area with drop-off/delivery service',
+    },
+    {
+        name: 'Restaurant / Café',
+        icon: '🍽️',
+        capital: { min: 1000000, max: 3000000 },
+        monthlyRevenue: { min: 200000, max: 600000 },
+        netMargin: 0.20,
+        breakEvenMonths: 21,
+        riskLevel: 'Medium-High',
+        entryPhase: 'Phase 4 (Age 32+)',
+        keySuccess: 'Value-driven concept in business districts — operator discipline',
+    },
+    {
+        name: 'Airbnb Unit',
+        icon: '🏡',
+        capital: { min: 2000000, max: 5000000 },
+        monthlyRevenue: { min: 80000, max: 150000 },
+        netMargin: 0.55,
+        breakEvenMonths: 30,
+        riskLevel: 'Medium',
+        entryPhase: 'Phase 3–4 (Age 30+)',
+        keySuccess: 'Prime Nairobi location (Kilimani, Westlands) + professional management',
+    },
+    {
+        name: 'Boutique Resort',
+        icon: '🏖️',
+        capital: { min: 10000000, max: 30000000 },
+        monthlyRevenue: { min: 500000, max: 2000000 },
+        netMargin: 0.25,
+        breakEvenMonths: 48,
+        riskLevel: 'High',
+        entryPhase: 'Phase 5 (Age 40+)',
+        keySuccess: 'Tourism corridor (Coast, Maasai Mara) + MICE & domestic tourism focus',
+    },
+];
+
 // ==================== OFF-BOOK INCOME ====================
 let offBookIncome = 0;
 let offBookType = 'monthly';
@@ -116,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSimulatorSliders();
     populateWealthAvenues();
     initFeeDragCalculator();
+    populateCareerTrajectory();
 
     // Initialize all charts after a small delay to ensure DOM is ready
     setTimeout(() => {
@@ -345,23 +524,30 @@ function populateGoals() {
 // ==================== TIMELINE ====================
 function populateTimeline() {
     const events = [
-        { date: 'Jul 2026', title: '📍 Now - Current Position', desc: 'Stipend income of KES 15,480/month. Total savings: KES 173,000. Investment portfolio: KES 0.', amount: 'Savings: KES 173,000', type: 'current' },
-        { date: 'Sep 2026', title: '💼 Start Job', desc: 'Net salary: KES 59,000/month. Buy KES 6,995 suit from first paycheck.', amount: 'Salary: KES 59,000/mo', type: 'milestone' },
-        { date: 'Oct 2026', title: '📱 Buy Phone', desc: 'KES 80,000 phone. First paycheck (KES 59,000) + KES 21,000 top-up from savings. Start weekly KES 350 savings to MMF.', amount: 'Phone: KES 80,000', type: 'milestone' },
+        { date: 'Jul 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (net ${formatKES(computeNetSalary(PERSONAL.currentStipend).netPay)}). Total savings: ${formatKES(PERSONAL.currentSavings)}. Investment portfolio: KES 0.`, amount: 'Savings: KES 173,000', type: 'current' },
+        { date: 'Sep 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Buy ${formatKES(PERSONAL.suitCost)} suit.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
+        { date: 'Oct 2026', title: '📱 Buy Phone', desc: 'KES 80,000 phone. First paycheck + KES 21,000 top-up from savings. Start weekly KES 350 savings to MMF.', amount: 'Phone: KES 80,000', type: 'milestone' },
         { date: 'Oct 2026', title: '💰 Weekly Savings Begin', desc: 'KES 350/week = KES 1,400/month deposited into Money Market Fund.', amount: 'KES 350/week', type: '' },
         { date: 'Jan 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
         { date: 'Mar 2027', title: '📊 First T-Bill Purchase', desc: 'MMF balance reaches KES 50,000. Roll into 91-day Treasury Bills at ~8.5% yield.', amount: 'T-Bill: KES 50,000', type: '' },
         { date: 'Jun 2027', title: '📈 Start Stock Investing', desc: 'Begin monthly KES 5,000 NSE purchases. Focus on Safaricom, Equity Group, KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
         { date: 'Sep 2027', title: '🎂 Turn 25', desc: 'Age 25 - review investment allocation. Portfolio target check: on track for KES 1M by 2030.', amount: '', type: '' },
         { date: 'Jun 2028', title: '🔄 Job Contract Ends', desc: 'End of initial KES 59,000/month contract. Estimated savings: ~KES 350K+. Career transition or upgrade.', amount: '', type: 'milestone' },
-        { date: 'Jul 2028', title: '📈 Career Growth', desc: 'Target next role at KES 80K–120K/month. Increase investment allocation to 30%+.', amount: 'Target: KES 100K/mo', type: '' },
-        { date: 'Jan 2030', title: '🎯 KES 1M Portfolio!', desc: 'Investment portfolio hits KES 1 million milestone. Diversified across T-Bonds, stocks, MMF, and SACCO.', amount: '🎉 KES 1,000,000', type: 'milestone' },
+        { date: 'Jul 2028', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
+        { date: 'Oct 2028', title: '🚗 Launch Car Wash Business', desc: 'First business investment: KES 300K–500K capital from savings + SACCO loan. Target location near residential estate or petrol station. Projected KES 80K–200K/month revenue at 40% net margin. Break-even: 6–12 months.', amount: 'Capital: KES 300-500K', type: 'milestone' },
+        { date: 'Jan 2030', title: '🎯 KES 1M Portfolio!', desc: 'Investment portfolio hits KES 1 million milestone. Diversified across T-Bonds, stocks, MMF, SACCO, and car wash cash flows.', amount: '🎉 KES 1,000,000', type: 'milestone' },
         { date: 'Dec 2030', title: '🏠 Move Out + 🚗 Buy Car', desc: 'Rent at KES 40,000/month. Purchase first car (KES 1M-1.5M). Major lifestyle upgrade - budget restructure required.', amount: 'Car: KES 1-1.5M', type: 'milestone' },
-        { date: '2032–2035', title: '💍 Marriage & Family', desc: 'Start family. Budget for wife and children. Scale investments with growing career income. Open education funds for children.', amount: '', type: '' },
+        { date: 'Jun 2031', title: '👔 Launch Laundromat', desc: 'Second business: KES 500K–1.5M capital. High-density urban location with drop-off and delivery service. Projected KES 250K–400K/month revenue at 35% margin. Car wash cash flows fund expansion.', amount: 'Capital: KES 500K-1.5M', type: 'milestone' },
+        { date: '2032', title: '💍 Marriage & Family', desc: `Stage 4: Manager role at KES 250K gross → Net ${formatKES(computeNetSalary(250000).netPay)}/month. Start family. Budget for wife and children. Two businesses generating passive cash flow.`, amount: `Net: ${formatKES(computeNetSalary(250000).netPay)}/mo`, type: '' },
+        { date: '2033', title: '🏡 First Airbnb Unit', desc: 'Acquire furnished apartment in Kilimani/Westlands (KES 2M–5M). Professional management agency handles operations. KES 80K–150K/month at 55% net margin. SACCO mortgage + business cash flows fund purchase.', amount: 'Capital: KES 2-5M', type: 'milestone' },
+        { date: '2035–2037', title: '🍽️ Open Restaurant / Café', desc: 'Value-driven concept in a Nairobi business district. KES 1M–3M capital from accumulated business proceeds. KES 200K–600K/month revenue at 20% margin. Requires operator discipline — hire experienced manager.', amount: 'Capital: KES 1-3M', type: 'milestone' },
         { date: '2035–2040', title: '🏗️ Property Investment', desc: 'Consider buying property via SACCO mortgage. Build equity and eliminate rent. Explore D-REITs for diversification.', amount: '', type: '' },
-        { date: '2040–2045', title: '📚 Children\'s Education Peak', desc: 'School fees for 3 children. Unit trust education funds should cover majority. Maintain investment discipline.', amount: '', type: '' },
-        { date: '2045–2050', title: '🛡️ FIRE Glide Path', desc: 'Shift to conservative allocation (70% bonds). Build 2-year cash buffer. Establish passive income streams.', amount: '', type: '' },
-        { date: 'Sep 2052', title: '🔥 FIRE - Retire at 50!', desc: 'Financial Independence achieved. Passive income from bonds, dividends, rental income, and SACCO interest covers all family expenses.', amount: '🔥 FIRE!', type: 'milestone' },
+        { date: '2037', title: '📈 Stage 5: Director', desc: `Promotion to Director/Dept Head at KES 450K gross → Net ${formatKES(computeNetSalary(450000).netPay)}/month. Four active businesses generating combined KES 500K+ passive monthly income.`, amount: `Net: ${formatKES(computeNetSalary(450000).netPay)}/mo`, type: 'milestone' },
+        { date: '2040–2045', title: '📚 Children\'s Education Peak', desc: 'School fees for 3 children. Unit trust education funds + business income cover majority. Maintain investment discipline.', amount: '', type: '' },
+        { date: '2042', title: '🏖️ Boutique Resort Investment', desc: 'Crown jewel: KES 10M–30M investment in tourism corridor (Coast or Maasai Mara). MICE + domestic tourism focus. KES 500K–2M/month revenue at 25% margin. Funded by portfolio + business proceeds. Break-even: 3–5 years.', amount: 'Capital: KES 10-30M', type: 'milestone' },
+        { date: '2045', title: '🛡️ Stage 6: C-Suite / Founder', desc: `KES 800K gross → Net ${formatKES(computeNetSalary(800000).netPay)}/month. Five businesses + paper portfolio generating combined KES 1.5M+/month passive income. Begin conservative shift.`, amount: `Net: ${formatKES(computeNetSalary(800000).netPay)}/mo`, type: 'milestone' },
+        { date: '2045–2050', title: '🛡️ FIRE Glide Path', desc: 'Shift to conservative allocation (70% bonds). Build 2-year cash buffer. Business portfolio self-sustaining with hired managers. Establish passive income streams.', amount: '', type: '' },
+        { date: 'Sep 2052', title: '🔥 FIRE - Retire at 50!', desc: 'Financial Independence achieved. Passive income from bonds, dividends, rental income, SACCO interest, and 5 operating businesses covers all family expenses.', amount: '🔥 FIRE!', type: 'milestone' },
     ];
 
     const container = document.getElementById('timelineContainer');
