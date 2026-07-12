@@ -532,6 +532,7 @@ function populateTimeline() {
         { date: 'Mar 2027', title: '📊 First T-Bill Purchase', desc: 'MMF balance reaches KES 50,000. Roll into 91-day Treasury Bills at ~8.5% yield.', amount: 'T-Bill: KES 50,000', type: '' },
         { date: 'Jun 2027', title: '📈 Start Stock Investing', desc: 'Begin monthly KES 5,000 NSE purchases. Focus on Safaricom, Equity Group, KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
         { date: 'Sep 2027', title: '🎂 Turn 25', desc: 'Age 25 - review investment allocation. Portfolio target check: on track for KES 1M by 2030.', amount: '', type: '' },
+        { date: 'Jan 2028', title: '⚖️ Onboard Special Fund Advisory', desc: 'Onboard into CMA-regulated Special Funds (e.g., SIB Mansa-X or Faida OAK) with KES 100,000 from accumulated savings. Set up KES 5,000/month contributions under advisor-guided tactical asset allocation.', amount: 'Entry: KES 100,000', type: '' },
         { date: 'Jun 2028', title: '🔄 Job Contract Ends', desc: 'End of initial KES 59,000/month contract. Estimated savings: ~KES 350K+. Career transition or upgrade.', amount: '', type: 'milestone' },
         { date: 'Jul 2028', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
         { date: 'Oct 2028', title: '🚗 Launch Car Wash Business', desc: 'First business investment: KES 300K–500K capital from savings + SACCO loan. Target location near residential estate or petrol station. Projected KES 80K–200K/month revenue at 40% net margin. Break-even: 6–12 months.', amount: 'Capital: KES 300-500K', type: 'milestone' },
@@ -540,12 +541,14 @@ function populateTimeline() {
         { date: 'Jun 2031', title: '👔 Launch Laundromat', desc: 'Second business: KES 500K–1.5M capital. High-density urban location with drop-off and delivery service. Projected KES 250K–400K/month revenue at 35% margin. Car wash cash flows fund expansion.', amount: 'Capital: KES 500K-1.5M', type: 'milestone' },
         { date: '2032', title: '💍 Marriage & Family', desc: `Stage 4: Manager role at KES 250K gross → Net ${formatKES(computeNetSalary(250000).netPay)}/month. Start family. Budget for wife and children. Two businesses generating passive cash flow.`, amount: `Net: ${formatKES(computeNetSalary(250000).netPay)}/mo`, type: '' },
         { date: '2033', title: '🏡 First Airbnb Unit', desc: 'Acquire furnished apartment in Kilimani/Westlands (KES 2M–5M). Professional management agency handles operations. KES 80K–150K/month at 55% net margin. SACCO mortgage + business cash flows fund purchase.', amount: 'Capital: KES 2-5M', type: 'milestone' },
+        { date: '2034', title: '💵 USD Special Fund Diversification', desc: 'Diversify into USD-denominated Special Funds (e.g., Mansa-X USD) under macro wealth advisory to hedge against local currency (KES) depreciation. Allocate 10% of portfolio to capture global alpha.', amount: 'USD Hedging', type: '' },
         { date: '2035–2037', title: '🍽️ Open Restaurant / Café', desc: 'Value-driven concept in a Nairobi business district. KES 1M–3M capital from accumulated business proceeds. KES 200K–600K/month revenue at 20% margin. Requires operator discipline — hire experienced manager.', amount: 'Capital: KES 1-3M', type: 'milestone' },
         { date: '2035–2040', title: '🏗️ Property Investment', desc: 'Consider buying property via SACCO mortgage. Build equity and eliminate rent. Explore D-REITs for diversification.', amount: '', type: '' },
         { date: '2037', title: '📈 Stage 5: Director', desc: `Promotion to Director/Dept Head at KES 450K gross → Net ${formatKES(computeNetSalary(450000).netPay)}/month. Four active businesses generating combined KES 500K+ passive monthly income.`, amount: `Net: ${formatKES(computeNetSalary(450000).netPay)}/mo`, type: 'milestone' },
         { date: '2040–2045', title: '📚 Children\'s Education Peak', desc: 'School fees for 3 children. Unit trust education funds + business income cover majority. Maintain investment discipline.', amount: '', type: '' },
         { date: '2042', title: '🏖️ Boutique Resort Investment', desc: 'Crown jewel: KES 10M–30M investment in tourism corridor (Coast or Maasai Mara). MICE + domestic tourism focus. KES 500K–2M/month revenue at 25% margin. Funded by portfolio + business proceeds. Break-even: 3–5 years.', amount: 'Capital: KES 10-30M', type: 'milestone' },
         { date: '2045', title: '🛡️ Stage 6: C-Suite / Founder', desc: `KES 800K gross → Net ${formatKES(computeNetSalary(800000).netPay)}/month. Five businesses + paper portfolio generating combined KES 1.5M+/month passive income. Begin conservative shift.`, amount: `Net: ${formatKES(computeNetSalary(800000).netPay)}/mo`, type: 'milestone' },
+        { date: '2046', title: '🛡️ Retirement Asset Restructuring', desc: 'Systems-wide de-risking under advisory guidance. Transition aggressive Special Fund equity/derivative assets into low-volatility, capital-preservation focused sub-funds.', amount: 'De-risking', type: '' },
         { date: '2045–2050', title: '🛡️ FIRE Glide Path', desc: 'Shift to conservative allocation (70% bonds). Build 2-year cash buffer. Business portfolio self-sustaining with hired managers. Establish passive income streams.', amount: '', type: '' },
         { date: 'Sep 2052', title: '🔥 FIRE - Retire at 50!', desc: 'Financial Independence achieved. Passive income from bonds, dividends, rental income, SACCO interest, and 5 operating businesses covers all family expenses.', amount: '🔥 FIRE!', type: 'milestone' },
     ];
@@ -2522,6 +2525,7 @@ async function exportToPDF() {
                 ['T-Bonds (5-10yr)', '12-14%', 'Very Low', 'Secondary', 'KES 50,000'],
                 ['Infra Bonds (Tax-Free)', '12-14%', 'Very Low', 'Secondary', 'KES 50,000'],
                 ['SACCO Deposits', '10-18%', 'Low-Mod', 'Notice', 'KES 200/mo'],
+                ['CMA Special Funds', '12-16%', 'Mod-High', 'Daily/Monthly', 'KES 100,000'],
                 ['NSE Blue-Chips', '12-20%', 'Mod-High', 'T+3', 'KES 100'],
                 ['D-REITs (Acorn)', '7-10%', 'Moderate', 'Monthly', 'KES 5,000'],
                 ['Unit Trust Equity', '12-20%', 'Moderate', 'T+2 to T+5', 'KES 5,000'],
@@ -2530,7 +2534,7 @@ async function exportToPDF() {
         );
 
         subTitle('6.2 Compound Growth (KES 5,000/mo over ' + yearsToRetire + 'yr)');
-        const vRows = [['MMF', 0.10], ['T-Bonds', 0.125], ['SACCO', 0.14], ['NSE', 0.15], ['Unit Trusts', 0.18]].map(v => {
+        const vRows = [['MMF', 0.10], ['T-Bonds', 0.125], ['Special Funds', 0.142], ['SACCO', 0.14], ['NSE', 0.15], ['Unit Trusts', 0.18]].map(v => {
             const mr = v[1] / 12;
             const fv = 5000 * ((Math.pow(1 + mr, months) - 1) / mr);
             return [v[0], fP(v[1] * 100), fK(5000 * months), fK(fv)];
@@ -2708,6 +2712,7 @@ async function exportToPDF() {
             'Track weekly KES ' + wkTransport.toLocaleString('en-KE') + ' transport budget rigorously',
             'Begin monthly KES ' + stipendInvest.toLocaleString('en-KE') + ' investment (MMF + SACCO split)',
             'Join a reputable SACCO (Stima, Kenya Police, or sector-specific)',
+            'Research high-reputation CMA Special Funds and establish advisory prerequisites',
             'Open Interactive Brokers account (free) for future ETF investments',
         ];
         actions.forEach((a, i) => {
