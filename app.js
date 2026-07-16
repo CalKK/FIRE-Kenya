@@ -77,8 +77,8 @@ function computeNetSalary(grossMonthly) {
     let remaining = taxableIncome;
 
     const bands = [
-        { limit: 24000,  rate: 0.10 },
-        { limit: 8333,   rate: 0.25 },
+        { limit: 24000, rate: 0.10 },
+        { limit: 8333, rate: 0.25 },
         { limit: 467667, rate: 0.30 },
         { limit: 300000, rate: 0.325 },
         { limit: Infinity, rate: 0.35 },
@@ -117,12 +117,12 @@ function computeNetSalary(grossMonthly) {
 
 // Career stages with gross salary benchmarks
 const CAREER_STAGES = [
-    { stage: 1, role: 'Intern / Attachment',     gross: 15480,  ageRange: '23',    phase: 'Stipend',    note: 'Below PAYE threshold — minimal deductions' },
-    { stage: 2, role: 'Entry-Level Professional', gross: 59000,  ageRange: '24–25', phase: 'Foundation',  note: 'First formal employment — full statutory deductions apply' },
-    { stage: 3, role: 'Specialist / Team Lead',   gross: 120000, ageRange: '26–29', phase: 'Acceleration', note: 'NSSF Tier II maxes out — career growth accelerates savings' },
+    { stage: 1, role: 'Intern / Attachment', gross: 15480, ageRange: '23', phase: 'Stipend', note: 'Below PAYE threshold — minimal deductions' },
+    { stage: 2, role: 'Entry-Level Professional', gross: 59000, ageRange: '24–25', phase: 'Foundation', note: 'First formal employment — full statutory deductions apply' },
+    { stage: 3, role: 'Specialist / Team Lead', gross: 120000, ageRange: '26–29', phase: 'Acceleration', note: 'NSSF Tier II maxes out — career growth accelerates savings' },
     { stage: 4, role: 'Manager / Senior Engineer', gross: 250000, ageRange: '30–35', phase: 'Wealth Building', note: 'Peak earning growth — 30% PAYE band captures most income' },
-    { stage: 5, role: 'Director / Dept. Head',    gross: 450000, ageRange: '36–44', phase: 'Scaling',     note: 'NSSF capped — marginal tax rate 30%. Business income diversifies' },
-    { stage: 6, role: 'C-Suite / Founder',        gross: 800000, ageRange: '45–50', phase: 'FIRE Glide',  note: '32.5% band begins — tax optimization becomes critical' },
+    { stage: 5, role: 'Director / Dept. Head', gross: 450000, ageRange: '36–44', phase: 'Scaling', note: 'NSSF capped — marginal tax rate 30%. Business income diversifies' },
+    { stage: 6, role: 'C-Suite / Founder', gross: 800000, ageRange: '45–50', phase: 'FIRE Glide', note: '32.5% band begins — tax optimization becomes critical' },
 ];
 
 function populateCareerTrajectory() {
@@ -326,7 +326,7 @@ function initFeeDragCalculator() {
 
     const yearsVal = document.getElementById('feeCalcYearsVal');
     const returnVal = document.getElementById('feeCalcReturnVal');
-    
+
     const resultEtf = document.getElementById('feeResultEtf');
     const resultActive = document.getElementById('feeResultActive');
     const resultDrag = document.getElementById('feeResultDrag');
