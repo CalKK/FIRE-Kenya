@@ -562,6 +562,128 @@ function populateTimeline() {
             ${ev.amount ? `<span class="timeline-amount">${ev.amount}</span>` : ''}
         </div>
     `).join('');
+
+    // ── Graduated Annual Investment Goals Breakdown ──
+    const P = PERSONAL;
+    const expectedReturn = 0.12; // blended portfolio return
+    const moTransport = Math.round(1000 * 52 / 12);
+    const fireTarget = 18000000;
+    let bal = P.currentSavings;
+    let cumInvested = 0;
+    const goalRows = [];
+
+    for (let age = P.currentAge; age <= P.retireAge; age++) {
+        const year = P.birthYear + age;
+        let sal = P.currentStipend;
+        if (age >= 24) sal = P.jobSalary;
+        if (age >= 26) sal = 100000;
+        if (age >= 28) sal = 150000;
+        if (age >= 33) sal = 250000;
+        if (age >= 38) sal = 350000;
+        if (age >= 44) sal = 450000;
+
+        let rent = 0;
+        if (age >= 28 && age < 38) rent = 40000;
+
+        const monthlyInvest = Math.max(0, (sal - rent - moTransport) * 0.30);
+        const annualInvest = Math.round(monthlyInvest * 12);
+        cumInvested += annualInvest;
+
+        // Compound growth
+        bal = bal * (1 + expectedReturn) + annualInvest;
+        if (age === 24) bal -= (P.suitCost + P.phoneCost);
+        if (age === 28) bal -= 1250000; // car purchase
+
+        bal = Math.max(0, bal);
+        const pctOfFire = Math.min(100, (bal / fireTarget) * 100);
+
+        // Determine income phase label
+        let phase = '';
+        if (age < 24) phase = 'Stipend';
+        else if (age < 26) phase = 'First Job';
+        else if (age < 28) phase = 'Career Growth';
+        else if (age < 33) phase = 'Mid-Career';
+        else if (age < 38) phase = 'Senior Role';
+        else if (age < 44) phase = 'Leadership';
+        else phase = 'Peak Career';
+
+        goalRows.push({
+            year,
+            age,
+            phase,
+            monthlyInvest: Math.round(monthlyInvest),
+            annualInvest,
+            cumInvested,
+            portfolio: Math.round(bal),
+            pctOfFire,
+        });
+    }
+
+    const goalsHTML = `
+    <div class="investment-goals-breakdown">
+        <div class="investment-goals-title">
+            <span class="investment-goals-icon">📊</span>
+            <div>
+                <h3>Annual Investment Goals — Graduated Breakdown</h3>
+                <p>Year-by-year targets from age ${P.currentAge} to ${P.retireAge}, showing how investment capacity grows with income phases</p>
+            </div>
+        </div>
+        <div class="investment-goals-table-wrap">
+            <table class="investment-goals-table">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Age</th>
+                        <th>Phase</th>
+                        <th>Monthly Target</th>
+                        <th>Annual Target</th>
+                        <th>Cumulative Invested</th>
+                        <th>Projected Portfolio</th>
+                        <th>FIRE Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${goalRows.map((r, i) => `
+                        <tr class="investment-goals-row${r.age === P.retireAge ? ' fire-row' : ''}" style="animation-delay: ${(events.length + i) * 0.04}s">
+                            <td class="ig-year">${r.year}</td>
+                            <td class="ig-age">${r.age}</td>
+                            <td class="ig-phase"><span class="phase-badge phase-${r.phase.toLowerCase().replace(/\s+/g, '-')}">${r.phase}</span></td>
+                            <td class="ig-amount">${formatKES(r.monthlyInvest)}</td>
+                            <td class="ig-amount">${formatKES(r.annualInvest)}</td>
+                            <td class="ig-amount">${formatKES(r.cumInvested, true)}</td>
+                            <td class="ig-portfolio">${formatKES(r.portfolio, true)}</td>
+                            <td class="ig-progress-cell">
+                                <div class="ig-progress-bar">
+                                    <div class="ig-progress-fill" style="width: ${r.pctOfFire}%"></div>
+                                </div>
+                                <span class="ig-progress-label">${r.pctOfFire.toFixed(1)}%</span>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+        <div class="investment-goals-footer">
+            <div class="ig-footer-stat">
+                <span class="ig-footer-label">Total Contributed</span>
+                <span class="ig-footer-value">${formatKES(cumInvested, true)}</span>
+            </div>
+            <div class="ig-footer-stat">
+                <span class="ig-footer-label">Compound Growth</span>
+                <span class="ig-footer-value ig-highlight">${formatKES(Math.round(bal) - cumInvested, true)}</span>
+            </div>
+            <div class="ig-footer-stat">
+                <span class="ig-footer-label">Final Portfolio</span>
+                <span class="ig-footer-value ig-gold">${formatKES(Math.round(bal), true)}</span>
+            </div>
+            <div class="ig-footer-stat">
+                <span class="ig-footer-label">FIRE Target</span>
+                <span class="ig-footer-value">${formatKES(fireTarget, true)}</span>
+            </div>
+        </div>
+    </div>`;
+
+    container.innerHTML += goalsHTML;
 }
 
 // ==================== CHARTS ====================
@@ -579,14 +701,14 @@ const chartDefaults = {
             borderWidth: 1,
             padding: 12,
             cornerRadius: 8,
-            titleFont: { family: 'Inter', weight: '600' },
+            titleFont: { family: 'Sora', weight: '600' },
             bodyFont: { family: 'JetBrains Mono', size: 12 },
         },
     },
     scales: {
         x: {
             grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-            ticks: { color: '#5a6178', font: { family: 'Inter', size: 11 } }
+            ticks: { color: '#5a6178', font: { family: 'Sora', size: 11 } }
         },
         y: {
             grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
@@ -746,7 +868,7 @@ function initBudgetDoughnut() {
                     position: 'bottom',
                     labels: {
                         color: '#8b92a8',
-                        font: { family: 'Inter', size: 11 },
+                        font: { family: 'Sora', size: 11 },
                         padding: 16,
                         usePointStyle: true,
                         pointStyleWidth: 10,
@@ -808,7 +930,7 @@ function initPortfolioAllocationChart() {
                     position: 'bottom',
                     labels: {
                         color: '#8b92a8',
-                        font: { family: 'Inter', size: 10 },
+                        font: { family: 'Sora', size: 10 },
                         padding: 10,
                         usePointStyle: true,
                         pointStyleWidth: 8,
@@ -861,7 +983,7 @@ function initInvestmentGrowthChart() {
                     align: 'end',
                     labels: {
                         color: '#8b92a8',
-                        font: { family: 'Inter', size: 11 },
+                        font: { family: 'Sora', size: 11 },
                         padding: 16,
                         usePointStyle: true,
                         pointStyleWidth: 10,
@@ -1238,7 +1360,7 @@ function updateSimChart(labels, data, fireData) {
                     align: 'end',
                     labels: {
                         color: '#8b92a8',
-                        font: { family: 'Inter', size: 11 },
+                        font: { family: 'Sora', size: 11 },
                         padding: 16,
                         usePointStyle: true,
                     }
@@ -1432,7 +1554,7 @@ function calculateDecisionImpact() {
                 ...chartDefaults,
                 plugins: {
                     ...chartDefaults.plugins,
-                    legend: { display: true, position: 'top', align: 'end', labels: { color: '#8b92a8', font: { family: 'Inter', size: 11 }, padding: 16, usePointStyle: true } },
+                    legend: { display: true, position: 'top', align: 'end', labels: { color: '#8b92a8', font: { family: 'Sora', size: 11 }, padding: 16, usePointStyle: true } },
                     tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: ctx => ctx.dataset.label + ': ' + formatKES(ctx.parsed.y, true) } }
                 }
             }
@@ -1637,7 +1759,7 @@ function reverseEngineerFIRE() {
             ...chartDefaults,
             plugins: {
                 ...chartDefaults.plugins,
-                legend: { display: true, position: 'top', align: 'end', labels: { color: '#8b92a8', font: { family: 'Inter', size: 11 }, padding: 16, usePointStyle: true } },
+                legend: { display: true, position: 'top', align: 'end', labels: { color: '#8b92a8', font: { family: 'Sora', size: 11 }, padding: 16, usePointStyle: true } },
                 tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: ctx => ctx.dataset.label + ': ' + formatKES(ctx.parsed.y, true) } }
             }
         }
@@ -1802,7 +1924,7 @@ function simulateMarketScenario() {
             ...chartDefaults,
             plugins: {
                 ...chartDefaults.plugins,
-                legend: { display: true, position: 'top', align: 'end', labels: { color: '#8b92a8', font: { family: 'Inter', size: 11 }, padding: 16, usePointStyle: true } },
+                legend: { display: true, position: 'top', align: 'end', labels: { color: '#8b92a8', font: { family: 'Sora', size: 11 }, padding: 16, usePointStyle: true } },
                 tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: ctx => ctx.dataset.label + ': ' + formatKES(ctx.parsed.y, true) } }
             }
         }
