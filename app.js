@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    FIRE Kenya - Financial Independence Dashboard
    Application Logic & Engine
    ============================================================ */
@@ -2114,10 +2114,6 @@ function forecastTuition() {
 
 
 // ==================== COMPREHENSIVE PDF EXPORT ENGINE ====================
-// Transport cost constants (KES 1,000 per week, fixed)
-const WEEKLY_TRANSPORT = 1000;
-const MONTHLY_TRANSPORT = Math.round(WEEKLY_TRANSPORT * 52 / 12); // 4333
-const ANNUAL_TRANSPORT = WEEKLY_TRANSPORT * 52; // 52000
 
 function openExportModal() {
     document.getElementById('pdfExportModal').classList.add('active');
@@ -2159,7 +2155,7 @@ async function exportToPDF() {
 
         let y = MT;
         let currentPage = 1;
-        const TOTAL_STEPS = 12;
+        const TOTAL_STEPS = 18;
 
         // ── Helper functions ──
 
@@ -2327,25 +2323,24 @@ async function exportToPDF() {
 
         function fP(val) { return val.toFixed(1) + '%'; }
 
-        // ── Gather all computational inputs ──
+        // ══════════════════════════════════════════════════
+        //  DYNAMIC STATE COLLECTION — reads all live values
+        // ══════════════════════════════════════════════════
 
         const P = PERSONAL;
         const income = P.currentStipend;
         const savings = P.currentSavings;
-        const retireAge = P.retireAge;
+        const retireAge = parseInt(document.getElementById('fireRetireAge')?.value) || P.retireAge;
         const currentAge = P.currentAge;
         const yearsToRetire = retireAge - currentAge;
         const jobSalary = P.jobSalary;
 
+        // FIRE Calculator — live DOM values
         const annualExpenses = parseFloat(document.getElementById('fireAnnualExpenses')?.value) || 720000;
         const swr = (parseFloat(document.getElementById('fireWithdrawalRate')?.value) || 4) / 100;
         const expectedReturn = (parseFloat(document.getElementById('fireExpectedReturn')?.value) || 12) / 100;
         const inflationRate = (parseFloat(document.getElementById('fireInflation')?.value) || 6) / 100;
         const monthlyInvest = parseFloat(document.getElementById('fireMonthlyInvest')?.value) || 17700;
-
-        const wkTransport = WEEKLY_TRANSPORT;
-        const moTransport = MONTHLY_TRANSPORT;
-        const yrTransport = ANNUAL_TRANSPORT;
 
         // Derived computations
         const inflatedAnnualExpenses = annualExpenses * Math.pow(1 + inflationRate, yearsToRetire);
@@ -2356,18 +2351,99 @@ async function exportToPDF() {
         const pvGrown = savings * Math.pow(1 + monthlyRate, months);
         const annuityFactor = (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
         const portfolioBaseline = pvGrown + monthlyInvest * annuityFactor;
-        const transportOpportunityCost = moTransport * annuityFactor;
 
-        // Budget breakdowns
+        // Budget breakdowns (transport bundled into essentials — no separate line)
         const stipendEssentials = Math.round(income * 0.50);
         const stipendInvest = Math.round(income * 0.30);
         const stipendFun = Math.round(income * 0.20);
-        const stipendEssAfterTransport = stipendEssentials - moTransport;
-
         const jobEssentials = Math.round(jobSalary * 0.50);
         const jobInvest = Math.round(jobSalary * 0.30);
         const jobFun = Math.round(jobSalary * 0.20);
-        const jobEssAfterTransport = jobEssentials - moTransport;
+
+        // Simulator — live DOM values
+        const simSalary = parseFloat(document.getElementById('simSalary')?.value) || 59000;
+        const simSavingsRate = parseFloat(document.getElementById('simSavingsRate')?.value) || 30;
+        const simRent = parseFloat(document.getElementById('simRent')?.value) || 0;
+        const simReturn = parseFloat(document.getElementById('simReturn')?.value) || 12;
+        const simGrowth = parseFloat(document.getElementById('simGrowth')?.value) || 8;
+        const simChildren = parseInt(document.getElementById('simChildren')?.value) || 3;
+
+        // Reverse FIRE — live DOM values
+        const revRetireAge = parseInt(document.getElementById('revRetireAge')?.value) || 50;
+        const revMonthlyExpense = parseFloat(document.getElementById('revMonthlyExpenseRetire')?.value) || 150000;
+        const revSWR = parseFloat(document.getElementById('revWithdrawalRate')?.value) / 100 || 0.035;
+        const revInflation = parseFloat(document.getElementById('revInflation')?.value) / 100 || 0.06;
+        const revReturn = parseFloat(document.getElementById('revExpectedReturn')?.value) / 100 || 0.12;
+        const revCurrentAge = parseInt(document.getElementById('revCurrentAge')?.value) || 23;
+
+        // Market Trends — live DOM values
+        const mktNSE = parseFloat(document.getElementById('mktNSE')?.value) || 15;
+        const mktTBond = parseFloat(document.getElementById('mktTBond')?.value) || 12.5;
+        const mktMMF = parseFloat(document.getElementById('mktMMF')?.value) || 10;
+        const mktREIT = parseFloat(document.getElementById('mktREIT')?.value) || 8;
+        const mktSACCO = parseFloat(document.getElementById('mktSACCO')?.value) || 14;
+        const mktInflation = parseFloat(document.getElementById('mktInflation')?.value) || 6;
+        const allocNSE = parseInt(document.getElementById('allocNSE')?.value) || 30;
+        const allocTBond = parseInt(document.getElementById('allocTBond')?.value) || 25;
+        const allocMMF = parseInt(document.getElementById('allocMMF')?.value) || 15;
+        const allocREIT = parseInt(document.getElementById('allocREIT')?.value) || 10;
+        const allocSACCO = parseInt(document.getElementById('allocSACCO')?.value) || 15;
+        const allocCash = parseInt(document.getElementById('allocCash')?.value) || 5;
+
+        // Insurance — live DOM values
+        const insNHIF = parseFloat(document.getElementById('insNHIF')?.value) || 1700;
+        const insPrivateHealth = parseFloat(document.getElementById('insPrivateHealth')?.value) || 5000;
+        const insHealthStartAge = parseInt(document.getElementById('insHealthStartAge')?.value) || 28;
+        const insCarValue = parseFloat(document.getElementById('insCarValue')?.value) || 1250000;
+        const insCarRate = parseFloat(document.getElementById('insCarRate')?.value) || 5;
+        const insCarStartAge = parseInt(document.getElementById('insCarStartAge')?.value) || 28;
+        const insLifeMonthly = parseFloat(document.getElementById('insLifeMonthly')?.value) || 3000;
+        const insLifeStartAge = parseInt(document.getElementById('insLifeStartAge')?.value) || 30;
+
+        // Tuition — live DOM values
+        const tuitionInflRate = parseFloat(document.getElementById('tuitionInflation')?.value) || 8;
+        const tuitionChildren = [1, 2, 3].map(i => ({
+            birthYear: parseInt(document.getElementById(`child${i}BirthYear`)?.value) || (2032 + i),
+            primary: parseFloat(document.getElementById(`child${i}PrimaryAnnual`)?.value) || 0,
+            secondary: parseFloat(document.getElementById(`child${i}SecondaryAnnual`)?.value) || 0,
+            uni: parseFloat(document.getElementById(`child${i}UniAnnual`)?.value) || 0,
+        }));
+
+        // Decision Lab — in-memory state
+        const decisions = [...decisionLog];
+
+        // Off-book income — globals
+        const obIncome = offBookIncome;
+        const obType = offBookType;
+
+        // ── Checkbox gating ──
+        const sec = {
+            overview:    document.getElementById('chk-overview')?.checked !== false,
+            accounts:    document.getElementById('chk-accounts')?.checked !== false,
+            timeline:    document.getElementById('chk-timeline')?.checked !== false,
+            investments: document.getElementById('chk-investments')?.checked !== false,
+            fireCalc:    document.getElementById('chk-fire-calc')?.checked !== false,
+            simulator:   document.getElementById('chk-simulator')?.checked !== false,
+            decisionLab: document.getElementById('chk-decision-lab')?.checked !== false,
+            reverseFire: document.getElementById('chk-reverse-fire')?.checked !== false,
+            markets:     document.getElementById('chk-markets')?.checked !== false,
+            protection:  document.getElementById('chk-protection')?.checked !== false,
+        };
+
+        // ── Build dynamic TOC ──
+        let secNum = 0;
+        const tocEntries = [];
+        if (sec.overview)    tocEntries.push({ num: ++secNum, title: 'Executive Summary & Key Metrics' });
+        if (sec.accounts)    { tocEntries.push({ num: ++secNum, title: 'Personal Financial Profile' }); tocEntries.push({ num: ++secNum, title: 'Budget Analysis (50/30/20)' }); }
+        if (sec.fireCalc)    { tocEntries.push({ num: ++secNum, title: 'FIRE Number Derivation' }); tocEntries.push({ num: ++secNum, title: 'Portfolio Growth Projections' }); }
+        if (sec.investments) { tocEntries.push({ num: ++secNum, title: 'Kenyan Investment Vehicle Analysis' }); tocEntries.push({ num: ++secNum, title: 'ETFs & Index Funds: Global Opportunities' }); }
+        if (sec.decisionLab) tocEntries.push({ num: ++secNum, title: 'Decision Impact Lab' });
+        if (sec.reverseFire) tocEntries.push({ num: ++secNum, title: 'Reverse FIRE Engineering' });
+        if (sec.markets)     tocEntries.push({ num: ++secNum, title: 'Market Trends & Allocation Analysis' });
+        if (sec.protection)  { tocEntries.push({ num: ++secNum, title: 'Protection: Insurance Impact' }); tocEntries.push({ num: ++secNum, title: 'Education: Tuition Fee Forecasting' }); }
+        if (sec.simulator)   { tocEntries.push({ num: ++secNum, title: 'Scenario & Sensitivity Analysis' }); tocEntries.push({ num: ++secNum, title: 'Risk Assessment & Mitigation' }); }
+        tocEntries.push({ num: ++secNum, title: 'Action Plan & Conclusion' });
+
 
         // ════════════════════════════════════════════
         //  COVER PAGE
@@ -2392,14 +2468,16 @@ async function exportToPDF() {
         doc.text('Comprehensive Financial Independence Report', PW / 2, 120, { align: 'center' });
         doc.setFontSize(9.5);
         doc.setTextColor(99, 102, 241);
-        doc.text('Full Computational Derivations, Transport Integration & ETF Analysis', PW / 2, 130, { align: 'center' });
+        doc.text('Full Computational Derivations, Investment Analysis & Decision Modelling', PW / 2, 130, { align: 'center' });
 
         doc.setFontSize(8.5);
         doc.setTextColor(139, 146, 168);
         doc.text('FIRE Target: ' + fK(fireNumber), PW / 2, 155, { align: 'center' });
         doc.text('Horizon: ' + yearsToRetire + ' years (Age ' + currentAge + ' to ' + retireAge + ')', PW / 2, 162, { align: 'center' });
         doc.text('Return: ' + fP(expectedReturn * 100) + ' | Inflation: ' + fP(inflationRate * 100) + ' | SWR: ' + fP(swr * 100), PW / 2, 169, { align: 'center' });
-        doc.text('Weekly Transport: ' + fK(wkTransport) + ' | Monthly: ' + fK(moTransport), PW / 2, 176, { align: 'center' });
+        if (obIncome > 0) {
+            doc.text('Off-Book Income: ' + fK(obIncome) + (obType === 'onetime' ? ' (one-time)' : '/month'), PW / 2, 176, { align: 'center' });
+        }
 
         const dateStr = new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         doc.setFontSize(8);
@@ -2417,422 +2495,706 @@ async function exportToPDF() {
         sectionTitle('Table of Contents');
         spacer(4);
 
-        const tocItems = [
-            '1. Executive Summary & Key Metrics',
-            '2. Personal Financial Profile',
-            '3. Budget Analysis with Transport Costs',
-            '4. FIRE Number Derivation',
-            '5. Portfolio Growth Projections',
-            '6. Kenyan Investment Vehicle Analysis',
-            '7. ETFs & Index Funds: Global Opportunities',
-            '8. Scenario & Sensitivity Analysis',
-            '9. Risk Assessment & Mitigation',
-            '10. Action Plan & Conclusion',
-        ];
-        tocItems.forEach(item => {
+        tocEntries.forEach(item => {
             doc.setFontSize(10);
             doc.setTextColor(55, 55, 65);
             doc.setFont('helvetica', 'normal');
-            doc.text(item, ML + 4, y);
+            doc.text(item.num + '. ' + item.title, ML + 4, y);
             y += 8;
         });
 
+        // Track section numbering for content
+        let sn = 0;
+
         // ════════════════════════════════════════════
-        //  SECTION 1: EXECUTIVE SUMMARY
+        //  SECTION: EXECUTIVE SUMMARY
         // ════════════════════════════════════════════
 
-        prog(3, 'Computing executive summary...');
-        newPage();
-        sectionTitle('1. Executive Summary');
-        spacer(2);
-        para('This report presents a rigorous computational analysis of the path to Financial Independence, Retire Early (FIRE). Every figure is derived from first-principles financial mathematics with all assumptions and formulae made explicit. A fixed weekly transport expenditure of KES 1,000 is integrated into all financial computations throughout.');
-        spacer(2);
-        subTitle('Key Metrics at a Glance');
-        dataTable(
-            ['Metric', 'Value', 'Derivation'],
-            [
+        if (sec.overview) {
+            sn++;
+            prog(3, 'Computing executive summary...');
+            newPage();
+            sectionTitle(sn + '. Executive Summary');
+            spacer(2);
+            para('This report presents a rigorous computational analysis of the path to Financial Independence, Retire Early (FIRE). Every figure is derived from first-principles financial mathematics with all assumptions and formulae made explicit. All values reflect the current dashboard state at the time of export.');
+            spacer(2);
+            subTitle('Key Metrics at a Glance');
+            const summaryRows = [
                 ['Current Age', String(currentAge), 'PERSONAL.currentAge'],
-                ['Retirement Age', String(retireAge), 'PERSONAL.retireAge'],
+                ['Retirement Age', String(retireAge), 'User-configured'],
                 ['Years to FIRE', String(yearsToRetire), retireAge + ' - ' + currentAge],
                 ['Current Savings', fK(savings), 'PERSONAL.currentSavings'],
                 ['Current Monthly Income', fK(income), 'Stipend income'],
                 ['Next Job Salary', fK(jobSalary), 'From Sep 2026'],
-                ['Weekly Transport Cost', fK(wkTransport), 'Fixed weekly expenditure'],
-                ['Monthly Transport Cost', fK(moTransport), wkTransport + ' x 52/12'],
-                ['Annual Transport Cost', fK(yrTransport), wkTransport + ' x 52'],
+                ['Annual Expenses', fK(annualExpenses), 'Live FIRE calc input'],
                 ['FIRE Target (nominal)', fK(fireNumber), 'Inflated expenses / SWR'],
-                ['Safe Withdrawal Rate', fP(swr * 100), 'Conservative for 40+ yr horizon'],
-                ['Expected Return', fP(expectedReturn * 100), 'Blended portfolio return'],
-                ['Inflation Rate', fP(inflationRate * 100), 'Kenya long-term average'],
+                ['Safe Withdrawal Rate', fP(swr * 100), 'User-configured'],
+                ['Expected Return', fP(expectedReturn * 100), 'User-configured'],
+                ['Inflation Rate', fP(inflationRate * 100), 'User-configured'],
                 ['Real Return', fP(realReturn * 100), '(1+nom)/(1+inf) - 1'],
-                ['Transport Opp. Cost', fK(transportOpportunityCost), moTransport + ' x annuity factor'],
-            ],
-            [55, 50, 75]
-        );
+                ['Monthly Investment', fK(monthlyInvest), 'Live FIRE calc input'],
+                ['Projected Portfolio', fK(portfolioBaseline), 'FV(PV + PMT annuity)'],
+            ];
+            if (obIncome > 0) {
+                summaryRows.push(['Off-Book Income', fK(obIncome) + (obType === 'onetime' ? ' (one-time)' : '/mo'), 'User-applied']);
+            }
+            if (decisions.length > 0) {
+                summaryRows.push(['Active Decisions', String(decisions.length), 'Decision Impact Lab']);
+            }
+            dataTable(['Metric', 'Value', 'Source'], summaryRows, [55, 50, 75]);
+        }
 
         // ════════════════════════════════════════════
-        //  SECTION 2: PERSONAL PROFILE
+        //  SECTION: PERSONAL PROFILE & BUDGET
         // ════════════════════════════════════════════
 
-        prog(4, 'Building personal profile...');
-        newPage();
-        sectionTitle('2. Personal Financial Profile');
-        spacer(2);
+        if (sec.accounts) {
+            sn++;
+            prog(4, 'Building personal profile...');
+            newPage();
+            sectionTitle(sn + '. Personal Financial Profile');
+            spacer(2);
 
-        subTitle('2.1 Income Timeline');
-        dataTable(
-            ['Period', 'Monthly Income', 'Source', 'Duration'],
-            [
-                ['Jul - Aug 2026', fK(income), 'Stipend', '3 months'],
-                ['Sep 2026 - Jun 2028', fK(jobSalary), 'Contract', '22 months'],
-                ['Jul 2028 - Dec 2029', 'KES 100,000', 'Career growth', '18 months'],
-                ['Jan 2030 - Dec 2034', 'KES 150,000', 'Mid-career', '5 years'],
-                ['Jan 2035 - Dec 2039', 'KES 250,000', 'Senior role', '5 years'],
-                ['Jan 2040 - Dec 2044', 'KES 350,000', 'Leadership', '5 years'],
-                ['Jan 2045 - Sep 2052', 'KES 450,000', 'Peak career', '~8 years'],
-            ],
-            [48, 42, 48, 42]
-        );
+            subTitle(sn + '.1 Income Timeline');
+            dataTable(
+                ['Period', 'Monthly Income', 'Source', 'Duration'],
+                [
+                    ['Jul - Aug 2026', fK(income), 'Stipend', '3 months'],
+                    ['Sep 2026 - Jun 2028', fK(jobSalary), 'Contract', '22 months'],
+                    ['Jul 2028 - Dec 2029', 'KES 100,000', 'Career growth', '18 months'],
+                    ['Jan 2030 - Dec 2034', 'KES 150,000', 'Mid-career', '5 years'],
+                    ['Jan 2035 - Dec 2039', 'KES 250,000', 'Senior role', '5 years'],
+                    ['Jan 2040 - Dec 2044', 'KES 350,000', 'Leadership', '5 years'],
+                    ['Jan 2045 - Sep 2052', 'KES 450,000', 'Peak career', '~8 years'],
+                ],
+                [48, 42, 48, 42]
+            );
 
-        subTitle('2.2 Transport Expenditure Derivation');
-        formulaBlock('Weekly Transport = KES ' + wkTransport.toLocaleString('en-KE') + ' (fixed)');
-        formulaBlock('Monthly = ' + wkTransport + ' x (52/12) = KES ' + moTransport.toLocaleString('en-KE'));
-        formulaBlock('Annual = ' + wkTransport + ' x 52 = KES ' + yrTransport.toLocaleString('en-KE'));
-        formulaBlock('Total over ' + yearsToRetire + ' years = KES ' + (yrTransport * yearsToRetire).toLocaleString('en-KE'));
+            subTitle(sn + '.2 Planned Major Expenditures');
+            dataTable(
+                ['Item', 'Cost (KES)', 'Timing', 'Funding Source'],
+                [
+                    ['Professional Suit', fK(P.suitCost), 'Sep 2026', 'First paycheck'],
+                    ['Phone Purchase', fK(P.phoneCost), 'Oct 2026', 'Paycheck + KES 21K top-up'],
+                    ['First Car', 'KES 1,250,000', 'Dec 2030', 'Savings / SACCO loan'],
+                ],
+                [42, 40, 42, 56]
+            );
 
-        subTitle('2.3 Planned Major Expenditures');
-        dataTable(
-            ['Item', 'Cost (KES)', 'Timing', 'Funding Source'],
-            [
-                ['Professional Suit', fK(P.suitCost), 'Sep 2026', 'First paycheck'],
-                ['Phone Purchase', fK(P.phoneCost), 'Oct 2026', 'Paycheck + KES 21K top-up'],
-                ['First Car', 'KES 1,250,000', 'Dec 2030', 'Savings / SACCO loan'],
-            ],
-            [42, 40, 42, 56]
-        );
+            // Budget Analysis
+            sn++;
+            spacer(4);
+            sectionTitle(sn + '. Budget Analysis (50/30/20)');
+            spacer(2);
+            para('The 50/30/20 framework allocates income into Essentials (50%), Investments (30%), and Entertainment (20%). All recurring costs including transport and airtime are bundled within the Essentials allocation.');
+            spacer(2);
 
-        // ════════════════════════════════════════════
-        //  SECTION 3: BUDGET ANALYSIS
-        // ════════════════════════════════════════════
+            subTitle(sn + '.1 Stipend Phase (' + fK(income) + '/mo)');
+            formulaBlock('Essentials (50%) = ' + fK(income) + ' x 0.50 = ' + fK(stipendEssentials));
+            formulaBlock('Investments (30%) = ' + fK(income) + ' x 0.30 = ' + fK(stipendInvest));
+            formulaBlock('Entertainment (20%) = ' + fK(income) + ' x 0.20 = ' + fK(stipendFun));
 
-        prog(5, 'Computing budget analysis...');
-        newPage();
-        sectionTitle('3. Budget Analysis with Transport Costs');
-        spacer(2);
-        para('The 50/30/20 framework allocates income into Essentials (50%), Investments (30%), and Entertainment (20%). Transport is classified as Essential, preserving the full investment allocation.');
-        spacer(2);
-
-        subTitle('3.1 Stipend Phase (KES ' + income.toLocaleString('en-KE') + '/mo)');
-        formulaBlock('Essentials (50%) = ' + income.toLocaleString('en-KE') + ' x 0.50 = KES ' + stipendEssentials.toLocaleString('en-KE'));
-        formulaBlock('Investments (30%) = ' + income.toLocaleString('en-KE') + ' x 0.30 = KES ' + stipendInvest.toLocaleString('en-KE'));
-        formulaBlock('Entertainment (20%) = ' + income.toLocaleString('en-KE') + ' x 0.20 = KES ' + stipendFun.toLocaleString('en-KE'));
-        boldPara('After Transport Deduction:');
-        formulaBlock('Essentials after Transport = KES ' + stipendEssentials.toLocaleString('en-KE') + ' - KES ' + moTransport.toLocaleString('en-KE') + ' = KES ' + stipendEssAfterTransport.toLocaleString('en-KE'));
-
-        spacer(2);
-        subTitle('3.2 Employment Phase (KES ' + jobSalary.toLocaleString('en-KE') + '/mo)');
-        formulaBlock('Essentials (50%) = KES ' + jobEssentials.toLocaleString('en-KE'));
-        formulaBlock('Investments (30%) = KES ' + jobInvest.toLocaleString('en-KE'));
-        formulaBlock('Entertainment (20%) = KES ' + jobFun.toLocaleString('en-KE'));
-        boldPara('After Transport Deduction:');
-        formulaBlock('Essentials after Transport = KES ' + jobEssentials.toLocaleString('en-KE') + ' - KES ' + moTransport.toLocaleString('en-KE') + ' = KES ' + jobEssAfterTransport.toLocaleString('en-KE'));
-        para('Transport = ' + fP(moTransport / jobSalary * 100) + ' of gross salary. The investment bucket of KES ' + jobInvest.toLocaleString('en-KE') + ' is fully preserved.');
+            spacer(2);
+            subTitle(sn + '.2 Employment Phase (' + fK(jobSalary) + '/mo)');
+            formulaBlock('Essentials (50%) = ' + fK(jobEssentials));
+            formulaBlock('Investments (30%) = ' + fK(jobInvest));
+            formulaBlock('Entertainment (20%) = ' + fK(jobFun));
+            para('The investment bucket of ' + fK(jobInvest) + ' is fully preserved and never drawn from for essentials or entertainment.');
+        }
 
         // ════════════════════════════════════════════
-        //  SECTION 4: FIRE NUMBER DERIVATION
+        //  SECTION: FIRE NUMBER DERIVATION + PORTFOLIO
         // ════════════════════════════════════════════
 
-        prog(6, 'Deriving FIRE number...');
-        newPage();
-        sectionTitle('4. FIRE Number Derivation');
-        spacer(2);
+        if (sec.fireCalc) {
+            sn++;
+            prog(6, 'Deriving FIRE number...');
+            newPage();
+            sectionTitle(sn + '. FIRE Number Derivation');
+            spacer(2);
 
-        subTitle('4.1 Inflation-Adjusted Future Expenses');
-        formulaBlock('Future Expenses = Current x (1 + inflation)^years');
-        formulaBlock('= KES ' + annualExpenses.toLocaleString('en-KE') + ' x (1 + ' + inflationRate + ')^' + yearsToRetire);
-        formulaBlock('= KES ' + annualExpenses.toLocaleString('en-KE') + ' x ' + Math.pow(1 + inflationRate, yearsToRetire).toFixed(4));
-        formulaBlock('= KES ' + Math.round(inflatedAnnualExpenses).toLocaleString('en-KE'));
+            subTitle(sn + '.1 Inflation-Adjusted Future Expenses');
+            formulaBlock('Future Expenses = Current x (1 + inflation)^years');
+            formulaBlock('= ' + fK(annualExpenses) + ' x (1 + ' + inflationRate + ')^' + yearsToRetire);
+            formulaBlock('= ' + fK(annualExpenses) + ' x ' + Math.pow(1 + inflationRate, yearsToRetire).toFixed(4));
+            formulaBlock('= ' + fK(inflatedAnnualExpenses));
 
-        const monthlyInflated = inflatedAnnualExpenses / 12;
-        para('KES ' + Math.round(annualExpenses / 12).toLocaleString('en-KE') + '/month today becomes KES ' + Math.round(monthlyInflated).toLocaleString('en-KE') + '/month at age ' + retireAge + '.');
+            const monthlyInflated = inflatedAnnualExpenses / 12;
+            para(fK(annualExpenses / 12) + '/month today becomes ' + fK(monthlyInflated) + '/month at age ' + retireAge + '.');
 
-        spacer(2);
-        subTitle('4.2 Apply Safe Withdrawal Rate');
-        formulaBlock('FIRE Number = Inflated Annual Expenses / SWR');
-        formulaBlock('= KES ' + Math.round(inflatedAnnualExpenses).toLocaleString('en-KE') + ' / ' + swr);
-        formulaBlock('= KES ' + Math.round(fireNumber).toLocaleString('en-KE'));
+            spacer(2);
+            subTitle(sn + '.2 Apply Safe Withdrawal Rate');
+            formulaBlock('FIRE Number = Inflated Annual Expenses / SWR');
+            formulaBlock('= ' + fK(inflatedAnnualExpenses) + ' / ' + swr);
+            formulaBlock('= ' + fK(fireNumber));
 
-        spacer(2);
-        subTitle('4.3 SWR Sensitivity');
-        dataTable(
-            ['SWR', 'Multiplier', 'FIRE Number'],
-            [
-                ['3.0%', '33.3x', fK(inflatedAnnualExpenses / 0.03)],
-                ['3.5%', '28.6x', fK(inflatedAnnualExpenses / 0.035)],
-                ['4.0%', '25.0x', fK(inflatedAnnualExpenses / 0.04)],
-                ['4.5%', '22.2x', fK(inflatedAnnualExpenses / 0.045)],
-                ['5.0%', '20.0x', fK(inflatedAnnualExpenses / 0.05)],
-            ],
-            [40, 40, 100]
-        );
+            spacer(2);
+            subTitle(sn + '.3 SWR Sensitivity');
+            dataTable(
+                ['SWR', 'Multiplier', 'FIRE Number'],
+                [
+                    ['3.0%', '33.3x', fK(inflatedAnnualExpenses / 0.03)],
+                    ['3.5%', '28.6x', fK(inflatedAnnualExpenses / 0.035)],
+                    ['4.0%', '25.0x', fK(inflatedAnnualExpenses / 0.04)],
+                    ['4.5%', '22.2x', fK(inflatedAnnualExpenses / 0.045)],
+                    ['5.0%', '20.0x', fK(inflatedAnnualExpenses / 0.05)],
+                ],
+                [40, 40, 100]
+            );
+
+            // Portfolio Growth
+            sn++;
+            prog(7, 'Computing portfolio projections...');
+            newPage();
+            sectionTitle(sn + '. Portfolio Growth Projections');
+            spacer(2);
+
+            subTitle(sn + '.1 Future Value Formula');
+            formulaBlock('FV = PV x (1 + r_m)^n  +  PMT x ((1 + r_m)^n - 1) / r_m');
+            kvLine('PV (Present Value)', fK(savings));
+            kvLine('PMT (Monthly Investment)', fK(monthlyInvest));
+            kvLine('r_m (Monthly Rate)', expectedReturn + ' / 12 = ' + monthlyRate.toFixed(6));
+            kvLine('n (Total Months)', yearsToRetire + ' x 12 = ' + months);
+
+            spacer(2);
+            subTitle(sn + '.2 Step-by-Step Computation');
+            formulaBlock('PV Growth = ' + savings.toLocaleString('en-KE') + ' x (1 + ' + monthlyRate.toFixed(6) + ')^' + months + ' = ' + fK(pvGrown));
+            formulaBlock('Annuity Factor = ((1 + ' + monthlyRate.toFixed(6) + ')^' + months + ' - 1) / ' + monthlyRate.toFixed(6) + ' = ' + annuityFactor.toFixed(2));
+            formulaBlock('PMT Accumulation = ' + monthlyInvest.toLocaleString('en-KE') + ' x ' + annuityFactor.toFixed(2) + ' = ' + fK(monthlyInvest * annuityFactor));
+            formulaBlock('Total Portfolio = ' + fK(portfolioBaseline));
+
+            spacer(2);
+            subTitle(sn + '.3 Portfolio Milestones');
+            const milestones = [];
+            let bal = savings;
+            let sal = income;
+            for (let age = currentAge; age <= retireAge; age++) {
+                if (age >= 24) sal = jobSalary;
+                if (age >= 26) sal = 100000;
+                if (age >= 28) sal = 150000;
+                if (age >= 33) sal = 250000;
+                if (age >= 38) sal = 350000;
+                if (age >= 44) sal = 450000;
+                let rent = 0;
+                if (age >= 28) rent = 40000;
+                if (age >= 38) rent = 0;
+                const mSav = Math.max(0, (sal - rent) * 0.30);
+                bal = bal * (1 + expectedReturn) + mSav * 12;
+                if (age === 24) bal -= (P.suitCost + P.phoneCost);
+                if (age === 28) bal -= 1250000;
+                if ((age - currentAge) % 3 === 0 || age === retireAge) {
+                    milestones.push(['Age ' + age, fK(sal), fK(mSav), fK(Math.max(0, Math.round(bal)))]);
+                }
+            }
+            dataTable(['Age', 'Salary', 'Monthly Savings', 'Portfolio'], milestones, [35, 40, 50, 55]);
+        }
 
         // ════════════════════════════════════════════
-        //  SECTION 5: PORTFOLIO GROWTH
+        //  SECTION: KENYAN VEHICLES + ETFs
         // ════════════════════════════════════════════
 
-        prog(7, 'Computing portfolio projections...');
-        newPage();
-        sectionTitle('5. Portfolio Growth Projections');
-        spacer(2);
+        if (sec.investments) {
+            sn++;
+            prog(8, 'Writing investment analysis...');
+            newPage();
+            sectionTitle(sn + '. Kenyan Investment Vehicle Analysis');
+            spacer(2);
 
-        subTitle('5.1 Future Value Formula');
-        formulaBlock('FV = PV x (1 + r_m)^n  +  PMT x ((1 + r_m)^n - 1) / r_m');
-        kvLine('PV (Present Value)', fK(savings));
-        kvLine('PMT (Monthly Investment)', fK(monthlyInvest));
-        kvLine('r_m (Monthly Rate)', expectedReturn + ' / 12 = ' + monthlyRate.toFixed(6));
-        kvLine('n (Total Months)', yearsToRetire + ' x 12 = ' + months);
+            subTitle(sn + '.1 Vehicle Comparison');
+            dataTable(
+                ['Vehicle', 'Return', 'Risk', 'Liquidity', 'Min Entry'],
+                [
+                    ['Money Market Funds', '10-12%', 'Very Low', 'T+1', 'KES 100'],
+                    ['T-Bills (91-day)', '8.5-9%', 'Risk-Free', 'At maturity', 'KES 50,000'],
+                    ['T-Bonds (5-10yr)', '12-14%', 'Very Low', 'Secondary', 'KES 50,000'],
+                    ['Infra Bonds (Tax-Free)', '12-14%', 'Very Low', 'Secondary', 'KES 50,000'],
+                    ['SACCO Deposits', '10-18%', 'Low-Mod', 'Notice', 'KES 200/mo'],
+                    ['CMA Special Funds', '12-16%', 'Mod-High', 'Daily/Monthly', 'KES 100,000'],
+                    ['NSE Blue-Chips', '12-20%', 'Mod-High', 'T+3', 'KES 100'],
+                    ['D-REITs (Acorn)', '7-10%', 'Moderate', 'Monthly', 'KES 5,000'],
+                    ['Unit Trust Equity', '12-20%', 'Moderate', 'T+2 to T+5', 'KES 5,000'],
+                ],
+                [42, 26, 26, 36, 30]
+            );
 
-        spacer(2);
-        subTitle('5.2 Step-by-Step Computation');
-        formulaBlock('PV Growth = ' + savings.toLocaleString('en-KE') + ' x (1 + ' + monthlyRate.toFixed(6) + ')^' + months + ' = KES ' + Math.round(pvGrown).toLocaleString('en-KE'));
-        formulaBlock('Annuity Factor = ((1 + ' + monthlyRate.toFixed(6) + ')^' + months + ' - 1) / ' + monthlyRate.toFixed(6) + ' = ' + annuityFactor.toFixed(2));
-        formulaBlock('PMT Accumulation = ' + monthlyInvest.toLocaleString('en-KE') + ' x ' + annuityFactor.toFixed(2) + ' = KES ' + Math.round(monthlyInvest * annuityFactor).toLocaleString('en-KE'));
-        formulaBlock('Total Portfolio = KES ' + Math.round(portfolioBaseline).toLocaleString('en-KE'));
+            subTitle(sn + '.2 Compound Growth (KES 5,000/mo over ' + yearsToRetire + 'yr)');
+            const vRows = [['MMF', 0.10], ['T-Bonds', 0.125], ['Special Funds', 0.142], ['SACCO', 0.14], ['NSE', 0.15], ['Unit Trusts', 0.18]].map(v => {
+                const mr = v[1] / 12;
+                const fv = 5000 * ((Math.pow(1 + mr, months) - 1) / mr);
+                return [v[0], fP(v[1] * 100), fK(5000 * months), fK(fv)];
+            });
+            dataTable(['Vehicle', 'Return', 'Contributed', 'Future Value'], vRows, [35, 30, 55, 60]);
 
-        spacer(2);
-        subTitle('5.3 Transport Opportunity Cost');
-        formulaBlock('Opportunity Cost = KES ' + moTransport.toLocaleString('en-KE') + ' x ' + annuityFactor.toFixed(2) + ' = KES ' + Math.round(transportOpportunityCost).toLocaleString('en-KE'));
-        para('This is the compound growth of KES ' + moTransport.toLocaleString('en-KE') + '/month over ' + yearsToRetire + ' years at ' + fP(expectedReturn * 100) + '. Transport is necessary for income generation; the key is to optimise, not eliminate.');
+            // ETFs
+            sn++;
+            prog(9, 'Writing ETF & Index Fund analysis...');
+            newPage();
+            sectionTitle(sn + '. ETFs & Index Funds: Global Opportunities');
+            spacer(2);
 
-        spacer(2);
-        subTitle('5.4 Portfolio Milestones (Transport Deducted)');
-        const milestones = [];
-        let bal = savings;
-        let sal = income;
-        for (let age = currentAge; age <= retireAge; age++) {
-            if (age >= 24) sal = jobSalary;
-            if (age >= 26) sal = 100000;
-            if (age >= 28) sal = 150000;
-            if (age >= 33) sal = 250000;
-            if (age >= 38) sal = 350000;
-            if (age >= 44) sal = 450000;
-            let rent = 0;
-            if (age >= 28) rent = 40000;
-            if (age >= 38) rent = 0;
-            const mSav = Math.max(0, (sal - rent - moTransport) * 0.30);
-            bal = bal * (1 + expectedReturn) + mSav * 12;
-            if (age === 24) bal -= (P.suitCost + P.phoneCost);
-            if (age === 28) bal -= 1250000;
-            if ((age - currentAge) % 3 === 0 || age === retireAge) {
-                milestones.push(['Age ' + age, fK(sal), fK(mSav), fK(Math.max(0, Math.round(bal)))]);
+            para('Exchange-Traded Funds (ETFs) and Index Funds represent one of the most powerful wealth-building tools available to modern investors. While Kenya\'s local ETF market is nascent, Kenyan investors can access global markets through international brokerages.');
+            spacer(2);
+
+            subTitle(sn + '.1 Historical Performance');
+            dataTable(
+                ['Index / ETF', 'Return (USD)', 'Period', 'Characteristic'],
+                [
+                    ['S&P 500 (VOO/SPY)', '10.5% p.a.', '1957-2025', '500 largest US companies'],
+                    ['MSCI World (IWDA)', '8.8% p.a.', '1987-2025', 'Developed markets globally'],
+                    ['MSCI Emerging Mkts', '9.2% p.a.', '2000-2025', 'EM incl. Africa & Asia'],
+                    ['Nasdaq-100 (QQQ)', '14.2% p.a.', '2000-2025', 'Tech-heavy, higher vol.'],
+                    ['FTSE All-World (VWRA)', '8.5% p.a.', '2005-2025', 'Global all-cap coverage'],
+                    ['Vanguard Total Bond', '4.1% p.a.', '2007-2025', 'US investment-grade bonds'],
+                ],
+                [45, 30, 30, 75]
+            );
+
+            spacer(2);
+            subTitle(sn + '.2 Currency Diversification');
+            para('KES has depreciated vs USD at ~3-5% per year. USD ETFs provide a natural hedge:', 4);
+            formulaBlock('KES Return = (1 + USD Return) x (1 + KES Depreciation) - 1');
+            formulaBlock('= (1 + 0.105) x (1 + 0.04) - 1 = 14.9% in KES terms');
+
+            spacer(2);
+            subTitle(sn + '.3 Fee Drag Computation');
+            const etfNet = 100000 * Math.pow(1 + 0.12 - 0.0003, yearsToRetire);
+            const utNet = 100000 * Math.pow(1 + 0.12 - 0.02, yearsToRetire);
+            const feeDrag = etfNet - utNet;
+            formulaBlock('KES 100,000 at 12% gross over ' + yearsToRetire + ' years:');
+            formulaBlock('ETF (0.03% fee): net 11.97% -> ' + fK(etfNet));
+            formulaBlock('Unit Trust (2% fee): net 10% -> ' + fK(utNet));
+            formulaBlock('Fee Drag = ' + fK(feeDrag) + ' (' + fP(feeDrag / etfNet * 100) + ' lost to fees)');
+
+            spacer(2);
+            subTitle(sn + '.4 Recommended ETF Allocation');
+            dataTable(
+                ['ETF', 'Ticker', 'Allocation', 'Rationale'],
+                [
+                    ['Vanguard S&P 500', 'VOO', '50%', 'Core US large-cap, 0.03% fee'],
+                    ['iShares MSCI World', 'IWDA', '25%', 'Developed market diversification'],
+                    ['Vanguard FTSE EM', 'VWO', '15%', 'Emerging market growth'],
+                    ['iShares Global Bonds', 'AGGU', '10%', 'Fixed income stability'],
+                ],
+                [48, 22, 24, 86]
+            );
+        }
+
+        // ════════════════════════════════════════════
+        //  SECTION: DECISION IMPACT LAB (NEW)
+        // ════════════════════════════════════════════
+
+        if (sec.decisionLab) {
+            sn++;
+            prog(10, 'Writing Decision Impact Lab...');
+            newPage();
+            sectionTitle(sn + '. Decision Impact Lab');
+            spacer(2);
+
+            if (decisions.length === 0) {
+                para('No financial decisions have been modeled in the Decision Impact Lab. Use the dashboard to add decisions and analyze their impact on your FIRE trajectory before exporting.');
+            } else {
+                para('The Decision Impact Lab models the compound ripple effect of financial decisions on the path to FIRE. Below are all ' + decisions.length + ' decisions currently logged and their aggregate impact.');
+                spacer(2);
+
+                subTitle(sn + '.1 Logged Decisions');
+                const decRows = decisions.map(d => {
+                    const typeLabels = { expense: 'One-time Expense', monthly_expense: 'Recurring Expense', investment: 'Lump Investment', monthly_invest: 'Recurring Investment', asset: 'Asset Purchase', income_change: 'Income Change' };
+                    return [d.name, fK(d.amount) + (d.type.includes('monthly') || d.type === 'income_change' ? '/mo' : ''), typeLabels[d.type] || d.type, 'Age ' + d.atAge, d.duration + ' yr'];
+                });
+                dataTable(['Decision', 'Amount', 'Type', 'At Age', 'Duration'], decRows, [52, 32, 36, 24, 20]);
+
+                // Compute impact
+                spacer(2);
+                subTitle(sn + '.2 Aggregate Impact Analysis');
+
+                const baseline = computeBaselineTrajectory();
+                // Recompute with decisions
+                let dPortfolio = P.currentSavings;
+                if (obType === 'onetime') dPortfolio += obIncome;
+                let dSalary = P.currentStipend;
+                const withDec = [];
+                for (let age = P.currentAge; age <= 55; age++) {
+                    if (age >= 24) dSalary = P.jobSalary;
+                    if (age >= 26) dSalary = 100000;
+                    if (age >= 28) dSalary = 150000;
+                    if (age >= 33) dSalary = 250000;
+                    if (age >= 38) dSalary = 350000;
+                    if (age >= 44) dSalary = 450000;
+                    let dRent = 0;
+                    if (age >= 28) dRent = 40000;
+                    if (age >= 38) dRent = 0;
+                    decisions.forEach(d => {
+                        if (d.type === 'expense' && age === d.atAge) dPortfolio -= d.amount;
+                        else if (d.type === 'monthly_expense' && age >= d.atAge && age < d.atAge + d.duration) dPortfolio -= d.amount * 12;
+                        else if (d.type === 'investment' && age === d.atAge) dPortfolio += d.amount;
+                        else if (d.type === 'monthly_invest' && age >= d.atAge && age < d.atAge + d.duration) dPortfolio += d.amount * 12;
+                        else if (d.type === 'asset' && age === d.atAge) dPortfolio -= d.amount;
+                        else if (d.type === 'income_change' && age >= d.atAge && age < d.atAge + d.duration) dSalary += d.amount;
+                    });
+                    const activeOB = (obType === 'monthly') ? obIncome : 0;
+                    dPortfolio = dPortfolio * 1.12 + Math.max(0, (dSalary + activeOB - dRent)) * 0.30 * 12 - (P.monthlyAirtime * 12);
+                    if (age === 24) dPortfolio -= (P.suitCost + P.phoneCost);
+                    if (age === 28) dPortfolio -= 1250000;
+                    withDec.push({ age, value: Math.max(0, Math.round(dPortfolio)) });
+                }
+
+                const at50Idx = 50 - P.currentAge;
+                const baseAt50 = baseline[at50Idx]?.value || 0;
+                const decAt50 = withDec[at50Idx]?.value || 0;
+                const diff = baseAt50 - decAt50;
+
+                const totalDirectCost = decisions.reduce((sum, d) => {
+                    if (d.type === 'expense' || d.type === 'asset') return sum + d.amount;
+                    if (d.type === 'monthly_expense') return sum + d.amount * 12 * d.duration;
+                    return sum;
+                }, 0);
+
+                kvLine('Total Direct Cost', fK(totalDirectCost));
+                kvLine('Opportunity Cost at 50', fK(Math.abs(diff)));
+                kvLine('Portfolio at 50 (Baseline)', fK(baseAt50));
+                kvLine('Portfolio at 50 (With Decisions)', fK(decAt50));
+                kvLine('Net Impact', (diff > 0 ? '-' : '+') + fK(Math.abs(diff)));
+
+                // Read advice from DOM if available
+                const adviceEl = document.getElementById('impactAdvice');
+                if (adviceEl && adviceEl.textContent.trim()) {
+                    spacer(2);
+                    subTitle(sn + '.3 Contextual Advice');
+                    para(adviceEl.textContent.trim());
+                }
             }
         }
-        dataTable(['Age', 'Salary', 'Monthly Savings', 'Portfolio'], milestones, [35, 40, 50, 55]);
 
         // ════════════════════════════════════════════
-        //  SECTION 6: KENYAN VEHICLES
+        //  SECTION: REVERSE FIRE ENGINEERING (NEW)
         // ════════════════════════════════════════════
 
-        prog(8, 'Writing investment analysis...');
+        if (sec.reverseFire) {
+            sn++;
+            prog(11, 'Writing Reverse FIRE analysis...');
+            newPage();
+            sectionTitle(sn + '. Reverse FIRE Engineering');
+            spacer(2);
+            para('Reverse FIRE works backwards from a desired retirement lifestyle to compute the exact monthly savings required today. All values reflect the current dashboard inputs.');
+            spacer(2);
+
+            subTitle(sn + '.1 Input Parameters');
+            const revYears = revRetireAge - revCurrentAge;
+            const revInflatedExp = revMonthlyExpense * 12 * Math.pow(1 + revInflation, revYears);
+            const revFIRE = revInflatedExp / revSWR;
+            const revMR = revReturn / 12;
+            const revMonths = revYears * 12;
+            const revPVGrown = savings * Math.pow(1 + revMR, revMonths);
+            const revAF = (Math.pow(1 + revMR, revMonths) - 1) / revMR;
+            const revRequired = Math.max(0, (revFIRE - revPVGrown) / revAF);
+            const revMaxExp = Math.max(0, jobSalary - revRequired);
+
+            dataTable(
+                ['Parameter', 'Value'],
+                [
+                    ['Target Retirement Age', String(revRetireAge)],
+                    ['Monthly Expense at Retirement', fK(revMonthlyExpense)],
+                    ['Safe Withdrawal Rate', fP(revSWR * 100)],
+                    ['Expected Inflation', fP(revInflation * 100)],
+                    ['Expected Return', fP(revReturn * 100)],
+                    ['Current Age', String(revCurrentAge)],
+                ],
+                [90, 90]
+            );
+
+            spacer(2);
+            subTitle(sn + '.2 Computed Results');
+            kvLine('FIRE Number Required', fK(revFIRE));
+            kvLine('Inflated Annual Expenses', fK(revInflatedExp));
+            kvLine('Required Monthly Savings', fK(revRequired));
+            kvLine('Savings Rate (of ' + fK(jobSalary) + ')', fP(revRequired / jobSalary * 100));
+            kvLine('Max Monthly Expenditure', fK(revMaxExp));
+
+            spacer(2);
+            subTitle(sn + '.3 Savings Path');
+            formulaBlock('Required: ' + fK(revRequired) + '/month for ' + revYears + ' years at ' + fP(revReturn * 100) + ' return');
+            formulaBlock('This produces ' + fK(revFIRE) + ' by age ' + revRetireAge);
+        }
+
+        // ════════════════════════════════════════════
+        //  SECTION: MARKET TRENDS & ALLOCATION (NEW)
+        // ════════════════════════════════════════════
+
+        if (sec.markets) {
+            sn++;
+            prog(12, 'Writing market analysis...');
+            newPage();
+            sectionTitle(sn + '. Market Trends & Allocation Analysis');
+            spacer(2);
+            para('This section captures the current market return assumptions and asset allocation from the dashboard sliders, computing the blended portfolio return and FIRE feasibility under these conditions.');
+            spacer(2);
+
+            subTitle(sn + '.1 Market Return Assumptions');
+            dataTable(
+                ['Asset Class', 'Expected Return', 'Allocation'],
+                [
+                    ['NSE Equities', fP(mktNSE), allocNSE + '%'],
+                    ['Treasury Bonds', fP(mktTBond), allocTBond + '%'],
+                    ['Money Market Funds', fP(mktMMF), allocMMF + '%'],
+                    ['D-REITs', fP(mktREIT), allocREIT + '%'],
+                    ['SACCO', fP(mktSACCO), allocSACCO + '%'],
+                    ['Cash / T-Bills', '8.5%', allocCash + '%'],
+                ],
+                [60, 60, 60]
+            );
+
+            const blended = (allocNSE * mktNSE + allocTBond * mktTBond + allocMMF * mktMMF + allocREIT * mktREIT + allocSACCO * mktSACCO + allocCash * 8.5) / 100;
+            const mktReal = ((1 + blended / 100) / (1 + mktInflation / 100) - 1) * 100;
+
+            spacer(2);
+            subTitle(sn + '.2 Blended Results');
+            kvLine('Blended Nominal Return', fP(blended));
+            kvLine('Inflation Assumption', fP(mktInflation));
+            kvLine('Real Return', fP(mktReal));
+            kvLine('Total Allocation', (allocNSE + allocTBond + allocMMF + allocREIT + allocSACCO + allocCash) + '%');
+
+            // Portfolio simulation under these market conditions
+            let mktPortfolio = savings;
+            if (obType === 'onetime') mktPortfolio += obIncome;
+            let mktSal = income;
+            for (let age = currentAge; age <= 50; age++) {
+                if (age >= 24) mktSal = jobSalary;
+                if (age >= 26) mktSal = 100000;
+                if (age >= 28) mktSal = 150000;
+                if (age >= 33) mktSal = 250000;
+                if (age >= 38) mktSal = 350000;
+                if (age >= 44) mktSal = 450000;
+                let mktRent = 0;
+                if (age >= 28) mktRent = 40000;
+                if (age >= 38) mktRent = 0;
+                const activeOB = (obType === 'monthly') ? obIncome : 0;
+                mktPortfolio = mktPortfolio * (1 + blended / 100) + Math.max(0, (mktSal + activeOB - mktRent)) * 0.30 * 12 - (P.monthlyAirtime * 12);
+                if (age === 24) mktPortfolio -= (P.suitCost + P.phoneCost);
+                if (age === 28) mktPortfolio -= 1250000;
+            }
+
+            spacer(2);
+            kvLine('Portfolio at 50 (this scenario)', fK(Math.max(0, Math.round(mktPortfolio))));
+            const mktFireNum = 720000 * 25 * Math.pow(1 + mktInflation / 100, 27);
+            kvLine('FIRE Feasibility', Math.round(mktPortfolio) >= mktFireNum ? 'Achievable' : 'Gap exists');
+        }
+
+        // ════════════════════════════════════════════
+        //  SECTION: INSURANCE + TUITION (NEW)
+        // ════════════════════════════════════════════
+
+        if (sec.protection) {
+            // Insurance
+            sn++;
+            prog(13, 'Writing insurance analysis...');
+            newPage();
+            sectionTitle(sn + '. Protection: Insurance Impact');
+            spacer(2);
+            para('Insurance is essential for protecting wealth accumulation. This section reflects current dashboard inputs for NHIF, private health, car, and life insurance costs.');
+            spacer(2);
+
+            subTitle(sn + '.1 Insurance Parameters');
+            dataTable(
+                ['Coverage', 'Monthly Cost', 'Starts At'],
+                [
+                    ['NHIF / SHA', fK(insNHIF), 'Now (mandatory)'],
+                    ['Private Health', fK(insPrivateHealth), 'Age ' + insHealthStartAge],
+                    ['Car Insurance', fK(Math.round(insCarValue * insCarRate / 100 / 12)), 'Age ' + insCarStartAge],
+                    ['Life Insurance', fK(insLifeMonthly), 'Age ' + insLifeStartAge],
+                ],
+                [60, 60, 60]
+            );
+
+            // Compute lifetime cost
+            let insTotalCost = 0;
+            let insPeakMonthly = insNHIF;
+            for (let age = currentAge; age <= 50; age++) {
+                let yearlyIns = insNHIF * 12;
+                if (age >= insHealthStartAge) yearlyIns += insPrivateHealth * 12;
+                if (age >= insCarStartAge) yearlyIns += insCarValue * (insCarRate / 100) * Math.pow(0.90, age - insCarStartAge);
+                if (age >= insLifeStartAge) yearlyIns += insLifeMonthly * 12;
+                insTotalCost += yearlyIns;
+            }
+            insPeakMonthly = insNHIF + insPrivateHealth + insLifeMonthly + Math.round(insCarValue * insCarRate / 100 / 12);
+
+            spacer(2);
+            subTitle(sn + '.2 Cost Summary');
+            kvLine('Current Monthly', fK(insNHIF));
+            kvLine('Peak Monthly (all active)', fK(insPeakMonthly));
+            kvLine('Lifetime Cost (to age 50)', fK(Math.round(insTotalCost)));
+            const insFireDelay = (insTotalCost * 0.5 / (jobSalary * 0.3 * 12) / 12).toFixed(1);
+            kvLine('Estimated FIRE Delay', '~' + insFireDelay + ' years');
+
+            // Tuition
+            sn++;
+            prog(14, 'Writing tuition analysis...');
+            newPage();
+            sectionTitle(sn + '. Education: Tuition Fee Forecasting');
+            spacer(2);
+            para('Education cost projections for ' + P.children + ' children with ' + tuitionInflRate + '% annual education inflation. All values reflect current dashboard inputs.');
+            spacer(2);
+
+            subTitle(sn + '.1 Per-Child Fee Structure');
+            const childRows = tuitionChildren.map((c, i) => [
+                'Child ' + (i + 1),
+                String(c.birthYear),
+                fK(c.primary),
+                fK(c.secondary),
+                fK(c.uni),
+            ]);
+            dataTable(['Child', 'Birth Year', 'Primary/yr', 'Secondary/yr', 'University/yr'], childRows, [28, 28, 38, 38, 38]);
+
+            // Compute totals
+            const eduInfl = tuitionInflRate / 100;
+            let eduTotalNom = 0, eduTotalInfl = 0;
+            const eduYearlyFees = {};
+            tuitionChildren.forEach(child => {
+                for (let y = 0; y < 8; y++) {
+                    const year = child.birthYear + 6 + y;
+                    const yrs = year - 2026;
+                    const inflFee = child.primary * Math.pow(1 + eduInfl, Math.max(0, yrs));
+                    if (!eduYearlyFees[year]) eduYearlyFees[year] = 0;
+                    eduYearlyFees[year] += inflFee;
+                    eduTotalNom += child.primary;
+                    eduTotalInfl += inflFee;
+                }
+                for (let y = 0; y < 4; y++) {
+                    const year = child.birthYear + 14 + y;
+                    const yrs = year - 2026;
+                    const inflFee = child.secondary * Math.pow(1 + eduInfl, Math.max(0, yrs));
+                    if (!eduYearlyFees[year]) eduYearlyFees[year] = 0;
+                    eduYearlyFees[year] += inflFee;
+                    eduTotalNom += child.secondary;
+                    eduTotalInfl += inflFee;
+                }
+                for (let y = 0; y < 4; y++) {
+                    const year = child.birthYear + 18 + y;
+                    const yrs = year - 2026;
+                    const inflFee = child.uni * Math.pow(1 + eduInfl, Math.max(0, yrs));
+                    if (!eduYearlyFees[year]) eduYearlyFees[year] = 0;
+                    eduYearlyFees[year] += inflFee;
+                    eduTotalNom += child.uni;
+                    eduTotalInfl += inflFee;
+                }
+            });
+
+            let eduPeakYear = 2026, eduPeakAmt = 0;
+            Object.entries(eduYearlyFees).forEach(([yr, amt]) => { if (amt > eduPeakAmt) { eduPeakAmt = amt; eduPeakYear = parseInt(yr); } });
+
+            const firstFeeYr = Math.min(...Object.keys(eduYearlyFees).map(Number));
+            const eduMonthsUntil = Math.max(1, (firstFeeYr - 2026) * 12);
+            const eduFundRate = 0.10 / 12;
+            const eduFvFactor = (Math.pow(1 + eduFundRate, eduMonthsUntil) - 1) / eduFundRate;
+            const eduReqMonthly = eduTotalInfl / eduFvFactor;
+
+            spacer(2);
+            subTitle(sn + '.2 Cost Summary');
+            kvLine('Total (nominal)', fK(eduTotalNom));
+            kvLine('Total (inflation-adjusted)', fK(Math.round(eduTotalInfl)));
+            kvLine('Peak Year', eduPeakYear + ' (' + fK(Math.round(eduPeakAmt)) + ')');
+            kvLine('Required Monthly Savings', fK(Math.round(eduReqMonthly)));
+            para('Savings into a 10% p.a. education fund starting now to cover all inflated fees.');
+        }
+
+        // ════════════════════════════════════════════
+        //  SECTION: SCENARIO & SENSITIVITY + RISK
+        // ════════════════════════════════════════════
+
+        if (sec.simulator) {
+            sn++;
+            prog(15, 'Running scenario analysis...');
+            newPage();
+            sectionTitle(sn + '. Scenario & Sensitivity Analysis');
+            spacer(2);
+
+            subTitle(sn + '.1 Simulator Configuration (Live)');
+            dataTable(
+                ['Parameter', 'Current Value'],
+                [
+                    ['Starting Salary', fK(simSalary)],
+                    ['Savings Rate', simSavingsRate + '%'],
+                    ['Monthly Rent', fK(simRent)],
+                    ['Expected Return', simReturn + '%'],
+                    ['Salary Growth', simGrowth + '%'],
+                    ['Number of Children', String(simChildren)],
+                ],
+                [90, 90]
+            );
+
+            spacer(2);
+            subTitle(sn + '.2 Return Rate Sensitivity');
+            const retScen = [8, 10, 12, 14, 16, 18].map(r => {
+                const mr = r / 100 / 12;
+                const pv = savings * Math.pow(1 + mr, months);
+                const af = (Math.pow(1 + mr, months) - 1) / mr;
+                const fv = pv + monthlyInvest * af;
+                return [fP(r), fK(fv), fP(fv / fireNumber * 100), fv >= fireNumber ? 'FIRE' : 'Gap'];
+            });
+            dataTable(['Return', 'Portfolio at ' + retireAge, '% of FIRE', 'Status'], retScen, [35, 55, 45, 45]);
+
+            subTitle(sn + '.3 Savings Rate Sensitivity');
+            const srScen = [10, 20, 30, 40, 50].map(sr => {
+                const ms = Math.round(jobSalary * sr / 100);
+                const pv = savings * Math.pow(1 + monthlyRate, months);
+                const af = annuityFactor;
+                const fv = pv + ms * af;
+                return [fP(sr), fK(ms), fK(fv), fv >= fireNumber ? 'FIRE' : 'Gap'];
+            });
+            dataTable(['SR', 'Monthly Savings', 'Portfolio at ' + retireAge, 'Status'], srScen, [30, 45, 60, 45]);
+
+            subTitle(sn + '.4 Inflation Sensitivity');
+            const infScen = [4, 5, 6, 7, 8, 10].map(inf => {
+                const ir = inf / 100;
+                const ie = annualExpenses * Math.pow(1 + ir, yearsToRetire);
+                return [fP(inf), fK(ie), fK(ie / swr), fP(((1 + expectedReturn) / (1 + ir) - 1) * 100)];
+            });
+            dataTable(['Inflation', 'Future Expenses', 'FIRE Number', 'Real Return'], infScen, [30, 45, 55, 50]);
+
+            // Risk Assessment
+            sn++;
+            prog(16, 'Building risk assessment...');
+            newPage();
+            sectionTitle(sn + '. Risk Assessment & Mitigation');
+            spacer(2);
+
+            dataTable(
+                ['Risk Factor', 'Impact', 'Probability', 'Mitigation'],
+                [
+                    ['High Inflation (>8%)', 'Erodes purchasing power', 'Moderate', 'Equity portfolio, USD ETFs'],
+                    ['KES Depreciation', 'Reduces import power', 'High', '20-30% in USD ETFs/bonds'],
+                    ['Job Loss', 'Halts contributions', 'Low-Mod', '6-mo emergency fund (MMF)'],
+                    ['Market Crash (-30%)', 'Portfolio drawdown', 'Low', 'Stay invested, rebalance'],
+                    ['Sequence-of-Returns', 'Poor returns near retire', 'Moderate', 'Bond tent at age 45+'],
+                    ['Health Emergency', 'Large unplanned cost', 'Low', 'NHIF + private insurance'],
+                    ['Education Inflation', 'Fees exceed plan', 'Moderate', 'Dedicated education fund'],
+                    ['Regulatory Changes', 'Tax/rule shifts', 'Moderate', 'Diversify vehicle types'],
+                ],
+                [40, 38, 30, 72]
+            );
+
+            spacer(2);
+            subTitle(sn + '.2 Real Return Derivation');
+            formulaBlock('Real Return = (1 + ' + expectedReturn + ') / (1 + ' + inflationRate + ') - 1 = ' + fP(realReturn * 100) + ' p.a.');
+            const realGrowth = Math.round(100000 * Math.pow(1 + realReturn, yearsToRetire));
+            para('KES 100,000 grows to ' + fK(realGrowth) + ' in today\'s purchasing power over ' + yearsToRetire + ' years.');
+        }
+
+        // ════════════════════════════════════════════
+        //  SECTION: ACTION PLAN (always included)
+        // ════════════════════════════════════════════
+
+        sn++;
+        prog(17, 'Building action plan...');
         newPage();
-        sectionTitle('6. Kenyan Investment Vehicle Analysis');
+        sectionTitle(sn + '. Action Plan & Conclusion');
         spacer(2);
 
-        subTitle('6.1 Vehicle Comparison');
-        dataTable(
-            ['Vehicle', 'Return', 'Risk', 'Liquidity', 'Min Entry'],
-            [
-                ['Money Market Funds', '10-12%', 'Very Low', 'T+1', 'KES 100'],
-                ['T-Bills (91-day)', '8.5-9%', 'Risk-Free', 'At maturity', 'KES 50,000'],
-                ['T-Bonds (5-10yr)', '12-14%', 'Very Low', 'Secondary', 'KES 50,000'],
-                ['Infra Bonds (Tax-Free)', '12-14%', 'Very Low', 'Secondary', 'KES 50,000'],
-                ['SACCO Deposits', '10-18%', 'Low-Mod', 'Notice', 'KES 200/mo'],
-                ['CMA Special Funds', '12-16%', 'Mod-High', 'Daily/Monthly', 'KES 100,000'],
-                ['NSE Blue-Chips', '12-20%', 'Mod-High', 'T+3', 'KES 100'],
-                ['D-REITs (Acorn)', '7-10%', 'Moderate', 'Monthly', 'KES 5,000'],
-                ['Unit Trust Equity', '12-20%', 'Moderate', 'T+2 to T+5', 'KES 5,000'],
-            ],
-            [42, 26, 26, 36, 30]
-        );
-
-        subTitle('6.2 Compound Growth (KES 5,000/mo over ' + yearsToRetire + 'yr)');
-        const vRows = [['MMF', 0.10], ['T-Bonds', 0.125], ['Special Funds', 0.142], ['SACCO', 0.14], ['NSE', 0.15], ['Unit Trusts', 0.18]].map(v => {
-            const mr = v[1] / 12;
-            const fv = 5000 * ((Math.pow(1 + mr, months) - 1) / mr);
-            return [v[0], fP(v[1] * 100), fK(5000 * months), fK(fv)];
-        });
-        dataTable(['Vehicle', 'Return', 'Contributed', 'Future Value'], vRows, [35, 30, 55, 60]);
-
-        // ════════════════════════════════════════════
-        //  SECTION 7: ETFs & INDEX FUNDS
-        // ════════════════════════════════════════════
-
-        prog(9, 'Writing ETF & Index Fund analysis...');
-        newPage();
-        sectionTitle('7. ETFs & Index Funds: Global Opportunities');
-        spacer(2);
-
-        para('Exchange-Traded Funds (ETFs) and Index Funds represent one of the most powerful wealth-building tools available to modern investors. While Kenya\'s local ETF market is nascent, Kenyan investors can access global markets through international brokerages.');
-        spacer(2);
-
-        subTitle('7.1 Definitions');
-        boldPara('ETF (Exchange-Traded Fund):');
-        para('A fund trading on a stock exchange that holds a basket of assets tracking an index. Key advantages: intraday trading, ultra-low fees (0.03%-0.20% p.a.), instant diversification across hundreds of companies, and tax efficiency.', 4);
-        boldPara('Index Fund:');
-        para('A mutual fund replicating a market index (e.g., S&P 500). Passive management means no fund manager tries to "beat the market," producing significantly lower fees than active funds which historically underperform indices over long periods.', 4);
-
-        spacer(2);
-        subTitle('7.2 Historical Performance');
-        dataTable(
-            ['Index / ETF', 'Return (USD)', 'Period', 'Characteristic'],
-            [
-                ['S&P 500 (VOO/SPY)', '10.5% p.a.', '1957-2025', '500 largest US companies'],
-                ['MSCI World (IWDA)', '8.8% p.a.', '1987-2025', 'Developed markets globally'],
-                ['MSCI Emerging Mkts', '9.2% p.a.', '2000-2025', 'EM incl. Africa & Asia'],
-                ['Nasdaq-100 (QQQ)', '14.2% p.a.', '2000-2025', 'Tech-heavy, higher vol.'],
-                ['FTSE All-World (VWRA)', '8.5% p.a.', '2005-2025', 'Global all-cap coverage'],
-                ['Vanguard Total Bond', '4.1% p.a.', '2007-2025', 'US investment-grade bonds'],
-            ],
-            [45, 30, 30, 75]
-        );
-
-        spacer(2);
-        subTitle('7.3 Why ETFs Matter for Kenyan FIRE Investors');
-
-        boldPara('1. Currency Diversification:');
-        para('KES has depreciated vs USD at ~3-5% per year. USD ETFs provide a natural hedge:', 4);
-        formulaBlock('KES Return = (1 + USD Return) x (1 + KES Depreciation) - 1');
-        formulaBlock('= (1 + 0.105) x (1 + 0.04) - 1 = 14.9% in KES terms');
-
-        boldPara('2. Unprecedented Diversification:');
-        para('Kenya\'s NSE has ~65 companies (~KES 2.5T market cap). The S&P 500 alone covers 500 companies worth USD 50T+. ETFs give access to thousands of companies across dozens of countries.', 4);
-
-        boldPara('3. Proven Track Record:');
-        para('The S&P 500 has survived World Wars, the Great Depression, dot-com crash, 2008 crisis, and COVID-19, returning 10.5% annually over nearly 70 years. Warren Buffett directs 90% of his estate to a low-cost S&P 500 index fund.', 4);
-
-        boldPara('4. Fee Drag Computation:');
-        const etfNet = 100000 * Math.pow(1 + 0.12 - 0.0003, yearsToRetire);
-        const utNet = 100000 * Math.pow(1 + 0.12 - 0.02, yearsToRetire);
-        const feeDrag = etfNet - utNet;
-        formulaBlock('KES 100,000 at 12% gross over ' + yearsToRetire + ' years:');
-        formulaBlock('ETF (0.03% fee): net 11.97% -> KES ' + Math.round(etfNet).toLocaleString('en-KE'));
-        formulaBlock('Unit Trust (2% fee): net 10% -> KES ' + Math.round(utNet).toLocaleString('en-KE'));
-        formulaBlock('Fee Drag = KES ' + Math.round(feeDrag).toLocaleString('en-KE') + ' (' + fP(feeDrag / etfNet * 100) + ' lost to fees)');
-
-        spacer(2);
-        subTitle('7.4 Access Platforms');
-        dataTable(
-            ['Platform', 'Min Deposit', 'ETFs', 'Commission'],
-            [
-                ['Interactive Brokers', 'USD 0', '13,000+', 'USD 1/trade'],
-                ['Saxo Bank', 'USD 2,000', '7,000+', 'USD 3/trade'],
-                ['Charles Schwab Intl', 'USD 25,000', '4,000+', 'USD 0 (US)'],
-                ['eToro', 'USD 50', '250+', '0%'],
-            ],
-            [45, 35, 45, 55]
-        );
-        para('Note: US ETF dividends face 30% withholding tax (15% with treaty). Comply with CBK forex regulations. Consult a tax professional.');
-
-        spacer(2);
-        subTitle('7.5 Recommended ETF Allocation');
-        dataTable(
-            ['ETF', 'Ticker', 'Allocation', 'Rationale'],
-            [
-                ['Vanguard S&P 500', 'VOO', '50%', 'Core US large-cap, 0.03% fee'],
-                ['iShares MSCI World', 'IWDA', '25%', 'Developed market diversification'],
-                ['Vanguard FTSE EM', 'VWO', '15%', 'Emerging market growth'],
-                ['iShares Global Bonds', 'AGGU', '10%', 'Fixed income stability'],
-            ],
-            [48, 22, 24, 86]
-        );
-
-        // ════════════════════════════════════════════
-        //  SECTION 8: SCENARIOS
-        // ════════════════════════════════════════════
-
-        prog(10, 'Running scenario analysis...');
-        newPage();
-        sectionTitle('8. Scenario & Sensitivity Analysis');
-        spacer(2);
-
-        subTitle('8.1 Return Rate Sensitivity');
-        const retScen = [8, 10, 12, 14, 16, 18].map(r => {
-            const mr = r / 100 / 12;
-            const pv = savings * Math.pow(1 + mr, months);
-            const af = (Math.pow(1 + mr, months) - 1) / mr;
-            const fv = pv + monthlyInvest * af;
-            return [fP(r), fK(fv), fP(fv / fireNumber * 100), fv >= fireNumber ? 'FIRE' : 'Gap'];
-        });
-        dataTable(['Return', 'Portfolio at ' + retireAge, '% of FIRE', 'Status'], retScen, [35, 55, 45, 45]);
-
-        subTitle('8.2 Savings Rate Sensitivity');
-        const srScen = [10, 20, 30, 40, 50].map(sr => {
-            const ms = Math.round(jobSalary * sr / 100);
-            const pv = savings * Math.pow(1 + monthlyRate, months);
-            const af = annuityFactor;
-            const fv = pv + ms * af;
-            return [fP(sr), fK(ms), fK(fv), fv >= fireNumber ? 'FIRE' : 'Gap'];
-        });
-        dataTable(['SR', 'Monthly Savings', 'Portfolio at ' + retireAge, 'Status'], srScen, [30, 45, 60, 45]);
-
-        subTitle('8.3 Transport Impact');
-        formulaBlock('Baseline Portfolio: KES ' + Math.round(portfolioBaseline).toLocaleString('en-KE'));
-        formulaBlock('Transport Opp. Cost (' + yearsToRetire + 'yr): KES ' + Math.round(transportOpportunityCost).toLocaleString('en-KE'));
-        para('Every KES 1,000 of weekly recurring expenditure carries KES ' + fK(transportOpportunityCost) + ' in compound opportunity cost over ' + yearsToRetire + ' years.');
-
-        subTitle('8.4 Inflation Sensitivity');
-        const infScen = [4, 5, 6, 7, 8, 10].map(inf => {
-            const ir = inf / 100;
-            const ie = annualExpenses * Math.pow(1 + ir, yearsToRetire);
-            return [fP(inf), fK(ie), fK(ie / swr), fP(((1 + expectedReturn) / (1 + ir) - 1) * 100)];
-        });
-        dataTable(['Inflation', 'Future Expenses', 'FIRE Number', 'Real Return'], infScen, [30, 45, 55, 50]);
-
-        // ════════════════════════════════════════════
-        //  SECTION 9: RISK
-        // ════════════════════════════════════════════
-
-        prog(11, 'Building risk assessment...');
-        newPage();
-        sectionTitle('9. Risk Assessment & Mitigation');
-        spacer(2);
-
-        dataTable(
-            ['Risk Factor', 'Impact', 'Probability', 'Mitigation'],
-            [
-                ['High Inflation (>8%)', 'Erodes purchasing power', 'Moderate', 'Equity portfolio, USD ETFs'],
-                ['KES Depreciation', 'Reduces import power', 'High', '20-30% in USD ETFs/bonds'],
-                ['Job Loss', 'Halts contributions', 'Low-Mod', '6-mo emergency fund (MMF)'],
-                ['Market Crash (-30%)', 'Portfolio drawdown', 'Low', 'Stay invested, rebalance'],
-                ['Sequence-of-Returns', 'Poor returns near retire', 'Moderate', 'Bond tent at age 45+'],
-                ['Health Emergency', 'Large unplanned cost', 'Low', 'NHIF + private insurance'],
-                ['Education Inflation', 'Fees exceed plan', 'Moderate', 'Dedicated education fund'],
-                ['Regulatory Changes', 'Tax/rule shifts', 'Moderate', 'Diversify vehicle types'],
-            ],
-            [40, 38, 30, 72]
-        );
-
-        spacer(2);
-        subTitle('9.2 Real Return Derivation');
-        formulaBlock('Real Return = (1 + ' + expectedReturn + ') / (1 + ' + inflationRate + ') - 1 = ' + fP(realReturn * 100) + ' p.a.');
-        const realGrowth = Math.round(100000 * Math.pow(1 + realReturn, yearsToRetire));
-        para('KES 100,000 grows to KES ' + realGrowth.toLocaleString('en-KE') + ' in today\'s purchasing power over ' + yearsToRetire + ' years.');
-
-        // ════════════════════════════════════════════
-        //  SECTION 10: ACTION PLAN
-        // ════════════════════════════════════════════
-
-        newPage();
-        sectionTitle('10. Action Plan & Conclusion');
-        spacer(2);
-
-        subTitle('10.1 Immediate Actions');
+        subTitle(sn + '.1 Immediate Actions');
         const actions = [
             'Open a Money Market Fund (Cytonn, Britam, or Sanlam) and deposit KES 5,000',
             'Register on DhowCSD (Central Bank) for T-Bill/Bond access (free)',
             'Open CDS account on NSE via Ziidi (M-Pesa) for stock trading',
-            'Track weekly KES ' + wkTransport.toLocaleString('en-KE') + ' transport budget rigorously',
-            'Begin monthly KES ' + stipendInvest.toLocaleString('en-KE') + ' investment (MMF + SACCO split)',
+            'Begin monthly ' + fK(stipendInvest) + ' investment (MMF + SACCO split)',
             'Join a reputable SACCO (Stima, Kenya Police, or sector-specific)',
             'Research high-reputation CMA Special Funds and establish advisory prerequisites',
             'Open Interactive Brokers account (free) for future ETF investments',
@@ -2851,23 +3213,24 @@ async function exportToPDF() {
         });
 
         spacer(4);
-        subTitle('10.2 Summary of Computational Results');
-        dataTable(
-            ['Metric', 'Value'],
-            [
-                ['FIRE Target Portfolio', fK(fireNumber)],
-                ['Current Savings', fK(savings)],
-                ['FIRE Progress', fP(savings / fireNumber * 100)],
-                ['Monthly Transport', fK(moTransport)],
-                ['Annual Transport', fK(yrTransport)],
-                ['Transport Opp. Cost (' + yearsToRetire + 'yr)', fK(transportOpportunityCost)],
-                ['Real Return', fP(realReturn * 100)],
-                ['Projected Portfolio at ' + retireAge, fK(portfolioBaseline)],
-                ['ETF vs UT Fee Drag', fK(feeDrag)],
-                ['Years to FIRE', String(yearsToRetire)],
-            ],
-            [100, 80]
-        );
+        subTitle(sn + '.2 Summary of Computational Results');
+        const summaryFinalRows = [
+            ['FIRE Target Portfolio', fK(fireNumber)],
+            ['Current Savings', fK(savings)],
+            ['FIRE Progress', fP(savings / fireNumber * 100)],
+            ['Monthly Investment', fK(monthlyInvest)],
+            ['Real Return', fP(realReturn * 100)],
+            ['Projected Portfolio at ' + retireAge, fK(portfolioBaseline)],
+            ['ETF vs UT Fee Drag', fK(feeDrag)],
+            ['Years to FIRE', String(yearsToRetire)],
+        ];
+        if (decisions.length > 0) {
+            summaryFinalRows.push(['Active Decisions', String(decisions.length)]);
+        }
+        if (obIncome > 0) {
+            summaryFinalRows.push(['Off-Book Income', fK(obIncome) + (obType === 'onetime' ? ' (one-time)' : '/mo')]);
+        }
+        dataTable(['Metric', 'Value'], summaryFinalRows, [100, 80]);
 
         spacer(6);
         checkBreak(24);
@@ -2878,13 +3241,13 @@ async function exportToPDF() {
         doc.setTextColor(45, 45, 55);
         doc.setFont('helvetica', 'italic');
         const closingLines = doc.splitTextToSize(
-            'This report was generated by the FIRE Kenya Financial Independence Dashboard. Every figure is derived from explicit computational formulae using the stated assumptions. Markets are inherently uncertain and past performance does not guarantee future results. This is for educational and planning purposes only. Review your plan regularly as circumstances evolve.',
+            'This report was generated by the FIRE Kenya Financial Independence Dashboard. Every figure is derived from explicit computational formulae using the stated assumptions. All values reflect the dashboard state at the time of export. Markets are inherently uncertain and past performance does not guarantee future results. This is for educational and planning purposes only. Review your plan regularly as circumstances evolve.',
             CW
         );
         closingLines.forEach(l => { checkBreak(4.5); doc.text(l, ML, y); y += 4.5; });
 
         // Save
-        prog(12, 'Finalising PDF...');
+        prog(18, 'Finalising PDF...');
         await new Promise(r => setTimeout(r, 300));
         doc.save(titleText.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.pdf');
 
@@ -2896,3 +3259,4 @@ async function exportToPDF() {
         closeExportModal();
     }
 }
+
