@@ -2351,6 +2351,7 @@ async function exportToPDF() {
         const pvGrown = savings * Math.pow(1 + monthlyRate, months);
         const annuityFactor = (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
         const portfolioBaseline = pvGrown + monthlyInvest * annuityFactor;
+        let feeDrag = 0; // computed in the investments section, read again in the Action Plan summary
 
         // Budget breakdowns (transport bundled into essentials — no separate line)
         const stipendEssentials = Math.round(income * 0.50);
@@ -2418,30 +2419,30 @@ async function exportToPDF() {
 
         // ── Checkbox gating ──
         const sec = {
-            overview:    document.getElementById('chk-overview')?.checked !== false,
-            accounts:    document.getElementById('chk-accounts')?.checked !== false,
-            timeline:    document.getElementById('chk-timeline')?.checked !== false,
+            overview: document.getElementById('chk-overview')?.checked !== false,
+            accounts: document.getElementById('chk-accounts')?.checked !== false,
+            timeline: document.getElementById('chk-timeline')?.checked !== false,
             investments: document.getElementById('chk-investments')?.checked !== false,
-            fireCalc:    document.getElementById('chk-fire-calc')?.checked !== false,
-            simulator:   document.getElementById('chk-simulator')?.checked !== false,
+            fireCalc: document.getElementById('chk-fire-calc')?.checked !== false,
+            simulator: document.getElementById('chk-simulator')?.checked !== false,
             decisionLab: document.getElementById('chk-decision-lab')?.checked !== false,
             reverseFire: document.getElementById('chk-reverse-fire')?.checked !== false,
-            markets:     document.getElementById('chk-markets')?.checked !== false,
-            protection:  document.getElementById('chk-protection')?.checked !== false,
+            markets: document.getElementById('chk-markets')?.checked !== false,
+            protection: document.getElementById('chk-protection')?.checked !== false,
         };
 
         // ── Build dynamic TOC ──
         let secNum = 0;
         const tocEntries = [];
-        if (sec.overview)    tocEntries.push({ num: ++secNum, title: 'Executive Summary & Key Metrics' });
-        if (sec.accounts)    { tocEntries.push({ num: ++secNum, title: 'Personal Financial Profile' }); tocEntries.push({ num: ++secNum, title: 'Budget Analysis (50/30/20)' }); }
-        if (sec.fireCalc)    { tocEntries.push({ num: ++secNum, title: 'FIRE Number Derivation' }); tocEntries.push({ num: ++secNum, title: 'Portfolio Growth Projections' }); }
+        if (sec.overview) tocEntries.push({ num: ++secNum, title: 'Executive Summary & Key Metrics' });
+        if (sec.accounts) { tocEntries.push({ num: ++secNum, title: 'Personal Financial Profile' }); tocEntries.push({ num: ++secNum, title: 'Budget Analysis (50/30/20)' }); }
+        if (sec.fireCalc) { tocEntries.push({ num: ++secNum, title: 'FIRE Number Derivation' }); tocEntries.push({ num: ++secNum, title: 'Portfolio Growth Projections' }); }
         if (sec.investments) { tocEntries.push({ num: ++secNum, title: 'Kenyan Investment Vehicle Analysis' }); tocEntries.push({ num: ++secNum, title: 'ETFs & Index Funds: Global Opportunities' }); }
         if (sec.decisionLab) tocEntries.push({ num: ++secNum, title: 'Decision Impact Lab' });
         if (sec.reverseFire) tocEntries.push({ num: ++secNum, title: 'Reverse FIRE Engineering' });
-        if (sec.markets)     tocEntries.push({ num: ++secNum, title: 'Market Trends & Allocation Analysis' });
-        if (sec.protection)  { tocEntries.push({ num: ++secNum, title: 'Protection: Insurance Impact' }); tocEntries.push({ num: ++secNum, title: 'Education: Tuition Fee Forecasting' }); }
-        if (sec.simulator)   { tocEntries.push({ num: ++secNum, title: 'Scenario & Sensitivity Analysis' }); tocEntries.push({ num: ++secNum, title: 'Risk Assessment & Mitigation' }); }
+        if (sec.markets) tocEntries.push({ num: ++secNum, title: 'Market Trends & Allocation Analysis' });
+        if (sec.protection) { tocEntries.push({ num: ++secNum, title: 'Protection: Insurance Impact' }); tocEntries.push({ num: ++secNum, title: 'Education: Tuition Fee Forecasting' }); }
+        if (sec.simulator) { tocEntries.push({ num: ++secNum, title: 'Scenario & Sensitivity Analysis' }); tocEntries.push({ num: ++secNum, title: 'Risk Assessment & Mitigation' }); }
         tocEntries.push({ num: ++secNum, title: 'Action Plan & Conclusion' });
 
 
@@ -3221,9 +3222,11 @@ async function exportToPDF() {
             ['Monthly Investment', fK(monthlyInvest)],
             ['Real Return', fP(realReturn * 100)],
             ['Projected Portfolio at ' + retireAge, fK(portfolioBaseline)],
-            ['ETF vs UT Fee Drag', fK(feeDrag)],
             ['Years to FIRE', String(yearsToRetire)],
         ];
+        if (sec.investments) {
+            summaryFinalRows.push(['ETF vs UT Fee Drag', fK(feeDrag)]);
+        }
         if (decisions.length > 0) {
             summaryFinalRows.push(['Active Decisions', String(decisions.length)]);
         }
