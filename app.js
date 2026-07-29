@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    FIRE Kenya - Financial Independence Dashboard
    Application Logic & Engine
    ============================================================ */
@@ -20,13 +20,13 @@ const PERSONAL = {
     currentStipend: 15480,
 
     // Upcoming
-    jobStartDate: '2026-09',
-    jobEndDate: '2028-06',
+    jobStartDate: '2026-12',
+    jobEndDate: '2028-09',
     jobSalary: 59000,
 
     // Purchases
     suitCost: 6995,        // with next (first job) salary
-    phoneCost: 80000,      // by Oct 2026 (first paycheck + 21K top-up)
+    phoneCost: 80000,      // by Jan 2027 (first paycheck + 21K top-up)
     phoneTopUp: 21000,
 
     // Housing
@@ -40,7 +40,7 @@ const PERSONAL = {
     carGoalDate: '2030-12',
 
     // Savings strategy
-    weeklySavingsStart: '2026-10',
+    weeklySavingsStart: '2027-01',
     weeklySavings: 350,
     monthlyAirtime: 1000,
 
@@ -118,7 +118,7 @@ function computeNetSalary(grossMonthly) {
 // Career stages with gross salary benchmarks
 const CAREER_STAGES = [
     { stage: 1, role: 'Intern / Attachment', gross: 15480, ageRange: '23', phase: 'Stipend', note: 'Below PAYE threshold — minimal deductions' },
-    { stage: 2, role: 'Entry-Level Professional', gross: 59000, ageRange: '24–25', phase: 'Foundation', note: 'First formal employment — full statutory deductions apply' },
+    { stage: 2, role: 'Entry-Level Professional', gross: 59000, ageRange: '24–26', phase: 'Foundation', note: 'First formal employment — full statutory deductions apply' },
     { stage: 3, role: 'Specialist / Team Lead', gross: 120000, ageRange: '26–29', phase: 'Acceleration', note: 'NSSF Tier II maxes out — career growth accelerates savings' },
     { stage: 4, role: 'Manager / Senior Engineer', gross: 250000, ageRange: '30–35', phase: 'Wealth Building', note: 'Peak earning growth — 30% PAYE band captures most income' },
     { stage: 5, role: 'Director / Dept. Head', gross: 450000, ageRange: '36–44', phase: 'Scaling', note: 'NSSF capped — marginal tax rate 30%. Business income diversifies' },
@@ -451,7 +451,7 @@ function populateGoals() {
             title: 'Buy Suit',
             target: 6995,
             saved: 0,
-            date: 'Sep 2026',
+            date: 'Dec 2026',
             note: 'First paycheck purchase'
         },
         {
@@ -459,7 +459,7 @@ function populateGoals() {
             title: 'Buy Phone (KES 80K)',
             target: 80000,
             saved: 0,
-            date: 'Oct 2026',
+            date: 'Jan 2027',
             note: 'First paycheck + KES 21K top-up'
         },
         {
@@ -525,16 +525,16 @@ function populateGoals() {
 function populateTimeline() {
     const events = [
         { date: 'Jul 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (net ${formatKES(computeNetSalary(PERSONAL.currentStipend).netPay)}). Total savings: ${formatKES(PERSONAL.currentSavings)}. Investment portfolio: KES 0.`, amount: 'Savings: KES 173,000', type: 'current' },
-        { date: 'Sep 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Buy ${formatKES(PERSONAL.suitCost)} suit.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
-        { date: 'Oct 2026', title: '📱 Buy Phone', desc: 'KES 80,000 phone. First paycheck + KES 21,000 top-up from savings. Start weekly KES 350 savings to MMF.', amount: 'Phone: KES 80,000', type: 'milestone' },
-        { date: 'Oct 2026', title: '💰 Weekly Savings Begin', desc: 'KES 350/week = KES 1,400/month deposited into Money Market Fund.', amount: 'KES 350/week', type: '' },
-        { date: 'Jan 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
-        { date: 'Mar 2027', title: '📊 First T-Bill Purchase', desc: 'MMF balance reaches KES 50,000. Roll into 91-day Treasury Bills at ~8.5% yield.', amount: 'T-Bill: KES 50,000', type: '' },
-        { date: 'Jun 2027', title: '📈 Start Stock Investing', desc: 'Begin monthly KES 5,000 NSE purchases. Focus on Safaricom, Equity Group, KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
+        { date: 'Dec 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Buy ${formatKES(PERSONAL.suitCost)} suit.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
+        { date: 'Jan 2027', title: '📱 Buy Phone', desc: 'KES 80,000 phone. First paycheck + KES 21,000 top-up from savings. Start weekly KES 350 savings to MMF.', amount: 'Phone: KES 80,000', type: 'milestone' },
+        { date: 'Jan 2027', title: '💰 Weekly Savings Begin', desc: 'KES 350/week = KES 1,400/month deposited into Money Market Fund.', amount: 'KES 350/week', type: '' },
+        { date: 'Mar 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
+        { date: 'May 2027', title: '📊 First T-Bill Purchase', desc: 'MMF balance reaches KES 50,000. Roll into 91-day Treasury Bills at ~8.5% yield.', amount: 'T-Bill: KES 50,000', type: '' },
+        { date: 'Aug 2027', title: '📈 Start Stock Investing', desc: 'Begin monthly KES 5,000 NSE purchases. Focus on Safaricom, Equity Group, KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
         { date: 'Sep 2027', title: '🎂 Turn 25', desc: 'Age 25 - review investment allocation. Portfolio target check: on track for KES 1M by 2030.', amount: '', type: '' },
-        { date: 'Jan 2028', title: '⚖️ Onboard Special Fund Advisory', desc: 'Onboard into CMA-regulated Special Funds (e.g., SIB Mansa-X or Faida OAK) with KES 100,000 from accumulated savings. Set up KES 5,000/month contributions under advisor-guided tactical asset allocation.', amount: 'Entry: KES 100,000', type: '' },
-        { date: 'Jun 2028', title: '🔄 Job Contract Ends', desc: 'End of initial KES 59,000/month contract. Estimated savings: ~KES 350K+. Career transition or upgrade.', amount: '', type: 'milestone' },
-        { date: 'Jul 2028', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
+        { date: 'Mar 2028', title: '⚖️ Onboard Special Fund Advisory', desc: 'Onboard into CMA-regulated Special Funds (e.g., SIB Mansa-X or Faida OAK) with KES 100,000 from accumulated savings. Set up KES 5,000/month contributions under advisor-guided tactical asset allocation.', amount: 'Entry: KES 100,000', type: '' },
+        { date: 'Sep 2028', title: '🔄 Job Contract Ends', desc: 'End of initial KES 59,000/month contract. Estimated savings: ~KES 350K+. Career transition or upgrade.', amount: '', type: 'milestone' },
+        { date: 'Oct 2028', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
         { date: 'Oct 2028', title: '🐛 Launch Pest Control Business', desc: 'First recession-resistant business: KES 200K–500K capital from savings + SACCO loan. Build route density in residential estates and commercial clients (hotels, warehouses). 85%+ recurring revenue from quarterly contracts. Projected KES 150K–400K/month revenue at 25% net margin. Break-even: 6–12 months.', amount: 'Capital: KES 200-500K', type: 'milestone' },
         { date: 'Jan 2030', title: '🎯 KES 1M Portfolio!', desc: 'Investment portfolio hits KES 1 million milestone. Diversified across T-Bonds, stocks, MMF, SACCO, and pest control cash flows.', amount: '🎉 KES 1,000,000', type: 'milestone' },
         { date: 'Dec 2030', title: '🏠 Move Out + 🚗 Buy Car', desc: 'Rent at KES 40,000/month. Purchase first car (KES 1M-1.5M). Major lifestyle upgrade - budget restructure required.', amount: 'Car: KES 1-1.5M', type: 'milestone' },
@@ -2526,7 +2526,7 @@ async function exportToPDF() {
                 ['Years to FIRE', String(yearsToRetire), retireAge + ' - ' + currentAge],
                 ['Current Savings', fK(savings), 'PERSONAL.currentSavings'],
                 ['Current Monthly Income', fK(income), 'Stipend income'],
-                ['Next Job Salary', fK(jobSalary), 'From Sep 2026'],
+                ['Next Job Salary', fK(jobSalary), 'From Dec 2026'],
                 ['Annual Expenses', fK(annualExpenses), 'Live FIRE calc input'],
                 ['FIRE Target (nominal)', fK(fireNumber), 'Inflated expenses / SWR'],
                 ['Safe Withdrawal Rate', fP(swr * 100), 'User-configured'],
@@ -2560,9 +2560,9 @@ async function exportToPDF() {
             dataTable(
                 ['Period', 'Monthly Income', 'Source', 'Duration'],
                 [
-                    ['Jul - Aug 2026', fK(income), 'Stipend', '3 months'],
-                    ['Sep 2026 - Jun 2028', fK(jobSalary), 'Contract', '22 months'],
-                    ['Jul 2028 - Dec 2029', 'KES 100,000', 'Career growth', '18 months'],
+                    ['Jul - Nov 2026', fK(income), 'Stipend', '5 months'],
+                    ['Dec 2026 - Sep 2028', fK(jobSalary), 'Contract', '22 months'],
+                    ['Oct 2028 - Dec 2029', 'KES 100,000', 'Career growth', '15 months'],
                     ['Jan 2030 - Dec 2034', 'KES 150,000', 'Mid-career', '5 years'],
                     ['Jan 2035 - Dec 2039', 'KES 250,000', 'Senior role', '5 years'],
                     ['Jan 2040 - Dec 2044', 'KES 350,000', 'Leadership', '5 years'],
@@ -2575,8 +2575,8 @@ async function exportToPDF() {
             dataTable(
                 ['Item', 'Cost (KES)', 'Timing', 'Funding Source'],
                 [
-                    ['Professional Suit', fK(P.suitCost), 'Sep 2026', 'First paycheck'],
-                    ['Phone Purchase', fK(P.phoneCost), 'Oct 2026', 'Paycheck + KES 21K top-up'],
+                    ['Professional Suit', fK(P.suitCost), 'Dec 2026', 'First paycheck'],
+                    ['Phone Purchase', fK(P.phoneCost), 'Jan 2027', 'Paycheck + KES 21K top-up'],
                     ['First Car', 'KES 1,250,000', 'Dec 2030', 'Savings / SACCO loan'],
                 ],
                 [42, 40, 42, 56]
