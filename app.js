@@ -6,7 +6,7 @@
 // ==================== PERSONAL FINANCIAL DATA ====================
 const PERSONAL = {
     name: 'Investor',
-    currentAge: 23,
+    currentAge: 24,
     birthMonth: 9,  // September
     birthYear: 2002,
     retireAge: 50,
@@ -14,20 +14,20 @@ const PERSONAL = {
     familySize: 5, // self + wife + 3 children
     children: 3,
 
-    // Current (as of Jul 2026)
-    currentSavings: 173000,
+    // Current (as of Aug 2026)
+    currentSavings: 110000,
     currentPortfolio: 0,
     currentStipend: 15480,
 
     // Upcoming
     jobStartDate: '2026-12',
-    jobEndDate: '2028-09',
+    jobEndDate: '2029-05',
     jobSalary: 59000,
 
     // Purchases
     suitCost: 6995,        // with next (first job) salary
-    phoneCost: 80000,      // by Jan 2027 (first paycheck + 21K top-up)
-    phoneTopUp: 21000,
+    phoneCost: 0,          // already purchased (Aug 2026)
+    phoneTopUp: 0,
 
     // Housing
     moveOutDate: '2030-12',
@@ -117,9 +117,9 @@ function computeNetSalary(grossMonthly) {
 
 // Career stages with gross salary benchmarks
 const CAREER_STAGES = [
-    { stage: 1, role: 'Intern / Attachment', gross: 15480, ageRange: '23', phase: 'Stipend', note: 'Below PAYE threshold — minimal deductions' },
-    { stage: 2, role: 'Entry-Level Professional', gross: 59000, ageRange: '24–26', phase: 'Foundation', note: 'First formal employment — full statutory deductions apply' },
-    { stage: 3, role: 'Specialist / Team Lead', gross: 120000, ageRange: '26–29', phase: 'Acceleration', note: 'NSSF Tier II maxes out — career growth accelerates savings' },
+    { stage: 1, role: 'Intern / Attachment', gross: 15480, ageRange: '23–24', phase: 'Stipend', note: 'Below PAYE threshold — minimal deductions' },
+    { stage: 2, role: 'Entry-Level Professional', gross: 59000, ageRange: '24–26', phase: 'Foundation', note: 'First formal employment (Dec 2026 – May 2029) — full statutory deductions apply' },
+    { stage: 3, role: 'Specialist / Team Lead', gross: 120000, ageRange: '27–29', phase: 'Acceleration', note: 'NSSF Tier II maxes out — career growth accelerates savings' },
     { stage: 4, role: 'Manager / Senior Engineer', gross: 250000, ageRange: '30–35', phase: 'Wealth Building', note: 'Peak earning growth — 30% PAYE band captures most income' },
     { stage: 5, role: 'Director / Dept. Head', gross: 450000, ageRange: '36–44', phase: 'Scaling', note: 'NSSF capped — marginal tax rate 30%. Business income diversifies' },
     { stage: 6, role: 'C-Suite / Founder', gross: 800000, ageRange: '45–50', phase: 'FIRE Glide', note: '32.5% band begins — tax optimization becomes critical' },
@@ -524,18 +524,17 @@ function populateGoals() {
 // ==================== TIMELINE ====================
 function populateTimeline() {
     const events = [
-        { date: 'Jul 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (net ${formatKES(computeNetSalary(PERSONAL.currentStipend).netPay)}). Total savings: ${formatKES(PERSONAL.currentSavings)}. Investment portfolio: KES 0.`, amount: 'Savings: KES 173,000', type: 'current' },
+        { date: 'Aug 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (Aug–Oct 2026). Total savings: ${formatKES(PERSONAL.currentSavings)} — all held in Etica MMF. Phone already purchased.`, amount: 'Savings: KES 110,000', type: 'current' },
         { date: 'Dec 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Buy ${formatKES(PERSONAL.suitCost)} suit.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
-        { date: 'Jan 2027', title: '📱 Buy Phone', desc: 'KES 80,000 phone. First paycheck + KES 21,000 top-up from savings. Start weekly KES 350 savings to MMF.', amount: 'Phone: KES 80,000', type: 'milestone' },
-        { date: 'Jan 2027', title: '💰 Weekly Savings Begin', desc: 'KES 350/week = KES 1,400/month deposited into Money Market Fund.', amount: 'KES 350/week', type: '' },
+        { date: 'Jan 2027', title: '💰 Weekly Savings Begin', desc: 'KES 350/week = KES 1,400/month deposited into Money Market Fund. Building the savings discipline.', amount: 'KES 350/week', type: '' },
         { date: 'Mar 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
         { date: 'May 2027', title: '📊 First T-Bill Purchase', desc: 'MMF balance reaches KES 50,000. Roll into 91-day Treasury Bills at ~8.5% yield.', amount: 'T-Bill: KES 50,000', type: '' },
         { date: 'Aug 2027', title: '📈 Start Stock Investing', desc: 'Begin monthly KES 5,000 NSE purchases. Focus on Safaricom, Equity Group, KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
         { date: 'Sep 2027', title: '🎂 Turn 25', desc: 'Age 25 - review investment allocation. Portfolio target check: on track for KES 1M by 2030.', amount: '', type: '' },
         { date: 'Mar 2028', title: '⚖️ Onboard Special Fund Advisory', desc: 'Onboard into CMA-regulated Special Funds (e.g., SIB Mansa-X or Faida OAK) with KES 100,000 from accumulated savings. Set up KES 5,000/month contributions under advisor-guided tactical asset allocation.', amount: 'Entry: KES 100,000', type: '' },
-        { date: 'Sep 2028', title: '🔄 Job Contract Ends', desc: 'End of initial KES 59,000/month contract. Estimated savings: ~KES 350K+. Career transition or upgrade.', amount: '', type: 'milestone' },
-        { date: 'Oct 2028', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
-        { date: 'Oct 2028', title: '🐛 Launch Pest Control Business', desc: 'First recession-resistant business: KES 200K–500K capital from savings + SACCO loan. Build route density in residential estates and commercial clients (hotels, warehouses). 85%+ recurring revenue from quarterly contracts. Projected KES 150K–400K/month revenue at 25% net margin. Break-even: 6–12 months.', amount: 'Capital: KES 200-500K', type: 'milestone' },
+        { date: 'May 2029', title: '🔄 Job Contract Ends', desc: 'End of KES 59,000/month contract (Dec 2026 – May 2029, 30 months). Estimated savings: ~KES 400K+. Career transition or upgrade.', amount: '', type: 'milestone' },
+        { date: 'Jun 2029', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
+        { date: 'Jun 2029', title: '🐛 Launch Pest Control Business', desc: 'First recession-resistant business: KES 200K–500K capital from savings + SACCO loan. Build route density in residential estates and commercial clients (hotels, warehouses). 85%+ recurring revenue from quarterly contracts. Projected KES 150K–400K/month revenue at 25% net margin. Break-even: 6–12 months.', amount: 'Capital: KES 200-500K', type: 'milestone' },
         { date: 'Jan 2030', title: '🎯 KES 1M Portfolio!', desc: 'Investment portfolio hits KES 1 million milestone. Diversified across T-Bonds, stocks, MMF, SACCO, and pest control cash flows.', amount: '🎉 KES 1,000,000', type: 'milestone' },
         { date: 'Dec 2030', title: '🏠 Move Out + 🚗 Buy Car', desc: 'Rent at KES 40,000/month. Purchase first car (KES 1M-1.5M). Major lifestyle upgrade - budget restructure required.', amount: 'Car: KES 1-1.5M', type: 'milestone' },
         { date: 'Jun 2031', title: '🧹 Launch Commercial Cleaning Co.', desc: 'Second recession-resistant business: KES 100K–500K capital. Contract-based janitorial services for offices, medical facilities, and commercial properties. Recurring monthly billing. Post-pandemic hygiene standards drive demand. Pest control cash flows fund expansion. Projected KES 200K–600K/month revenue at 20% margin.', amount: 'Capital: KES 100-500K', type: 'milestone' },
@@ -576,14 +575,14 @@ function populateTimeline() {
         const year = P.birthYear + age;
         let sal = P.currentStipend;
         if (age >= 24) sal = P.jobSalary;
-        if (age >= 26) sal = 100000;
-        if (age >= 28) sal = 150000;
+        if (age >= 27) sal = 100000;
+        if (age >= 29) sal = 150000;
         if (age >= 33) sal = 250000;
         if (age >= 38) sal = 350000;
         if (age >= 44) sal = 450000;
 
         let rent = 0;
-        if (age >= 28 && age < 38) rent = 40000;
+        if (age >= 29 && age < 38) rent = 40000;
 
         const monthlyInvest = Math.max(0, (sal - rent - moTransport) * 0.30);
         const annualInvest = Math.round(monthlyInvest * 12);
@@ -600,8 +599,8 @@ function populateTimeline() {
         // Determine income phase label
         let phase = '';
         if (age < 24) phase = 'Stipend';
-        else if (age < 26) phase = 'First Job';
-        else if (age < 28) phase = 'Career Growth';
+        else if (age < 27) phase = 'First Job';
+        else if (age < 29) phase = 'Career Growth';
         else if (age < 33) phase = 'Mid-Career';
         else if (age < 38) phase = 'Senior Role';
         else if (age < 44) phase = 'Leadership';
@@ -803,10 +802,11 @@ function projectNetWorth() {
         labels.push(year.toString());
 
         // Adjust salary/phases
-        if (year >= 2026 && year < 2028) {
-            if (year >= 2027) monthlySalary = PERSONAL.jobSalary;
-        } else if (year >= 2028 && year < 2030) {
-            monthlySalary = 100000; // career growth
+        if (year >= 2026 && year < 2027) {
+            monthlySalary = PERSONAL.currentStipend;
+        } else if (year >= 2027 && year < 2030) {
+            monthlySalary = PERSONAL.jobSalary;
+            if (year >= 2029) monthlySalary = 100000; // career growth after contract ends May 2029
         } else if (year >= 2030 && year < 2035) {
             monthlySalary = 150000;
             rent = 40000;
@@ -1069,8 +1069,8 @@ function recalculateFIRE() {
         labels.push(`Age ${age}`);
 
         // Scale monthly savings with career growth (rough model)
-        if (age >= 26) monthlySaving = monthlyInvest * 1.3;
-        if (age >= 28) monthlySaving = monthlyInvest * 2;
+        if (age >= 27) monthlySaving = monthlyInvest * 1.3;
+        if (age >= 29) monthlySaving = monthlyInvest * 2;
         if (age >= 32) monthlySaving = monthlyInvest * 3;
         if (age >= 38) monthlySaving = monthlyInvest * 4;
         if (age >= 44) monthlySaving = monthlyInvest * 5;
@@ -1443,14 +1443,14 @@ function computeBaselineTrajectory() {
 
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
         if (age >= 24) salary = PERSONAL.jobSalary;
-        if (age >= 26) salary = 100000;
-        if (age >= 28) salary = 150000;
+        if (age >= 27) salary = 100000;
+        if (age >= 29) salary = 150000;
         if (age >= 33) salary = 250000;
         if (age >= 38) salary = 350000;
         if (age >= 44) salary = 450000;
 
         let rent = 0;
-        if (age >= 28) rent = 40000;
+        if (age >= 29) rent = 40000;
         if (age >= 38) rent = 0; // own property
 
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
@@ -1490,14 +1490,14 @@ function calculateDecisionImpact() {
 
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
         if (age >= 24) salary = PERSONAL.jobSalary;
-        if (age >= 26) salary = 100000;
-        if (age >= 28) salary = 150000;
+        if (age >= 27) salary = 100000;
+        if (age >= 29) salary = 150000;
         if (age >= 33) salary = 250000;
         if (age >= 38) salary = 350000;
         if (age >= 44) salary = 450000;
 
         let rent = 0;
-        if (age >= 28) rent = 40000;
+        if (age >= 29) rent = 40000;
         if (age >= 38) rent = 0;
 
         // Apply all logged decisions
@@ -1660,7 +1660,7 @@ function reverseEngineerFIRE() {
     const withdrawalRate = parseFloat(document.getElementById('revWithdrawalRate').value) / 100 || 0.035;
     const inflation = parseFloat(document.getElementById('revInflation').value) / 100 || 0.06;
     const expectedReturn = parseFloat(document.getElementById('revExpectedReturn').value) / 100 || 0.12;
-    const currentAge = parseInt(document.getElementById('revCurrentAge').value) || 23;
+    const currentAge = parseInt(document.getElementById('revCurrentAge').value) || 24;
     const yearsToRetire = retireAge - currentAge;
 
     // Step 1: Calculate FIRE Number (inflation-adjusted)
@@ -1731,8 +1731,8 @@ function reverseEngineerFIRE() {
         // Actual path with current savings rate
         let actSalary = PERSONAL.currentStipend;
         if (age >= 24) actSalary = PERSONAL.jobSalary;
-        if (age >= 26) actSalary = 100000;
-        if (age >= 28) actSalary = 150000;
+        if (age >= 27) actSalary = 100000;
+        if (age >= 29) actSalary = 150000;
         if (age >= 33) actSalary = 250000;
         actPortfolio = actPortfolio * (1 + expectedReturn) + (actSalary + activeOffBook) * 0.30 * 12 - (PERSONAL.monthlyAirtime * 12);
         actualPath.push(Math.round(actPortfolio));
@@ -1875,14 +1875,14 @@ function simulateMarketScenario() {
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
         labels.push(`Age ${age}`);
         if (age >= 24) salary = PERSONAL.jobSalary;
-        if (age >= 26) salary = 100000;
-        if (age >= 28) salary = 150000;
+        if (age >= 27) salary = 100000;
+        if (age >= 29) salary = 150000;
         if (age >= 33) salary = 250000;
         if (age >= 38) salary = 350000;
         if (age >= 44) salary = 450000;
 
         let rent = 0;
-        if (age >= 28) rent = 40000;
+        if (age >= 29) rent = 40000;
         if (age >= 38) rent = 0;
 
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
@@ -2375,7 +2375,7 @@ async function exportToPDF() {
         const revSWR = parseFloat(document.getElementById('revWithdrawalRate')?.value) / 100 || 0.035;
         const revInflation = parseFloat(document.getElementById('revInflation')?.value) / 100 || 0.06;
         const revReturn = parseFloat(document.getElementById('revExpectedReturn')?.value) / 100 || 0.12;
-        const revCurrentAge = parseInt(document.getElementById('revCurrentAge')?.value) || 23;
+        const revCurrentAge = parseInt(document.getElementById('revCurrentAge')?.value) || 24;
 
         // Market Trends — live DOM values
         const mktNSE = parseFloat(document.getElementById('mktNSE')?.value) || 15;
@@ -2560,10 +2560,10 @@ async function exportToPDF() {
             dataTable(
                 ['Period', 'Monthly Income', 'Source', 'Duration'],
                 [
-                    ['Jul - Nov 2026', fK(income), 'Stipend', '5 months'],
-                    ['Dec 2026 - Sep 2028', fK(jobSalary), 'Contract', '22 months'],
-                    ['Oct 2028 - Dec 2029', 'KES 100,000', 'Career growth', '15 months'],
-                    ['Jan 2030 - Dec 2034', 'KES 150,000', 'Mid-career', '5 years'],
+                    ['Aug - Oct 2026', fK(income), 'Stipend', '3 months'],
+                    ['Dec 2026 - May 2029', fK(jobSalary), 'Contract', '30 months'],
+                    ['Jun 2029 - Dec 2030', 'KES 100,000', 'Career growth', '19 months'],
+                    ['Jan 2031 - Dec 2034', 'KES 150,000', 'Mid-career', '4 years'],
                     ['Jan 2035 - Dec 2039', 'KES 250,000', 'Senior role', '5 years'],
                     ['Jan 2040 - Dec 2044', 'KES 350,000', 'Leadership', '5 years'],
                     ['Jan 2045 - Sep 2052', 'KES 450,000', 'Peak career', '~8 years'],
@@ -2576,7 +2576,7 @@ async function exportToPDF() {
                 ['Item', 'Cost (KES)', 'Timing', 'Funding Source'],
                 [
                     ['Professional Suit', fK(P.suitCost), 'Dec 2026', 'First paycheck'],
-                    ['Phone Purchase', fK(P.phoneCost), 'Jan 2027', 'Paycheck + KES 21K top-up'],
+                    ['Phone (Already Purchased)', 'KES 0', 'Aug 2026', 'Savings (completed)'],
                     ['First Car', 'KES 1,250,000', 'Dec 2030', 'Savings / SACCO loan'],
                 ],
                 [42, 40, 42, 56]
@@ -2671,13 +2671,13 @@ async function exportToPDF() {
             let sal = income;
             for (let age = currentAge; age <= retireAge; age++) {
                 if (age >= 24) sal = jobSalary;
-                if (age >= 26) sal = 100000;
-                if (age >= 28) sal = 150000;
+                if (age >= 27) sal = 100000;
+                if (age >= 29) sal = 150000;
                 if (age >= 33) sal = 250000;
                 if (age >= 38) sal = 350000;
                 if (age >= 44) sal = 450000;
                 let rent = 0;
-                if (age >= 28) rent = 40000;
+                if (age >= 29) rent = 40000;
                 if (age >= 38) rent = 0;
                 const mSav = Math.max(0, (sal - rent) * 0.30);
                 bal = bal * (1 + expectedReturn) + mSav * 12;
@@ -2816,13 +2816,13 @@ async function exportToPDF() {
                 const withDec = [];
                 for (let age = P.currentAge; age <= 55; age++) {
                     if (age >= 24) dSalary = P.jobSalary;
-                    if (age >= 26) dSalary = 100000;
-                    if (age >= 28) dSalary = 150000;
+                    if (age >= 27) dSalary = 100000;
+                    if (age >= 29) dSalary = 150000;
                     if (age >= 33) dSalary = 250000;
                     if (age >= 38) dSalary = 350000;
                     if (age >= 44) dSalary = 450000;
                     let dRent = 0;
-                    if (age >= 28) dRent = 40000;
+                    if (age >= 29) dRent = 40000;
                     if (age >= 38) dRent = 0;
                     decisions.forEach(d => {
                         if (d.type === 'expense' && age === d.atAge) dPortfolio -= d.amount;
@@ -2960,13 +2960,13 @@ async function exportToPDF() {
             let mktSal = income;
             for (let age = currentAge; age <= 50; age++) {
                 if (age >= 24) mktSal = jobSalary;
-                if (age >= 26) mktSal = 100000;
-                if (age >= 28) mktSal = 150000;
+                if (age >= 27) mktSal = 100000;
+                if (age >= 29) mktSal = 150000;
                 if (age >= 33) mktSal = 250000;
                 if (age >= 38) mktSal = 350000;
                 if (age >= 44) mktSal = 450000;
                 let mktRent = 0;
-                if (age >= 28) mktRent = 40000;
+                if (age >= 29) mktRent = 40000;
                 if (age >= 38) mktRent = 0;
                 const activeOB = (obType === 'monthly') ? obIncome : 0;
                 mktPortfolio = mktPortfolio * (1 + blended / 100) + Math.max(0, (mktSal + activeOB - mktRent)) * 0.30 * 12 - (P.monthlyAirtime * 12);
