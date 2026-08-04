@@ -126,7 +126,7 @@ Full derivations with worked examples: see [`fire_analysis.ipynb`](fire_analysis
 
 ## Dashboard Sections
 
-1. **Overview** — KPIs, net worth chart, budget doughnut
+1. **Overview** — KPIs, net worth chart, budget doughnut, goal tracker, capital allocation & fund specifications callout
 2. **Accounts** — Income flow, 50/30/20 buckets, off-book income
 3. **Timeline** — 17 milestones (Jul 2026 → Sep 2052)
 4. **Investments** — 3 risk tiers (Kenyan) + global ETFs + fee drag calculator
@@ -138,6 +138,14 @@ Full derivations with worked examples: see [`fire_analysis.ipynb`](fire_analysis
 10. **Protection** — Insurance + tuition forecasting
 11. **Advice** — 5-phase strategy (Foundation → Glide Path)
 12. **PDF Export** — 10-section analytical report via jsPDF
+
+---
+
+## Dashboard Fund Specifications & Rules
+
+- **Goal Tracker Overview**: Phone goal removed (already purchased; excluded from active goal tracking). Active goals focus on Suit purchase, KES 1M portfolio, rental move-out, first car, and FIRE at age 50.
+- **Weekly KES 350 Set-Aside**: Explicitly designated as **funds reserved for relatives/family support**. It is NOT personal investment capital and is tracked separately from personal FIRE assets.
+- **KES 50,000 T-Bill Allocation**: Derived directly from reallocating a portion of the **existing KES 110,000 savings balance** currently in Etica MMF. This is a **capital reallocation**, NOT a fresh/new savings target. The remaining KES 60,000 is retained liquid in MMF as an emergency fund.
 
 ---
 

@@ -42,6 +42,7 @@ const PERSONAL = {
     // Savings strategy
     weeklySavingsStart: '2027-01',
     weeklySavings: 350,
+    weeklySavingsNote: 'Reserved strictly for relatives/family support (not personal investment funds)',
     monthlyAirtime: 1000,
 
     // Kenya Economic Context
@@ -455,14 +456,6 @@ function populateGoals() {
             note: 'First paycheck purchase'
         },
         {
-            icon: '📱',
-            title: 'Buy Phone (KES 80K)',
-            target: 80000,
-            saved: 0,
-            date: 'Jan 2027',
-            note: 'First paycheck + KES 21K top-up'
-        },
-        {
             icon: '💼',
             title: 'KES 1M Portfolio',
             target: 1000000,
@@ -524,11 +517,11 @@ function populateGoals() {
 // ==================== TIMELINE ====================
 function populateTimeline() {
     const events = [
-        { date: 'Aug 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (Aug–Oct 2026). Total savings: ${formatKES(PERSONAL.currentSavings)} — all held in Etica MMF. Phone already purchased.`, amount: 'Savings: KES 110,000', type: 'current' },
+        { date: 'Aug 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (Aug–Oct 2026). Total existing savings: ${formatKES(PERSONAL.currentSavings)} held in Etica MMF (source capital for KES 50K T-Bill allocation). Phone already purchased.`, amount: 'Savings: KES 110,000', type: 'current' },
         { date: 'Dec 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Buy ${formatKES(PERSONAL.suitCost)} suit.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
-        { date: 'Jan 2027', title: '💰 Weekly Savings Begin', desc: 'KES 350/week = KES 1,400/month deposited into Money Market Fund. Building the savings discipline.', amount: 'KES 350/week', type: '' },
+        { date: 'Jan 2027', title: '💰 Weekly Relatives\' Reserve Begins', desc: 'KES 350/week (KES 1,400/month) set aside into Money Market Fund. Note: These funds are reserved strictly for family/relatives and are separate from personal FIRE investments.', amount: 'KES 350/wk (Relatives)', type: '' },
         { date: 'Mar 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
-        { date: 'May 2027', title: '📊 First T-Bill Purchase', desc: 'MMF balance reaches KES 50,000. Roll into 91-day Treasury Bills at ~8.5% yield.', amount: 'T-Bill: KES 50,000', type: '' },
+        { date: 'May 2027', title: '📊 First T-Bill Purchase (From Existing Savings)', desc: 'Deploy KES 50,000 derived directly from existing KES 110,000 savings balance (capital reallocation, NOT a fresh savings target) into 91-day Treasury Bills at ~8.5% yield via DhowCSD.', amount: 'T-Bill: KES 50,000 (Existing Capital)', type: '' },
         { date: 'Aug 2027', title: '📈 Start Stock Investing', desc: 'Begin monthly KES 5,000 NSE purchases. Focus on Safaricom, Equity Group, KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
         { date: 'Sep 2027', title: '🎂 Turn 25', desc: 'Age 25 - review investment allocation. Portfolio target check: on track for KES 1M by 2030.', amount: '', type: '' },
         { date: 'Mar 2028', title: '⚖️ Onboard Special Fund Advisory', desc: 'Onboard into CMA-regulated Special Funds (e.g., SIB Mansa-X or Faida OAK) with KES 100,000 from accumulated savings. Set up KES 5,000/month contributions under advisor-guided tactical asset allocation.', amount: 'Entry: KES 100,000', type: '' },
@@ -2576,7 +2569,6 @@ async function exportToPDF() {
                 ['Item', 'Cost (KES)', 'Timing', 'Funding Source'],
                 [
                     ['Professional Suit', fK(P.suitCost), 'Dec 2026', 'First paycheck'],
-                    ['Phone (Already Purchased)', 'KES 0', 'Aug 2026', 'Savings (completed)'],
                     ['First Car', 'KES 1,250,000', 'Dec 2030', 'Savings / SACCO loan'],
                 ],
                 [42, 40, 42, 56]

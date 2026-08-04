@@ -178,9 +178,34 @@
 
             <!-- Goal Progress -->
             <div class="goals-section">
-                <h2 class="sub-heading">🎯 Goal Tracker</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                    <h2 class="sub-heading" style="margin-bottom: 0;">🎯 Goal Tracker</h2>
+                    <span class="badge" style="background: rgba(34, 211, 238, 0.1); color: var(--accent-info); border: 1px solid rgba(34, 211, 238, 0.3); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem;">Phone goal removed — already purchased</span>
+                </div>
                 <div class="goals-grid" id="goalsGrid">
                     <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Capital Allocation & Relatives Reserve Callout -->
+            <div class="advice-card highlight-card" style="margin-top: 1.5rem; border-left: 4px solid var(--accent-primary); background: rgba(99, 102, 241, 0.04);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                    <span style="font-size: 1.25rem;">📌</span>
+                    <h3 style="margin: 0; font-size: 1.05rem;">Dashboard Fund Specifications & Explicit Capital Sources</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                    <div style="background: var(--bg-card, #1e293b); padding: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
+                        <strong style="color: var(--accent-success); display: block; margin-bottom: 0.35rem;">🏦 KES 50,000 T-Bill Allocation (Derived from Existing Savings)</strong>
+                        <p style="font-size: 0.83rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
+                            Explicitly derived directly from reallocating a portion of your <strong>existing KES 110,000 savings balance</strong> (currently held in Etica MMF). This is a <strong>reallocation of existing capital</strong>, NOT a fresh savings target. (Leaves KES 60,000 liquid in MMF as an emergency reserve).
+                        </p>
+                    </div>
+                    <div style="background: var(--bg-card, #1e293b); padding: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
+                        <strong style="color: var(--accent-warning, #f59e0b); display: block; margin-bottom: 0.35rem;">👨‍👩‍👧‍👦 Weekly KES 350 Set-Aside (Reserved for Relatives)</strong>
+                        <p style="font-size: 0.83rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
+                            The weekly KES 350 (KES 1,400/month) is <strong>strictly funds reserved for your relatives/family support</strong>. It is not your personal money and is explicitly separated from your personal FIRE investment accumulation.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -396,8 +421,7 @@
                                 <div class="stat"><span class="stat-label">Platform</span><span
                                         class="stat-value">DhowCSD</span></div>
                             </div>
-                            <p class="instrument-desc">Short-term, government-backed. Perfect for parking savings while
-                                building towards the KES 50K minimum. Weekly auctions via CBK.</p>
+                            <p class="instrument-desc">Short-term, government-backed. Minimum investment of KES 50,000 is <strong>derived directly from reallocating your existing KES 110,000 savings balance</strong> (capital reallocation, NOT a fresh savings target). Weekly auctions via CBK on DhowCSD.</p>
                         </div>
                         <div class="instrument-card">
                             <div class="instrument-icon">🏦</div>
@@ -1215,11 +1239,7 @@
                             <span class="advice-check">💡</span>
                             <div>
                                 <strong>Actionable Steps during Stipend Period (Phase 1)</strong>
-                                <p>Maintain KES 50,000 of your KES 110,000 savings in MMF as an emergency fund. Split
-                                    your KES 4,644 monthly investment: KES 2,000 to SACCO deposits and KES 2,644 to MMF.
-                                    Savantly research prospectus documents for reputable, CMA-regulated Special Funds
-                                    (e.g., Standard Investment Bank's Mansa-X, Faida's OAK Special Fund) to prepare for
-                                    graduation in Phase 2.</p>
+                                <p><strong>Existing Capital Allocation:</strong> Your current <strong>KES 110,000 savings balance</strong> (in Etica MMF) is the source capital: reallocate <strong>KES 50,000 of this existing money</strong> into 91-day Treasury Bills via DhowCSD (capital reallocation, NOT a fresh savings target), while maintaining the remaining <strong>KES 60,000</strong> liquid in MMF as an emergency fund. Split your KES 4,644 monthly investment: KES 2,000 to SACCO deposits and KES 2,644 to MMF.</p>
                             </div>
                         </li>
                     </ul>
@@ -1256,17 +1276,15 @@
                         <li>
                             <span class="advice-check">✅</span>
                             <div>
-                                <strong>Build Emergency Fund</strong>
-                                <p>Target 3 months of expenses (KES 45,000). Your current KES 110,000 savings covers
-                                    this - keep KES 50,000 liquid in MMF.</p>
+                                <strong>Build Emergency Fund & Deploy Capital</strong>
+                                <p>Target 3 months of expenses (KES 45,000–60,000). Your existing KES 110,000 savings covers this — keep KES 60,000 liquid in Etica MMF and allocate KES 50,000 of this existing lump sum to purchase your first T-Bill.</p>
                             </div>
                         </li>
                         <li>
                             <span class="advice-check">✅</span>
                             <div>
-                                <strong>Register on DhowCSD</strong>
-                                <p>Create your CBK Central Depository account now. This is free and prepares you to buy
-                                    T-Bills and bonds when you have KES 50,000+ to invest.</p>
+                                <strong>Register on DhowCSD (For T-Bill Allocation)</strong>
+                                <p>Create your CBK Central Depository account now. This prepares you to deploy <strong>KES 50,000 from your existing KES 110,000 savings</strong> into 91-day T-Bills (capital reallocation, NOT a fresh savings target).</p>
                             </div>
                         </li>
                         <li>
@@ -1307,17 +1325,15 @@
                         <li>
                             <span class="advice-check">🎯</span>
                             <div>
-                                <strong>Start weekly KES 350 savings</strong>
-                                <p>From October 2026: KES 1,400/month into MMF. This builds the discipline for larger
-                                    amounts later.</p>
+                                <strong>Start weekly KES 350 savings (Relatives' Reserve)</strong>
+                                <p>From October 2026: KES 1,400/month set aside into MMF. <em>Important Note:</em> This KES 350 weekly set-aside is strictly designated as <strong>funds reserved for relatives/family support</strong>, NOT personal FIRE investment money.</p>
                             </div>
                         </li>
                         <li>
                             <span class="advice-check">🎯</span>
                             <div>
-                                <strong>Invest in Treasury Bills</strong>
-                                <p>Once MMF balance reaches KES 50,000, roll KES 50K into 91-day T-Bills (8.5% yield).
-                                    Keep rolling every quarter.</p>
+                                <strong>Invest in Treasury Bills (From Existing Savings)</strong>
+                                <p>Deploy KES 50,000 <em>derived directly from reallocating your existing KES 110,000 savings balance</em> into 91-day T-Bills (8.5% yield) via DhowCSD. This reallocates existing capital rather than accumulating a fresh KES 50,000 savings target. Keep rolling every quarter.</p>
                             </div>
                         </li>
                         <li>
