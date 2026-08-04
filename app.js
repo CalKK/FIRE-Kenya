@@ -31,7 +31,7 @@ const PERSONAL = {
 
     // Housing
     moveOutDate: '2030-12',
-    monthlyRent: 40000,
+    monthlyRent: 60000,
 
     // Investment Goals
     portfolioGoal: 1000000,    // KES 1M by start of 2030
@@ -465,11 +465,11 @@ function populateGoals() {
         },
         {
             icon: '🏠',
-            title: 'Move Out (Rent KES 40K)',
-            target: 480000,
+            title: 'Move Out (Rent KES 60K)',
+            target: 720000,
             saved: 0,
             date: 'Dec 2030',
-            note: '12 months rent + deposit'
+            note: '12 months rent (KES 60K/mo) + deposit'
         },
         {
             icon: '🚗',
@@ -530,7 +530,7 @@ function populateTimeline() {
         { date: 'Jun 2029', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
         { date: 'Jun 2029', title: '🐛 Launch Pest Control Business', desc: 'First recession-resistant business: KES 200K–500K capital from savings + SACCO loan. Build route density in residential estates and commercial clients (hotels, warehouses). 85%+ recurring revenue from quarterly contracts. Projected KES 150K–400K/month revenue at 25% net margin. Break-even: 6–12 months.', amount: 'Capital: KES 200-500K', type: 'milestone' },
         { date: 'Jan 2030', title: '🎯 KES 1M Portfolio!', desc: 'Investment portfolio hits KES 1 million milestone. Diversified across T-Bonds, stocks, MMF, SACCO, and pest control cash flows.', amount: '🎉 KES 1,000,000', type: 'milestone' },
-        { date: 'Dec 2030', title: '🏠 Move Out + 🚗 Buy Car', desc: 'Rent at KES 40,000/month. Purchase first car (KES 1M-1.5M). Major lifestyle upgrade - budget restructure required.', amount: 'Car: KES 1-1.5M', type: 'milestone' },
+        { date: 'Dec 2030', title: '🏠 Move Out (Rent KES 60K) + 🚗 Buy Car', desc: 'Move out to premium rental (KES 60,000/month). REALITY FLAG: KES 60K rent requires Net Income >= KES 180,000/mo (Stage 3/4) to satisfy 33% max rent rule.', amount: 'Rent: KES 60K/mo', type: 'milestone' },
         { date: 'Jun 2031', title: '🧹 Launch Commercial Cleaning Co.', desc: 'Second recession-resistant business: KES 100K–500K capital. Contract-based janitorial services for offices, medical facilities, and commercial properties. Recurring monthly billing. Post-pandemic hygiene standards drive demand. Pest control cash flows fund expansion. Projected KES 200K–600K/month revenue at 20% margin.', amount: 'Capital: KES 100-500K', type: 'milestone' },
         { date: '2032', title: '💍 Marriage & Family', desc: `Stage 4: Manager role at KES 250K gross → Net ${formatKES(computeNetSalary(250000).netPay)}/month. Start family. Budget for wife and children. Two recession-proof businesses generating passive cash flow.`, amount: `Net: ${formatKES(computeNetSalary(250000).netPay)}/mo`, type: '' },
         { date: '2033', title: '📋 Acquire Accounting/Tax Practice', desc: 'Acquire an existing accounting and tax advisory practice with recurring client base (KES 300K–2M). Counter-cyclical demand — economic stress increases need for KRA compliance and financial advisory. Cloud tools (QuickBooks, Xero) enable remote delivery. 25–40% net margins. Pest control + cleaning cash flows fund acquisition.', amount: 'Capital: KES 300K-2M', type: 'milestone' },
@@ -576,7 +576,7 @@ function populateTimeline() {
         if (age >= 44) sal = 450000;
 
         let rent = 0;
-        if (age >= 29 && age < 38) rent = 40000;
+        if (age >= 29 && age < 38) rent = 60000;
 
         const monthlyInvest = Math.max(0, (sal - rent - moTransport) * 0.30);
         const annualInvest = Math.round(monthlyInvest * 12);
@@ -803,10 +803,10 @@ function projectNetWorth() {
             if (year >= 2029) monthlySalary = 100000; // career growth after contract ends May 2029
         } else if (year >= 2030 && year < 2035) {
             monthlySalary = 150000;
-            rent = 40000;
+            rent = 60000;
         } else if (year >= 2035 && year < 2040) {
             monthlySalary = 250000;
-            rent = 60000;
+            rent = 75000;
         } else if (year >= 2040 && year < 2045) {
             monthlySalary = 350000;
             rent = 0; // assume property purchase
@@ -1444,7 +1444,7 @@ function computeBaselineTrajectory() {
         if (age >= 44) salary = 450000;
 
         let rent = 0;
-        if (age >= 29) rent = 40000;
+        if (age >= 29) rent = 60000;
         if (age >= 38) rent = 0; // own property
 
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
