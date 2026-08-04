@@ -518,11 +518,12 @@ function populateGoals() {
 function populateTimeline() {
     const events = [
         { date: 'Aug 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (Aug–Oct 2026). Total existing savings: ${formatKES(PERSONAL.currentSavings)} held in Etica MMF (source capital for KES 50K T-Bill allocation). Phone already purchased.`, amount: 'Savings: KES 110,000', type: 'current' },
+        { date: 'Oct 2026', title: '📈 Start NSE Stock Investing (Early Entry)', desc: 'Begin early monthly NSE stock purchases (KES 2,000–2,644/month) via Ziidi app on M-Pesa during stipend period. Focus on blue-chip dividend growth stocks: Safaricom, Equity Group, KCB.', amount: 'Stocks: KES 2,000-2,644/mo', type: 'milestone' },
         { date: 'Dec 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Buy ${formatKES(PERSONAL.suitCost)} suit.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
         { date: 'Jan 2027', title: '💰 Weekly Relatives\' Reserve Begins', desc: 'KES 350/week (KES 1,400/month) set aside into Money Market Fund. Note: These funds are reserved strictly for family/relatives and are separate from personal FIRE investments.', amount: 'KES 350/wk (Relatives)', type: '' },
         { date: 'Mar 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
         { date: 'May 2027', title: '📊 First T-Bill Purchase (From Existing Savings)', desc: 'Deploy KES 50,000 derived directly from existing KES 110,000 savings balance (capital reallocation, NOT a fresh savings target) into 91-day Treasury Bills at ~8.5% yield via DhowCSD.', amount: 'T-Bill: KES 50,000 (Existing Capital)', type: '' },
-        { date: 'Aug 2027', title: '📈 Start Stock Investing', desc: 'Begin monthly KES 5,000 NSE purchases. Focus on Safaricom, Equity Group, KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
+        { date: 'Aug 2027', title: '📈 Scale NSE Stock Purchases', desc: 'Expand monthly stock purchases to KES 5,000+/month from full job income. Continue accumulating Safaricom, Equity Group, and KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
         { date: 'Sep 2027', title: '🎂 Turn 25', desc: 'Age 25 - review investment allocation. Portfolio target check: on track for KES 1M by 2030.', amount: '', type: '' },
         { date: 'Mar 2028', title: '⚖️ Onboard Special Fund Advisory', desc: 'Onboard into CMA-regulated Special Funds (e.g., SIB Mansa-X or Faida OAK) with KES 100,000 from accumulated savings. Set up KES 5,000/month contributions under advisor-guided tactical asset allocation.', amount: 'Entry: KES 100,000', type: '' },
         { date: 'May 2029', title: '🔄 Job Contract Ends', desc: 'End of KES 59,000/month contract (Dec 2026 – May 2029, 30 months). Estimated savings: ~KES 400K+. Career transition or upgrade.', amount: '', type: 'milestone' },
@@ -951,7 +952,7 @@ function initInvestmentGrowthChart() {
     const mmf = growAsset(years, 5000, 200, 0.10);
     const tbills = growAsset(years, 0, 300, 0.085, 2027);
     const tbonds = growAsset(years, 0, 500, 0.125, 2027);
-    const stocks = growAsset(years, 0, 400, 0.15, 2027);
+    const stocks = growAsset(years, 0, 400, 0.15, 2026);
     const sacco = growAsset(years, 0, 200, 0.14, 2027);
 
     investGrowthChart = new Chart(ctx, {
@@ -3186,8 +3187,8 @@ async function exportToPDF() {
         const actions = [
             'Open a Money Market Fund (Cytonn, Britam, or Sanlam) and deposit KES 5,000',
             'Register on DhowCSD (Central Bank) for T-Bill/Bond access (free)',
-            'Open CDS account on NSE via Ziidi (M-Pesa) for stock trading',
-            'Begin monthly ' + fK(stipendInvest) + ' investment (MMF + SACCO split)',
+            'Open CDS account on NSE via Ziidi (M-Pesa) & start stock investing in October 2026',
+            'Begin monthly ' + fK(stipendInvest) + ' investment (MMF + SACCO + NSE split)',
             'Join a reputable SACCO (Stima, Kenya Police, or sector-specific)',
             'Research high-reputation CMA Special Funds and establish advisory prerequisites',
             'Open Interactive Brokers account (free) for future ETF investments',
