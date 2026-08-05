@@ -39,10 +39,11 @@ const PERSONAL = {
     carGoal: { min: 1000000, max: 1500000 },
     carGoalDate: '2030-12',
 
-    // Savings strategy
+    // Relatives Support & Encumbered Funds
     weeklySavingsStart: '2027-01',
     weeklySavings: 350,
-    weeklySavingsNote: 'Reserved strictly for relatives/family support (not personal investment funds)',
+    monthlyRelativesOutflow: 1400, // KES 350 * 4 weeks = KES 1,400/mo pass-through encumbrance
+    weeklySavingsNote: 'Encumbered family support outflow — deducted from personal wealth calculations to cushion personal FIRE assets',
     monthlyAirtime: 1000,
 
     // Kenya Economic Context
@@ -520,7 +521,7 @@ function populateTimeline() {
         { date: 'Aug 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (Aug–Oct 2026). Total existing savings: ${formatKES(PERSONAL.currentSavings)} held in Etica MMF (source capital for KES 50K T-Bill allocation). Phone already purchased.`, amount: 'Savings: KES 110,000', type: 'current' },
         { date: 'Oct 2026', title: '📈 Start NSE Stock Investing (Early Entry)', desc: 'Begin early monthly NSE stock purchases (KES 2,000–2,644/month) via Ziidi app on M-Pesa during stipend period. Focus on blue-chip dividend growth stocks: Safaricom, Equity Group, KCB.', amount: 'Stocks: KES 2,000-2,644/mo', type: 'milestone' },
         { date: 'Dec 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Buy ${formatKES(PERSONAL.suitCost)} suit.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
-        { date: 'Jan 2027', title: '💰 Weekly Relatives\' Reserve Begins', desc: 'KES 350/week (KES 1,400/month) set aside into Money Market Fund. Note: These funds are reserved strictly for family/relatives and are separate from personal FIRE investments.', amount: 'KES 350/wk (Relatives)', type: '' },
+        { date: 'Jan 2027', title: '👨‍👩‍👧‍👦 Relatives\' Support Outflow (Encumbered)', desc: 'KES 350/week (KES 1,400/month) family commitment begins. Excluded from personal FIRE assets — dashboard cushions personal net worth by treating this strictly as a third-party pass-through obligation.', amount: 'Encumbered: KES 1,400/mo', type: 'family-outflow' },
         { date: 'Mar 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
         { date: 'May 2027', title: '📊 First T-Bill Purchase (From Existing Savings)', desc: 'Deploy KES 50,000 derived directly from existing KES 110,000 savings balance (capital reallocation, NOT a fresh savings target) into 91-day Treasury Bills at ~8.5% yield via DhowCSD.', amount: 'T-Bill: KES 50,000 (Existing Capital)', type: '' },
         { date: 'Aug 2027', title: '📈 Scale NSE Stock Purchases', desc: 'Expand monthly stock purchases to KES 5,000+/month from full job income. Continue accumulating Safaricom, Equity Group, and KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
@@ -578,7 +579,7 @@ function populateTimeline() {
         let rent = 0;
         if (age >= 29 && age < 38) rent = 60000;
 
-        const monthlyInvest = Math.max(0, (sal - rent - moTransport) * 0.30);
+        const monthlyInvest = Math.max(0, (sal - rent - moTransport - P.monthlyRelativesOutflow) * 0.30);
         const annualInvest = Math.round(monthlyInvest * 12);
         cumInvested += annualInvest;
 
@@ -816,7 +817,7 @@ function projectNetWorth() {
 
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
         // Annual investment growth + monthly contributions
-        const annualContribution = (monthlySalary + activeOffBook - rent) * savingsRate * 12;
+        const annualContribution = Math.max(0, (monthlySalary + activeOffBook - rent - PERSONAL.monthlyRelativesOutflow)) * savingsRate * 12;
         netWorth = netWorth * (1 + investReturn) + annualContribution - (PERSONAL.monthlyAirtime * 12);
 
         // Big purchases
@@ -1448,7 +1449,7 @@ function computeBaselineTrajectory() {
         if (age >= 38) rent = 0; // own property
 
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
-        portfolio = portfolio * (1 + returnRate) + Math.max(0, (salary + activeOffBook - rent)) * savingsRate * 12 - (PERSONAL.monthlyAirtime * 12);
+        portfolio = portfolio * (1 + returnRate) + Math.max(0, (salary + activeOffBook - rent - PERSONAL.monthlyRelativesOutflow)) * savingsRate * 12 - (PERSONAL.monthlyAirtime * 12);
 
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000;

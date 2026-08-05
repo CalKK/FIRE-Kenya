@@ -976,6 +976,11 @@ body {
     animation: pulseGlow 2s ease-in-out infinite;
 }
 
+.timeline-item.family-outflow::before {
+    background: var(--accent-warning, #f59e0b);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+}
+
 @keyframes pulseGlow {
 
     0%,
