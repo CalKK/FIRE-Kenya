@@ -25,9 +25,13 @@ const PERSONAL = {
     jobSalary: 59000,
 
     // Purchases
-    suitCost: 6995,        // with next (first job) salary
+    suitCost: 0,           // already purchased (Aug 2026)
     phoneCost: 0,          // already purchased (Aug 2026)
     phoneTopUp: 0,
+
+    // Pro-rata: mid-August 2026 → only ~4.5 months remain in 2026
+    // Aug (0.5) + Sep + Oct + Nov + Dec = 4.5 months
+    proRata2026Months: 4.5,
 
     // Housing
     moveOutDate: '2030-12',
@@ -449,14 +453,6 @@ function setCurrentDate() {
 function populateGoals() {
     const goals = [
         {
-            icon: '👔',
-            title: 'Buy Suit',
-            target: 6995,
-            saved: 0,
-            date: 'Dec 2026',
-            note: 'First paycheck purchase'
-        },
-        {
             icon: '💼',
             title: 'KES 1M Portfolio',
             target: 1000000,
@@ -518,9 +514,9 @@ function populateGoals() {
 // ==================== TIMELINE ====================
 function populateTimeline() {
     const events = [
-        { date: 'Aug 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (Aug–Oct 2026). Total existing savings: ${formatKES(PERSONAL.currentSavings)} held in Etica MMF (source capital for KES 50K T-Bill allocation). Phone already purchased.`, amount: 'Savings: KES 110,000', type: 'current' },
+        { date: 'Aug 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (Aug–Oct 2026). Total existing savings: ${formatKES(PERSONAL.currentSavings)} held in Etica MMF (source capital for KES 50K T-Bill allocation). Phone & suit already purchased.`, amount: 'Savings: KES 110,000', type: 'current' },
         { date: 'Oct 2026', title: '📈 Start NSE Stock Investing (Early Entry)', desc: 'Begin early monthly NSE stock purchases (KES 2,000–2,644/month) via Ziidi app on M-Pesa during stipend period. Focus on blue-chip dividend growth stocks: Safaricom, Equity Group, KCB.', amount: 'Stocks: KES 2,000-2,644/mo', type: 'milestone' },
-        { date: 'Dec 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Buy ${formatKES(PERSONAL.suitCost)} suit.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
+        { date: 'Dec 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Suit already purchased.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
         { date: 'Jan 2027', title: '👨‍👩‍👧‍👦 Relatives\' Support Outflow (Encumbered)', desc: 'KES 350/week (KES 1,400/month) family commitment begins. Excluded from personal FIRE assets — dashboard cushions personal net worth by treating this strictly as a third-party pass-through obligation.', amount: 'Encumbered: KES 1,400/mo', type: 'family-outflow' },
         { date: 'Mar 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
         { date: 'May 2027', title: '📊 First T-Bill Purchase (From Existing Savings)', desc: 'Deploy KES 50,000 derived directly from existing KES 110,000 savings balance (capital reallocation, NOT a fresh savings target) into 91-day Treasury Bills at ~8.5% yield via DhowCSD.', amount: 'T-Bill: KES 50,000 (Existing Capital)', type: '' },
@@ -565,6 +561,7 @@ function populateTimeline() {
     let bal = P.currentSavings;
     let cumInvested = 0;
     const goalRows = [];
+    const proRataFactor2026 = P.proRata2026Months / 12; // ~0.375 for 4.5 of 12 months
 
     for (let age = P.currentAge; age <= P.retireAge; age++) {
         const year = P.birthYear + age;
@@ -580,11 +577,14 @@ function populateTimeline() {
         if (age >= 29 && age < 38) rent = 60000;
 
         const monthlyInvest = Math.max(0, (sal - rent - moTransport - P.monthlyRelativesOutflow) * 0.30);
-        const annualInvest = Math.round(monthlyInvest * 12);
+        // Pro-rata 2026: only ~4.5 months of contributions
+        const effectiveMonths = (year === 2026) ? P.proRata2026Months : 12;
+        const annualInvest = Math.round(monthlyInvest * effectiveMonths);
         cumInvested += annualInvest;
 
-        // Compound growth
-        bal = bal * (1 + expectedReturn) + annualInvest;
+        // Compound growth (pro-rata return for 2026)
+        const effectiveReturn = (year === 2026) ? expectedReturn * proRataFactor2026 : expectedReturn;
+        bal = bal * (1 + effectiveReturn) + annualInvest;
         if (age === 24) bal -= (P.suitCost + P.phoneCost);
         if (age === 28) bal -= 1250000; // car purchase
 
@@ -816,9 +816,11 @@ function projectNetWorth() {
         }
 
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
-        // Annual investment growth + monthly contributions
-        const annualContribution = Math.max(0, (monthlySalary + activeOffBook - rent - PERSONAL.monthlyRelativesOutflow)) * savingsRate * 12;
-        netWorth = netWorth * (1 + investReturn) + annualContribution - (PERSONAL.monthlyAirtime * 12);
+        // Annual investment growth + monthly contributions (pro-rata for 2026)
+        const effectiveMonths = (year === 2026) ? PERSONAL.proRata2026Months : 12;
+        const proRataFactor = effectiveMonths / 12;
+        const annualContribution = Math.max(0, (monthlySalary + activeOffBook - rent - PERSONAL.monthlyRelativesOutflow)) * savingsRate * effectiveMonths;
+        netWorth = netWorth * (1 + investReturn * proRataFactor) + annualContribution - (PERSONAL.monthlyAirtime * effectiveMonths);
 
         // Big purchases
         if (year === 2026) netWorth -= (PERSONAL.suitCost + PERSONAL.phoneCost);
@@ -1072,7 +1074,11 @@ function recalculateFIRE() {
 
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
         const activeMonthlySaving = monthlySaving + (activeOffBook * 0.30);
-        portfolio = portfolio * (1 + expectedReturn) + activeMonthlySaving * 12 - (PERSONAL.monthlyAirtime * 12);
+        // Pro-rata 2026 (age 24): only ~4.5 months remain
+        const fcYear = PERSONAL.birthYear + age;
+        const fcEffMo = (fcYear === 2026) ? PERSONAL.proRata2026Months : 12;
+        const fcProRata = fcEffMo / 12;
+        portfolio = portfolio * (1 + expectedReturn * fcProRata) + activeMonthlySaving * fcEffMo - (PERSONAL.monthlyAirtime * fcEffMo);
 
         // Adjust FIRE number for inflation each year
         const yearlyFireNum = (annualExpenses * Math.pow(1 + inflationRate, age - PERSONAL.currentAge)) / withdrawalRate;
@@ -1270,8 +1276,13 @@ function runSimulation() {
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
         labels.push(`Age ${age}`);
 
-        const yearlyContrib = Math.max(0, (currentSalary + activeOffBook - currentRent) * savingsRate * 12);
-        portfolio = portfolio * (1 + annualReturn) + yearlyContrib - (PERSONAL.monthlyAirtime * 12);
+        // Pro-rata 2026 (age 24): only ~4.5 months remain
+        const year = PERSONAL.birthYear + age;
+        const effectiveMonths = (year === 2026) ? PERSONAL.proRata2026Months : 12;
+        const proRataFactor = effectiveMonths / 12;
+
+        const yearlyContrib = Math.max(0, (currentSalary + activeOffBook - currentRent) * savingsRate * effectiveMonths);
+        portfolio = portfolio * (1 + annualReturn * proRataFactor) + yearlyContrib - (PERSONAL.monthlyAirtime * effectiveMonths);
 
         // Deductions
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
@@ -1448,8 +1459,13 @@ function computeBaselineTrajectory() {
         if (age >= 29) rent = 60000;
         if (age >= 38) rent = 0; // own property
 
+        // Pro-rata 2026 (age 24): only ~4.5 months remain
+        const year = PERSONAL.birthYear + age;
+        const effectiveMonths = (year === 2026) ? PERSONAL.proRata2026Months : 12;
+        const proRataFactor = effectiveMonths / 12;
+
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
-        portfolio = portfolio * (1 + returnRate) + Math.max(0, (salary + activeOffBook - rent - PERSONAL.monthlyRelativesOutflow)) * savingsRate * 12 - (PERSONAL.monthlyAirtime * 12);
+        portfolio = portfolio * (1 + returnRate * proRataFactor) + Math.max(0, (salary + activeOffBook - rent - PERSONAL.monthlyRelativesOutflow)) * savingsRate * effectiveMonths - (PERSONAL.monthlyAirtime * effectiveMonths);
 
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000;
@@ -1512,8 +1528,13 @@ function calculateDecisionImpact() {
             }
         });
 
+        // Pro-rata 2026 (age 24): only ~4.5 months remain
+        const year = PERSONAL.birthYear + age;
+        const effectiveMonths = (year === 2026) ? PERSONAL.proRata2026Months : 12;
+        const proRataFactor = effectiveMonths / 12;
+
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
-        portfolio = portfolio * (1 + returnRate) + Math.max(0, (salary + activeOffBook - rent)) * savingsRate * 12 - (PERSONAL.monthlyAirtime * 12);
+        portfolio = portfolio * (1 + returnRate * proRataFactor) + Math.max(0, (salary + activeOffBook - rent)) * savingsRate * effectiveMonths - (PERSONAL.monthlyAirtime * effectiveMonths);
 
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000;
@@ -1720,7 +1741,12 @@ function reverseEngineerFIRE() {
         labels.push(`Age ${age}`);
         let activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
 
-        reqPortfolio = reqPortfolio * (1 + expectedReturn) + requiredMonthly * 12 - (PERSONAL.monthlyAirtime * 12);
+        // Pro-rata 2026 (age 24): only ~4.5 months remain
+        const revYear = PERSONAL.birthYear + age;
+        const revEffMo = (revYear === 2026) ? PERSONAL.proRata2026Months : 12;
+        const revProRata = revEffMo / 12;
+
+        reqPortfolio = reqPortfolio * (1 + expectedReturn * revProRata) + requiredMonthly * revEffMo - (PERSONAL.monthlyAirtime * revEffMo);
         requiredPath.push(Math.round(reqPortfolio));
 
         // Actual path with current savings rate
@@ -1729,7 +1755,7 @@ function reverseEngineerFIRE() {
         if (age >= 27) actSalary = 100000;
         if (age >= 29) actSalary = 150000;
         if (age >= 33) actSalary = 250000;
-        actPortfolio = actPortfolio * (1 + expectedReturn) + (actSalary + activeOffBook) * 0.30 * 12 - (PERSONAL.monthlyAirtime * 12);
+        actPortfolio = actPortfolio * (1 + expectedReturn * revProRata) + (actSalary + activeOffBook) * 0.30 * revEffMo - (PERSONAL.monthlyAirtime * revEffMo);
         actualPath.push(Math.round(actPortfolio));
     }
 
@@ -1880,8 +1906,13 @@ function simulateMarketScenario() {
         if (age >= 29) rent = 40000;
         if (age >= 38) rent = 0;
 
+        // Pro-rata 2026 (age 24): only ~4.5 months remain
+        const year = PERSONAL.birthYear + age;
+        const effectiveMonths = (year === 2026) ? PERSONAL.proRata2026Months : 12;
+        const proRataFactor = effectiveMonths / 12;
+
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
-        portfolio = portfolio * (1 + blendedReturn) + Math.max(0, (salary + activeOffBook - rent)) * savingsRate * 12 - (PERSONAL.monthlyAirtime * 12);
+        portfolio = portfolio * (1 + blendedReturn * proRataFactor) + Math.max(0, (salary + activeOffBook - rent)) * savingsRate * effectiveMonths - (PERSONAL.monthlyAirtime * effectiveMonths);
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000;
 
@@ -2567,10 +2598,10 @@ async function exportToPDF() {
             );
 
             subTitle(sn + '.2 Planned Major Expenditures');
+            para('Note: Professional Suit (KES 6,995) already purchased — omitted from projections.');
             dataTable(
                 ['Item', 'Cost (KES)', 'Timing', 'Funding Source'],
                 [
-                    ['Professional Suit', fK(P.suitCost), 'Dec 2026', 'First paycheck'],
                     ['First Car', 'KES 1,250,000', 'Dec 2030', 'Savings / SACCO loan'],
                 ],
                 [42, 40, 42, 56]
@@ -2674,7 +2705,11 @@ async function exportToPDF() {
                 if (age >= 29) rent = 40000;
                 if (age >= 38) rent = 0;
                 const mSav = Math.max(0, (sal - rent) * 0.30);
-                bal = bal * (1 + expectedReturn) + mSav * 12;
+                // Pro-rata 2026: only ~4.5 months remain
+                const pdfYear = P.birthYear + age;
+                const pdfEffMo = (pdfYear === 2026) ? P.proRata2026Months : 12;
+                const pdfProRata = pdfEffMo / 12;
+                bal = bal * (1 + expectedReturn * pdfProRata) + mSav * pdfEffMo;
                 if (age === 24) bal -= (P.suitCost + P.phoneCost);
                 if (age === 28) bal -= 1250000;
                 if ((age - currentAge) % 3 === 0 || age === retireAge) {
@@ -2826,8 +2861,12 @@ async function exportToPDF() {
                         else if (d.type === 'asset' && age === d.atAge) dPortfolio -= d.amount;
                         else if (d.type === 'income_change' && age >= d.atAge && age < d.atAge + d.duration) dSalary += d.amount;
                     });
+                    // Pro-rata 2026: only ~4.5 months remain
+                    const dYear = P.birthYear + age;
+                    const dEffMo = (dYear === 2026) ? P.proRata2026Months : 12;
+                    const dProRata = dEffMo / 12;
                     const activeOB = (obType === 'monthly') ? obIncome : 0;
-                    dPortfolio = dPortfolio * 1.12 + Math.max(0, (dSalary + activeOB - dRent)) * 0.30 * 12 - (P.monthlyAirtime * 12);
+                    dPortfolio = dPortfolio * (1 + 0.12 * dProRata) + Math.max(0, (dSalary + activeOB - dRent)) * 0.30 * dEffMo - (P.monthlyAirtime * dEffMo);
                     if (age === 24) dPortfolio -= (P.suitCost + P.phoneCost);
                     if (age === 28) dPortfolio -= 1250000;
                     withDec.push({ age, value: Math.max(0, Math.round(dPortfolio)) });
@@ -2962,8 +3001,12 @@ async function exportToPDF() {
                 let mktRent = 0;
                 if (age >= 29) mktRent = 40000;
                 if (age >= 38) mktRent = 0;
+                // Pro-rata 2026: only ~4.5 months remain
+                const mktYear = P.birthYear + age;
+                const mktEffMo = (mktYear === 2026) ? P.proRata2026Months : 12;
+                const mktProRata = mktEffMo / 12;
                 const activeOB = (obType === 'monthly') ? obIncome : 0;
-                mktPortfolio = mktPortfolio * (1 + blended / 100) + Math.max(0, (mktSal + activeOB - mktRent)) * 0.30 * 12 - (P.monthlyAirtime * 12);
+                mktPortfolio = mktPortfolio * (1 + blended / 100 * mktProRata) + Math.max(0, (mktSal + activeOB - mktRent)) * 0.30 * mktEffMo - (P.monthlyAirtime * mktEffMo);
                 if (age === 24) mktPortfolio -= (P.suitCost + P.phoneCost);
                 if (age === 28) mktPortfolio -= 1250000;
             }
