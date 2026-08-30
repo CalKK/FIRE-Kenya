@@ -20,9 +20,9 @@ const PERSONAL = {
     currentStipend: 15480,
 
     // Upcoming
-    jobStartDate: '2026-12',
-    jobEndDate: '2029-05',
-    jobSalary: 59000,
+    jobStartDate: '2027-01',
+    jobEndDate: '2029-06',
+    jobSalary: 80000,
 
     // Purchases
     suitCost: 0,           // already purchased (Aug 2026)
@@ -124,7 +124,7 @@ function computeNetSalary(grossMonthly) {
 // Career stages with gross salary benchmarks
 const CAREER_STAGES = [
     { stage: 1, role: 'Intern / Attachment', gross: 15480, ageRange: '23–24', phase: 'Stipend', note: 'Below PAYE threshold — minimal deductions' },
-    { stage: 2, role: 'Entry-Level Professional', gross: 59000, ageRange: '24–26', phase: 'Foundation', note: 'First formal employment (Dec 2026 – May 2029) — full statutory deductions apply' },
+    { stage: 2, role: 'Entry-Level Professional', gross: 80000, ageRange: '24–26', phase: 'Foundation', note: 'First formal employment (Jan 2027 – Jun 2029) — full statutory deductions apply' },
     { stage: 3, role: 'Specialist / Team Lead', gross: 120000, ageRange: '27–29', phase: 'Acceleration', note: 'NSSF Tier II maxes out — career growth accelerates savings' },
     { stage: 4, role: 'Manager / Senior Engineer', gross: 250000, ageRange: '30–35', phase: 'Wealth Building', note: 'Peak earning growth — 30% PAYE band captures most income' },
     { stage: 5, role: 'Director / Dept. Head', gross: 450000, ageRange: '36–44', phase: 'Scaling', note: 'NSSF capped — marginal tax rate 30%. Business income diversifies' },
@@ -516,15 +516,15 @@ function populateTimeline() {
     const events = [
         { date: 'Aug 2026', title: '📍 Now - Current Position', desc: `Stipend income of ${formatKES(PERSONAL.currentStipend)}/month (Aug–Oct 2026). Total existing savings: ${formatKES(PERSONAL.currentSavings)} held in Etica MMF (source capital for KES 50K T-Bill allocation). Phone & suit already purchased.`, amount: 'Savings: KES 110,000', type: 'current' },
         { date: 'Oct 2026', title: '📈 Start NSE Stock Investing (Early Entry)', desc: 'Begin early monthly NSE stock purchases (KES 2,000–2,644/month) via Ziidi app on M-Pesa during stipend period. Focus on blue-chip dividend growth stocks: Safaricom, Equity Group, KCB.', amount: 'Stocks: KES 2,000-2,644/mo', type: 'milestone' },
-        { date: 'Dec 2026', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Suit already purchased.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
-        { date: 'Jan 2027', title: '👨‍👩‍👧‍👦 Relatives\' Support Outflow (Encumbered)', desc: 'KES 350/week (KES 1,400/month) family commitment begins. Excluded from personal FIRE assets — dashboard cushions personal net worth by treating this strictly as a third-party pass-through obligation.', amount: 'Encumbered: KES 1,400/mo', type: 'family-outflow' },
+        { date: 'Jan 2027', title: '💼 Start Job (Stage 2)', desc: `Gross ${formatKES(PERSONAL.jobSalary)}/month → Net ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)} after PAYE, NSSF, SHIF & Housing Levy. Suit already purchased.`, amount: `Net: ${formatKES(computeNetSalary(PERSONAL.jobSalary).netPay)}/mo`, type: 'milestone' },
+        { date: 'Feb 2027', title: '👨‍👩‍👧‍👦 Relatives\' Support Outflow (Encumbered)', desc: 'KES 350/week (KES 1,400/month) family commitment begins. Excluded from personal FIRE assets — dashboard cushions personal net worth by treating this strictly as a third-party pass-through obligation.', amount: 'Encumbered: KES 1,400/mo', type: 'family-outflow' },
         { date: 'Mar 2027', title: '🏦 Open DhowCSD & SACCO', desc: 'Register on DhowCSD for T-Bills/Bonds. Join a SACCO (KES 2,000/month shares). Start building credit history.', amount: '', type: '' },
         { date: 'May 2027', title: '📊 First T-Bill Purchase (From Existing Savings)', desc: 'Deploy KES 50,000 derived directly from existing KES 110,000 savings balance (capital reallocation, NOT a fresh savings target) into 91-day Treasury Bills at ~8.5% yield via DhowCSD.', amount: 'T-Bill: KES 50,000 (Existing Capital)', type: '' },
         { date: 'Aug 2027', title: '📈 Scale NSE Stock Purchases', desc: 'Expand monthly stock purchases to KES 5,000+/month from full job income. Continue accumulating Safaricom, Equity Group, and KCB via Ziidi app.', amount: 'Stocks: KES 5,000/mo', type: '' },
         { date: 'Sep 2027', title: '🎂 Turn 25', desc: 'Age 25 - review investment allocation. Portfolio target check: on track for KES 1M by 2030.', amount: '', type: '' },
         { date: 'Mar 2028', title: '⚖️ Onboard Special Fund Advisory', desc: 'Onboard into CMA-regulated Special Funds (e.g., SIB Mansa-X or Faida OAK) with KES 100,000 from accumulated savings. Set up KES 5,000/month contributions under advisor-guided tactical asset allocation.', amount: 'Entry: KES 100,000', type: '' },
-        { date: 'May 2029', title: '🔄 Job Contract Ends', desc: 'End of KES 59,000/month contract (Dec 2026 – May 2029, 30 months). Estimated savings: ~KES 400K+. Career transition or upgrade.', amount: '', type: 'milestone' },
-        { date: 'Jun 2029', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
+        { date: 'Jun 2029', title: '🔄 Job Contract Ends', desc: `End of KES ${formatKES(PERSONAL.jobSalary).replace('KES ', '')}/month contract (Jan 2027 – Jun 2029, 30 months). Estimated savings: ~KES 500K+. Career transition or upgrade.`, amount: '', type: 'milestone' },
+        { date: 'Jul 2029', title: '📈 Stage 3: Specialist', desc: `Target next role at KES 120K gross → Net ${formatKES(computeNetSalary(120000).netPay)}/month. Increase investment allocation to 30%+.`, amount: `Net: ${formatKES(computeNetSalary(120000).netPay)}/mo`, type: 'milestone' },
         { date: 'Jun 2029', title: '🐛 Launch Pest Control Business', desc: 'First recession-resistant business: KES 200K–500K capital from savings + SACCO loan. Build route density in residential estates and commercial clients (hotels, warehouses). 85%+ recurring revenue from quarterly contracts. Projected KES 150K–400K/month revenue at 25% net margin. Break-even: 6–12 months.', amount: 'Capital: KES 200-500K', type: 'milestone' },
         { date: 'Jan 2030', title: '🎯 KES 1M Portfolio!', desc: 'Investment portfolio hits KES 1 million milestone. Diversified across T-Bonds, stocks, MMF, SACCO, and pest control cash flows.', amount: '🎉 KES 1,000,000', type: 'milestone' },
         { date: 'Dec 2030', title: '🏠 Move Out (Rent KES 60K) + 🚗 Buy Car', desc: 'Move out to premium rental (KES 60,000/month). REALITY FLAG: KES 60K rent requires Net Income >= KES 180,000/mo (Stage 3/4) to satisfy 33% max rent rule.', amount: 'Rent: KES 60K/mo', type: 'milestone' },
@@ -535,7 +535,9 @@ function populateTimeline() {
         { date: '2035–2037', title: '🔧 Acquire HVAC & Plumbing Company', desc: 'Acquire an established HVAC and plumbing services company with licensed technicians and maintenance contracts (KES 1M–5M). Emergency-driven, non-deferrable demand. Nairobi\'s commercial real estate boom drives sustained need. Recurring service agreements provide predictable cash flow. KES 400K–1.5M/month revenue at 18% margin.', amount: 'Capital: KES 1-5M', type: 'milestone' },
         { date: '2035–2040', title: '🏗️ Property Investment', desc: 'Consider buying property via SACCO mortgage. Build equity and eliminate rent. Explore D-REITs for diversification.', amount: '', type: '' },
         { date: '2037', title: '📈 Stage 5: Director', desc: `Promotion to Director/Dept Head at KES 450K gross → Net ${formatKES(computeNetSalary(450000).netPay)}/month. Four recession-resistant businesses (pest control, cleaning, accounting, HVAC/plumbing) generating combined KES 500K+ passive monthly income.`, amount: `Net: ${formatKES(computeNetSalary(450000).netPay)}/mo`, type: 'milestone' },
+        { date: '2038', title: '🍔 Invest in Food Franchise (Pizza Inn / Chicken Inn)', desc: 'First franchise investment via Simbisa Brands Owner-Operator model. Capital: KES 50M–85M (60% must be unborrowed cash). Includes franchise fee (KES 3.5–4.5M), fit-out (KES 15–30M), equipment (KES 20–35M), and working capital (KES 5–10M). Ongoing royalties: 5–7% of gross sales. Projected revenue: KES 2–5M/month. Note: KFC is master-franchised by Kuku Foods EA (not available to individuals). Big Square is company-owned only.', amount: 'Capital: KES 50-85M', type: 'milestone' },
         { date: '2040–2045', title: '📚 Children\'s Education Peak', desc: 'School fees for 3 children. Unit trust education funds + business income cover majority. Maintain investment discipline.', amount: '', type: '' },
+        { date: '2040–2042', title: '🏖️ Holiday Home at the Coast', desc: 'Acquire a holiday home/villa on the Kenyan coast (Diani, Watamu, or Malindi). Investment: KES 25M–40M for a furnished property with beach access. Diani offers the highest rental yields (6–10% p.a.) via Airbnb/short-term rentals. Watamu offers strong capital appreciation. All coastal property is leasehold (99-year lease). Verify titles via ArdhiSasa. Generates passive rental income during off-peak personal use periods. Active management required for high-yield operation.', amount: 'Property: KES 25-40M', type: 'milestone' },
         { date: '2042', title: '🐾 Acquire Veterinary Practice', desc: 'Crown jewel recession-resistant business: Acquire an established multi-vet practice (KES 3M–10M). Emotionally inelastic demand — pet owners treat vet care as essential. Kenya\'s rising middle class drives pet ownership. Wellness plans create recurring revenue. Also serves agricultural/livestock sector. KES 500K–2M/month revenue at 20% margin.', amount: 'Capital: KES 3-10M', type: 'milestone' },
         { date: '2045', title: '🛡️ Stage 6: C-Suite / Founder', desc: `KES 800K gross → Net ${formatKES(computeNetSalary(800000).netPay)}/month. Five recession-resistant businesses (pest control, cleaning, accounting, HVAC/plumbing, veterinary) + paper portfolio generating combined KES 1.5M+/month passive income. Begin conservative shift.`, amount: `Net: ${formatKES(computeNetSalary(800000).netPay)}/mo`, type: 'milestone' },
         { date: '2046', title: '🛡️ Retirement Asset Restructuring', desc: 'Systems-wide de-risking under advisory guidance. Transition aggressive Special Fund equity/derivative assets into low-volatility, capital-preservation focused sub-funds.', amount: 'De-risking', type: '' },
@@ -1385,9 +1387,9 @@ function updateSimChart(labels, data, fireData) {
 // ---- Presets ----
 function loadPreset(name) {
     const presets = {
-        current: { salary: 59000, savingsRate: 30, rent: 0, returnRate: 12, growth: 8, children: 3 },
-        aggressive: { salary: 59000, savingsRate: 50, rent: 0, returnRate: 15, growth: 10, children: 3 },
-        moderate: { salary: 59000, savingsRate: 20, rent: 25000, returnRate: 10, growth: 6, children: 3 },
+        current: { salary: 80000, savingsRate: 30, rent: 0, returnRate: 12, growth: 8, children: 3 },
+        aggressive: { salary: 80000, savingsRate: 50, rent: 0, returnRate: 15, growth: 10, children: 3 },
+        moderate: { salary: 80000, savingsRate: 20, rent: 25000, returnRate: 10, growth: 6, children: 3 },
         highEarner: { salary: 200000, savingsRate: 40, rent: 40000, returnRate: 14, growth: 12, children: 3 },
     };
 
@@ -1700,7 +1702,7 @@ function reverseEngineerFIRE() {
     const portfolioAt28 = pvAt28 + contributionsTo28;
 
     // Step 4: Max monthly expenditure
-    const avgSalary = 59000; // starting salary as benchmark
+    const avgSalary = 80000; // starting salary as benchmark
     const maxExpense = avgSalary - requiredMonthly;
 
     // Step 5: Required return if only saving current rate
@@ -2388,7 +2390,7 @@ async function exportToPDF() {
         const jobFun = Math.round(jobSalary * 0.20);
 
         // Simulator — live DOM values
-        const simSalary = parseFloat(document.getElementById('simSalary')?.value) || 59000;
+        const simSalary = parseFloat(document.getElementById('simSalary')?.value) || 80000;
         const simSavingsRate = parseFloat(document.getElementById('simSavingsRate')?.value) || 30;
         const simRent = parseFloat(document.getElementById('simRent')?.value) || 0;
         const simReturn = parseFloat(document.getElementById('simReturn')?.value) || 12;
@@ -2552,7 +2554,7 @@ async function exportToPDF() {
                 ['Years to FIRE', String(yearsToRetire), retireAge + ' - ' + currentAge],
                 ['Current Savings', fK(savings), 'PERSONAL.currentSavings'],
                 ['Current Monthly Income', fK(income), 'Stipend income'],
-                ['Next Job Salary', fK(jobSalary), 'From Dec 2026'],
+                ['Next Job Salary', fK(jobSalary), 'From Jan 2027'],
                 ['Annual Expenses', fK(annualExpenses), 'Live FIRE calc input'],
                 ['FIRE Target (nominal)', fK(fireNumber), 'Inflated expenses / SWR'],
                 ['Safe Withdrawal Rate', fP(swr * 100), 'User-configured'],
@@ -2587,7 +2589,7 @@ async function exportToPDF() {
                 ['Period', 'Monthly Income', 'Source', 'Duration'],
                 [
                     ['Aug - Oct 2026', fK(income), 'Stipend', '3 months'],
-                    ['Dec 2026 - May 2029', fK(jobSalary), 'Contract', '30 months'],
+                    ['Jan 2027 - Jun 2029', fK(jobSalary), 'Contract', '30 months'],
                     ['Jun 2029 - Dec 2030', 'KES 100,000', 'Career growth', '19 months'],
                     ['Jan 2031 - Dec 2034', 'KES 150,000', 'Mid-career', '4 years'],
                     ['Jan 2035 - Dec 2039', 'KES 250,000', 'Senior role', '5 years'],

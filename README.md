@@ -146,7 +146,7 @@ Full derivations with worked examples: see [`fire_analysis.ipynb`](fire_analysis
 - **Goal Tracker Overview**: Phone goal removed (already purchased; excluded from active goal tracking). Active goals focus on Suit purchase, KES 1M portfolio, rental move-out, first car, and FIRE at age 50.
 - **Weekly KES 350 Set-Aside (Relatives' Cushioning)**: Treated as an **encumbered pass-through family support outflow** (KES 1,400/month). It is deducted directly from disposable income before computing personal savings capacity and strictly **excluded** from personal net worth, portfolio growth, and FIRE crossover targets.
 - **KES 50,000 T-Bill Allocation**: Derived directly from reallocating a portion of the **existing KES 110,000 savings balance** currently in Etica MMF. This is a **capital reallocation**, NOT a fresh/new savings target. The remaining KES 60,000 is retained liquid in MMF as an emergency fund.
-- **NSE Stock Investing**: Early entry initiated as early as **October 2026** during stipend phase via Ziidi (M-Pesa), allocating KES 2,000–2,644/month to blue chips (Safaricom, Equity Group, KCB) and scaling to KES 5,000+/month upon starting regular job income in Dec 2026.
+- **NSE Stock Investing**: Early entry initiated as early as **October 2026** during stipend phase via Ziidi (M-Pesa), allocating KES 2,000–2,644/month to blue chips (Safaricom, Equity Group, KCB) and scaling to KES 5,000+/month upon starting regular job income in Jan 2027.
 
 ---
 
