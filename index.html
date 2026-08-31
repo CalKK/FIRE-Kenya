@@ -67,6 +67,9 @@
             <li><a href="#reverse-fire" class="nav-link" data-section="reverse-fire">
                     <span class="nav-icon">🔄</span><span class="nav-label">Reverse FIRE</span>
                 </a></li>
+            <li><a href="#formulae" class="nav-link" data-section="formulae">
+                    <span class="nav-icon">📐</span><span class="nav-label">Formulae</span>
+                </a></li>
             <li><a href="#market-trends" class="nav-link" data-section="market-trends">
                     <span class="nav-icon">🌍</span><span class="nav-label">Markets</span>
                 </a></li>
@@ -178,9 +181,12 @@
 
             <!-- Goal Progress -->
             <div class="goals-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
                     <h2 class="sub-heading" style="margin-bottom: 0;">🎯 Goal Tracker</h2>
-                    <span class="badge" style="background: rgba(34, 211, 238, 0.1); color: var(--accent-info); border: 1px solid rgba(34, 211, 238, 0.3); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem;">Phone & Suit goals removed — already purchased</span>
+                    <span class="badge"
+                        style="background: rgba(34, 211, 238, 0.1); color: var(--accent-info); border: 1px solid rgba(34, 211, 238, 0.3); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem;">Phone
+                        & Suit goals removed — already purchased</span>
                 </div>
                 <div class="goals-grid" id="goalsGrid">
                     <!-- Populated by JS -->
@@ -188,41 +194,65 @@
             </div>
 
             <!-- Capital Allocation & Relatives Reserve Callout -->
-            <div class="advice-card highlight-card" style="margin-top: 1.5rem; border-left: 4px solid var(--accent-primary); background: rgba(99, 102, 241, 0.04);">
+            <div class="advice-card highlight-card"
+                style="margin-top: 1.5rem; border-left: 4px solid var(--accent-primary); background: rgba(99, 102, 241, 0.04);">
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
                     <span style="font-size: 1.25rem;">📌</span>
-                    <h3 style="margin: 0; font-size: 1.05rem;">Dashboard Fund Specifications & Explicit Capital Sources</h3>
+                    <h3 style="margin: 0; font-size: 1.05rem;">Dashboard Fund Specifications & Explicit Capital Sources
+                    </h3>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-                    <div style="background: var(--bg-card, #1e293b); padding: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
-                        <strong style="color: var(--accent-success); display: block; margin-bottom: 0.35rem;">🏦 KES 50,000 T-Bill Allocation (Derived from Existing Savings)</strong>
+                    <div
+                        style="background: var(--bg-card, #1e293b); padding: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
+                        <strong style="color: var(--accent-success); display: block; margin-bottom: 0.35rem;">🏦 KES
+                            50,000 T-Bill Allocation (Derived from Existing Savings)</strong>
                         <p style="font-size: 0.83rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
-                            Explicitly derived directly from reallocating a portion of your <strong>existing KES 110,000 savings balance</strong> (currently held in Etica MMF). This is a <strong>reallocation of existing capital</strong>, NOT a fresh savings target. (Leaves KES 60,000 liquid in MMF as an emergency reserve).
+                            Explicitly derived directly from reallocating a portion of your <strong>existing KES 110,000
+                                savings balance</strong> (currently held in Etica MMF). This is a <strong>reallocation
+                                of existing capital</strong>, NOT a fresh savings target. (Leaves KES 60,000 liquid in
+                            MMF as an emergency reserve).
                         </p>
                     </div>
-                    <div style="background: var(--bg-card, #1e293b); padding: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
-                        <strong style="color: var(--accent-warning, #f59e0b); display: block; margin-bottom: 0.35rem;">🛡️ Relatives' Fund Cushioning (KES 350/wk = KES 1,400/mo)</strong>
+                    <div
+                        style="background: var(--bg-card, #1e293b); padding: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
+                        <strong
+                            style="color: var(--accent-warning, #f59e0b); display: block; margin-bottom: 0.35rem;">🛡️
+                            Relatives' Fund Cushioning (KES 350/wk = KES 1,400/mo)</strong>
                         <p style="font-size: 0.83rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
-                            The weekly KES 350 (KES 1,400/month) is an <strong>encumbered family support outflow</strong>. The FIRE dashboard cushions your personal portfolio by deducting this outflow before computing personal investment capacity and completely excluding it from your personal net worth and retirement targets.
+                            The weekly KES 350 (KES 1,400/month) is an <strong>encumbered family support
+                                outflow</strong>. The FIRE dashboard cushions your personal portfolio by deducting this
+                            outflow before computing personal investment capacity and completely excluding it from your
+                            personal net worth and retirement targets.
                         </p>
                     </div>
                 </div>
             </div>
 
             <!-- Realism Audit & Rent Feasibility Callout -->
-            <div class="advice-card highlight-card" style="margin-top: 1rem; border-left: 4px solid var(--accent-warning, #f59e0b); background: rgba(245, 158, 11, 0.04);">
+            <div class="advice-card highlight-card"
+                style="margin-top: 1rem; border-left: 4px solid var(--accent-warning, #f59e0b); background: rgba(245, 158, 11, 0.04);">
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                     <span style="font-size: 1.25rem;">⚖️</span>
-                    <h3 style="margin: 0; font-size: 1.05rem; color: var(--accent-warning, #f59e0b);">Realism Audit & KES 60,000 Rent Feasibility Flag</h3>
+                    <h3 style="margin: 0; font-size: 1.05rem; color: var(--accent-warning, #f59e0b);">Realism Audit &
+                        KES 60,000 Rent Feasibility Flag</h3>
                 </div>
                 <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
-                    <strong>Financial Reality Check:</strong> Moving out to a <strong>KES 60,000/month rental</strong> in Nairobi represents a premium lifestyle choice. Under the 50/30/20 rule, fixed housing costs should remain below <strong>30–35% of Net Monthly Salary</strong>.
+                    <strong>Financial Reality Check:</strong> Moving out to a <strong>KES 60,000/month rental</strong>
+                    in Nairobi represents a premium lifestyle choice. Under the 50/30/20 rule, fixed housing costs
+                    should remain below <strong>30–35% of Net Monthly Salary</strong>.
                     <br>
-                    • <em>Phase 1 (Stipend KES 15.4K) & Phase 2 (Job KES 80K gross / KES 56.9K net):</em> Paying KES 60K rent would consume 105% of net income — <strong>financially impossible</strong>. Living at home is mandatory.
+                    • <em>Phase 1 (Stipend KES 15.4K) & Phase 2 (Job KES 80K gross / KES 56.9K net):</em> Paying KES 60K
+                    rent would consume 105% of net income — <strong>financially impossible</strong>. Living at home is
+                    mandatory.
                     <br>
-                    • <em>Phase 3 (Dec 2030 Move Out - KES 100K gross / KES 76.5K net):</em> Paying KES 60K rent consumes <strong>78.4% of net salary</strong>, leaving only KES 16.5K for groceries, transport, and zero savings — <strong>Extreme Financial Vulnerability Flag!</strong>
+                    • <em>Phase 3 (Dec 2030 Move Out - KES 100K gross / KES 76.5K net):</em> Paying KES 60K rent
+                    consumes <strong>78.4% of net salary</strong>, leaving only KES 16.5K for groceries, transport, and
+                    zero savings — <strong>Extreme Financial Vulnerability Flag!</strong>
                     <br>
-                    • <em>Sustainable Reality Threshold:</em> Move-out to KES 60K rent is realistic in <strong>Stage 3/4 (2032+ Career Stage)</strong> when net salary reaches <strong>KES 150,000–180,000+/month</strong> (rent = 33% of net pay), or when shared with a working spouse/partner.
+                    • <em>Sustainable Reality Threshold:</em> Move-out to KES 60K rent is realistic in <strong>Stage 3/4
+                        (2032+ Career Stage)</strong> when net salary reaches <strong>KES
+                        150,000–180,000+/month</strong> (rent = 33% of net pay), or when shared with a working
+                    spouse/partner.
                 </p>
             </div>
         </section>
@@ -393,70 +423,105 @@
             </div>
 
             <!-- 4-Account Opening Directive & Channel Modalities (Equity Bank Kenya Framework) -->
-            <div class="advice-card highlight-card" style="margin-top: 2rem; border-left: 4px solid var(--accent-info, #6366f1); background: rgba(99, 102, 241, 0.03);">
-                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem;">
+            <div class="advice-card highlight-card"
+                style="margin-top: 2rem; border-left: 4px solid var(--accent-info, #6366f1); background: rgba(99, 102, 241, 0.03);">
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <span style="font-size: 1.35rem;">🏛️</span>
-                        <h3 style="margin: 0; font-size: 1.1rem; color: var(--text-primary);">4-Account Opening Directive & Channel Modalities</h3>
+                        <h3 style="margin: 0; font-size: 1.1rem; color: var(--text-primary);">4-Account Opening
+                            Directive & Channel Modalities</h3>
                     </div>
-                    <span class="badge" style="background: rgba(99, 102, 241, 0.15); color: var(--accent-info); border: 1px solid rgba(99, 102, 241, 0.3); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem;">Equity Bank Kenya Hub</span>
+                    <span class="badge"
+                        style="background: rgba(99, 102, 241, 0.15); color: var(--accent-info); border: 1px solid rgba(99, 102, 241, 0.3); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem;">Equity
+                        Bank Kenya Hub</span>
                 </div>
                 <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.25rem; line-height: 1.5;">
-                    Your active <strong>Equity Bank Kenya Current Account</strong> serves as your primary <strong>Income Hub (Account 1)</strong>. Below is the operational directive and opening modality for structuring the remaining 3 accounts across appropriate financial channels in Kenya:
+                    Your active <strong>Equity Bank Kenya Current Account</strong> serves as your primary <strong>Income
+                        Hub (Account 1)</strong>. Below is the operational directive and opening modality for
+                    structuring the remaining 3 accounts across appropriate financial channels in Kenya:
                 </p>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
                     <!-- Account 1: Income Hub -->
-                    <div style="background: var(--bg-card, #1e293b); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
+                    <div
+                        style="background: var(--bg-card, #1e293b); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                             <span style="font-size: 1.1rem;">💵</span>
-                            <strong style="color: var(--accent-primary); font-size: 0.95rem;">1. Income Account (Hub)</strong>
+                            <strong style="color: var(--accent-primary); font-size: 0.95rem;">1. Income Account
+                                (Hub)</strong>
                         </div>
-                        <div style="font-size: 0.8rem; color: var(--accent-info); margin-bottom: 0.5rem;"><strong>Channel:</strong> Equity Bank Kenya Current Account (Active)</div>
-                        <ul style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; padding-left: 1.1rem; line-height: 1.45;">
-                            <li><strong>Purpose:</strong> Primary receiving hub for all monthly salary, stipend, and off-book inflows.</li>
-                            <li><strong>Modality:</strong> Receives all income first. Set up automated Standing Orders on Equity Mobile App / EazzyNet to auto-distribute 50% Essentials, 30% Investment, and 20% Fun within 24 hours of payday.</li>
+                        <div style="font-size: 0.8rem; color: var(--accent-info); margin-bottom: 0.5rem;">
+                            <strong>Channel:</strong> Equity Bank Kenya Current Account (Active)</div>
+                        <ul
+                            style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; padding-left: 1.1rem; line-height: 1.45;">
+                            <li><strong>Purpose:</strong> Primary receiving hub for all monthly salary, stipend, and
+                                off-book inflows.</li>
+                            <li><strong>Modality:</strong> Receives all income first. Set up automated Standing Orders
+                                on Equity Mobile App / EazzyNet to auto-distribute 50% Essentials, 30% Investment, and
+                                20% Fun within 24 hours of payday.</li>
                         </ul>
                     </div>
 
                     <!-- Account 2: Essentials Account -->
-                    <div style="background: var(--bg-card, #1e293b); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
+                    <div
+                        style="background: var(--bg-card, #1e293b); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                             <span style="font-size: 1.1rem;">🏠</span>
-                            <strong style="color: var(--accent-success); font-size: 0.95rem;">2. Essentials Account (Living Expenses)</strong>
+                            <strong style="color: var(--accent-success); font-size: 0.95rem;">2. Essentials Account
+                                (Living Expenses)</strong>
                         </div>
-                        <div style="font-size: 0.8rem; color: var(--accent-info); margin-bottom: 0.5rem;"><strong>Channel:</strong> Equity Sub-Account or KCB / NCBA Loop</div>
-                        <ul style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; padding-left: 1.1rem; line-height: 1.45;">
-                            <li><strong>Opening Modality:</strong> Open a dedicated secondary savings/current sub-account via Equity Mobile App (or open NCBA Loop / KCB via USSD <code>*522#</code>).</li>
-                            <li><strong>Purpose:</strong> Pay KPA Tokens, Water, Fibre Wi-Fi, Groceries, Transport, and Rent (KES 60K/mo). Zero debit card usage for non-essential items.</li>
+                        <div style="font-size: 0.8rem; color: var(--accent-info); margin-bottom: 0.5rem;">
+                            <strong>Channel:</strong> Equity Sub-Account or KCB / NCBA Loop</div>
+                        <ul
+                            style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; padding-left: 1.1rem; line-height: 1.45;">
+                            <li><strong>Opening Modality:</strong> Open a dedicated secondary savings/current
+                                sub-account via Equity Mobile App (or open NCBA Loop / KCB via USSD <code>*522#</code>).
+                            </li>
+                            <li><strong>Purpose:</strong> Pay KPA Tokens, Water, Fibre Wi-Fi, Groceries, Transport, and
+                                Rent (KES 60K/mo). Zero debit card usage for non-essential items.</li>
                         </ul>
                     </div>
 
                     <!-- Account 3: Investment Account -->
-                    <div style="background: var(--bg-card, #1e293b); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
+                    <div
+                        style="background: var(--bg-card, #1e293b); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                             <span style="font-size: 1.1rem;">📈</span>
-                            <strong style="color: var(--accent-warning); font-size: 0.95rem;">3. Investment Account (Wealth Engine)</strong>
+                            <strong style="color: var(--accent-warning); font-size: 0.95rem;">3. Investment Account
+                                (Wealth Engine)</strong>
                         </div>
-                        <div style="font-size: 0.8rem; color: var(--accent-info); margin-bottom: 0.5rem;"><strong>Channel:</strong> MMF + DhowCSD + SACCO + Ziidi</div>
-                        <ul style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; padding-left: 1.1rem; line-height: 1.45;">
-                            <li><strong>Etica/Cytonn MMF:</strong> Open online in 10 mins (ID & KRA PIN). Primary home for Emergency Fund & liquid reserves.</li>
-                            <li><strong>CBK DhowCSD:</strong> Register at <code>dhowcsd.centralbank.go.ke</code>. Link Equity Bank account for T-Bills/Bonds.</li>
-                            <li><strong>Stima/Police SACCO:</strong> Apply online on SACCO portal. Auto-deposit KES 2,000+/mo via Standing Order.</li>
-                            <li><strong>Ziidi (M-Pesa):</strong> Dial <code>*483#</code> or M-Pesa App to open CDS account & trade NSE stocks (Oct 2026).</li>
+                        <div style="font-size: 0.8rem; color: var(--accent-info); margin-bottom: 0.5rem;">
+                            <strong>Channel:</strong> MMF + DhowCSD + SACCO + Ziidi</div>
+                        <ul
+                            style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; padding-left: 1.1rem; line-height: 1.45;">
+                            <li><strong>Etica/Cytonn MMF:</strong> Open online in 10 mins (ID & KRA PIN). Primary home
+                                for Emergency Fund & liquid reserves.</li>
+                            <li><strong>CBK DhowCSD:</strong> Register at <code>dhowcsd.centralbank.go.ke</code>. Link
+                                Equity Bank account for T-Bills/Bonds.</li>
+                            <li><strong>Stima/Police SACCO:</strong> Apply online on SACCO portal. Auto-deposit KES
+                                2,000+/mo via Standing Order.</li>
+                            <li><strong>Ziidi (M-Pesa):</strong> Dial <code>*483#</code> or M-Pesa App to open CDS
+                                account & trade NSE stocks (Oct 2026).</li>
                         </ul>
                     </div>
 
                     <!-- Account 4: Entertainment Account -->
-                    <div style="background: var(--bg-card, #1e293b); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
+                    <div
+                        style="background: var(--bg-card, #1e293b); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color, #334155);">
                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                             <span style="font-size: 1.1rem;">🎮</span>
-                            <strong style="color: #ec4899; font-size: 0.95rem;">4. Entertainment Account (Fun & Social)</strong>
+                            <strong style="color: #ec4899; font-size: 0.95rem;">4. Entertainment Account (Fun &
+                                Social)</strong>
                         </div>
-                        <div style="font-size: 0.8rem; color: var(--accent-info); margin-bottom: 0.5rem;"><strong>Channel:</strong> Dedicated M-Pesa Wallet / Equity Prepaid Visa</div>
-                        <ul style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; padding-left: 1.1rem; line-height: 1.45;">
-                            <li><strong>Opening Modality:</strong> Request an Equity Prepaid Visa Card on Equity App, or isolate a dedicated mobile wallet (M-Pesa / Airtel Money).</li>
-                            <li><strong>Strict Rule:</strong> Transfer exactly 20% of net income here on payday. When balance hits KES 0, fun spend stops until next month. Zero overdrafts allowed.</li>
+                        <div style="font-size: 0.8rem; color: var(--accent-info); margin-bottom: 0.5rem;">
+                            <strong>Channel:</strong> Dedicated M-Pesa Wallet / Equity Prepaid Visa</div>
+                        <ul
+                            style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; padding-left: 1.1rem; line-height: 1.45;">
+                            <li><strong>Opening Modality:</strong> Request an Equity Prepaid Visa Card on Equity App, or
+                                isolate a dedicated mobile wallet (M-Pesa / Airtel Money).</li>
+                            <li><strong>Strict Rule:</strong> Transfer exactly 20% of net income here on payday. When
+                                balance hits KES 0, fun spend stops until next month. Zero overdrafts allowed.</li>
                         </ul>
                     </div>
                 </div>
@@ -508,7 +573,10 @@
                                 <div class="stat"><span class="stat-label">Platform</span><span
                                         class="stat-value">DhowCSD</span></div>
                             </div>
-                            <p class="instrument-desc">Short-term, government-backed. Minimum investment of KES 50,000 is <strong>derived directly from reallocating your existing KES 110,000 savings balance</strong> (capital reallocation, NOT a fresh savings target). Weekly auctions via CBK on DhowCSD.</p>
+                            <p class="instrument-desc">Short-term, government-backed. Minimum investment of KES 50,000
+                                is <strong>derived directly from reallocating your existing KES 110,000 savings
+                                    balance</strong> (capital reallocation, NOT a fresh savings target). Weekly auctions
+                                via CBK on DhowCSD.</p>
                         </div>
                         <div class="instrument-card">
                             <div class="instrument-icon">🏦</div>
@@ -565,7 +633,9 @@
                                 <div class="stat"><span class="stat-label">Risk</span><span class="stat-value">Market
                                         volatility</span></div>
                             </div>
-                            <p class="instrument-desc">NSE returned 51%+ in 2025. Early entry starting October 2026 via Ziidi on M-Pesa. Blue-chips like Safaricom, Equity Group, and KCB offer dividends + capital appreciation.</p>
+                            <p class="instrument-desc">NSE returned 51%+ in 2025. Early entry starting October 2026 via
+                                Ziidi on M-Pesa. Blue-chips like Safaricom, Equity Group, and KCB offer dividends +
+                                capital appreciation.</p>
                         </div>
                         <div class="instrument-card">
                             <div class="instrument-icon">🤝</div>
@@ -788,26 +858,43 @@
             <!-- Tier 5: Franchise Investments -->
             <div class="tier-card tier-business" style="margin-top: 2rem;">
                 <div class="tier-header">
-                    <span class="tier-badge" style="background: rgba(236, 72, 153, 0.15); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.3);">FRANCHISE INVESTMENTS</span>
+                    <span class="tier-badge"
+                        style="background: rgba(236, 72, 153, 0.15); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.3);">FRANCHISE
+                        INVESTMENTS</span>
                     <h3>Food & Beverage Franchise Opportunities in Kenya</h3>
                 </div>
                 <p class="section-desc" style="margin-bottom: 1.5rem; color: var(--text-secondary); line-height: 1.6;">
-                    Franchise ownership represents a high-capital, proven-model business investment. In Kenya, most international QSR brands operate via <strong>master franchise</strong> or <strong>owner-operator</strong> models, meaning individual franchise opportunities are <strong>highly selective</strong> and require substantial capital. Sequenced for Stage 4–6 when net worth and business cash flows can support the capital requirements.
+                    Franchise ownership represents a high-capital, proven-model business investment. In Kenya, most
+                    international QSR brands operate via <strong>master franchise</strong> or
+                    <strong>owner-operator</strong> models, meaning individual franchise opportunities are
+                    <strong>highly selective</strong> and require substantial capital. Sequenced for Stage 4–6 when net
+                    worth and business cash flows can support the capital requirements.
                 </p>
                 <div class="instrument-grid" style="margin-bottom: 1.5rem;">
                     <!-- Pizza Inn / Chicken Inn -->
                     <div class="instrument-card">
                         <div class="instrument-icon">🍕</div>
-                        <h4>Pizza Inn / Chicken Inn <span style="font-size: 0.7rem; opacity: 0.7;">(Simbisa Brands)</span></h4>
+                        <h4>Pizza Inn / Chicken Inn <span style="font-size: 0.7rem; opacity: 0.7;">(Simbisa
+                                Brands)</span></h4>
                         <div class="instrument-stats">
-                            <div class="stat"><span class="stat-label">Capital</span><span class="stat-value">KES 50M–85M</span></div>
-                            <div class="stat"><span class="stat-label">Franchise Fee</span><span class="stat-value highlight-orange">KES 3.5–4.5M</span></div>
-                            <div class="stat"><span class="stat-label">Fit-out + Equipment</span><span class="stat-value">KES 35–65M</span></div>
-                            <div class="stat"><span class="stat-label">Working Capital</span><span class="stat-value">KES 5–10M</span></div>
-                            <div class="stat"><span class="stat-label">Royalties</span><span class="stat-value highlight-blue">5–7% gross sales</span></div>
-                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 5 (Age 38+)</span></div>
+                            <div class="stat"><span class="stat-label">Capital</span><span class="stat-value">KES
+                                    50M–85M</span></div>
+                            <div class="stat"><span class="stat-label">Franchise Fee</span><span
+                                    class="stat-value highlight-orange">KES 3.5–4.5M</span></div>
+                            <div class="stat"><span class="stat-label">Fit-out + Equipment</span><span
+                                    class="stat-value">KES 35–65M</span></div>
+                            <div class="stat"><span class="stat-label">Working Capital</span><span
+                                    class="stat-value">KES 5–10M</span></div>
+                            <div class="stat"><span class="stat-label">Royalties</span><span
+                                    class="stat-value highlight-blue">5–7% gross sales</span></div>
+                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 5 (Age
+                                    38+)</span></div>
                         </div>
-                        <p class="instrument-desc">Simbisa Brands' Owner-Operator model requires <strong>60% of investment from unborrowed cash</strong>. Highly selective — most outlets are company-operated. Revenue: KES 2–5M/month per outlet. Contact Simbisa Brands Kenya corporate office directly for current availability. Includes Chicken Inn, Creamy Inn, and Galito's brands.</p>
+                        <p class="instrument-desc">Simbisa Brands' Owner-Operator model requires <strong>60% of
+                                investment from unborrowed cash</strong>. Highly selective — most outlets are
+                            company-operated. Revenue: KES 2–5M/month per outlet. Contact Simbisa Brands Kenya corporate
+                            office directly for current availability. Includes Chicken Inn, Creamy Inn, and Galito's
+                            brands.</p>
                     </div>
 
                     <!-- KFC -->
@@ -815,39 +902,63 @@
                         <div class="instrument-icon">🍗</div>
                         <h4>KFC <span style="font-size: 0.7rem; opacity: 0.7;">(Kuku Foods East Africa)</span></h4>
                         <div class="instrument-stats">
-                            <div class="stat"><span class="stat-label">Capital</span><span class="stat-value">KES 65M–130M+</span></div>
-                            <div class="stat"><span class="stat-label">Model</span><span class="stat-value highlight-orange">Master Franchise</span></div>
-                            <div class="stat"><span class="stat-label">Operator</span><span class="stat-value">Kuku Foods EA</span></div>
-                            <div class="stat"><span class="stat-label">Individual Access</span><span class="stat-value" style="color: #ef4444;">Not Available</span></div>
-                            <div class="stat"><span class="stat-label">Global Range</span><span class="stat-value">USD 2.1–4M+</span></div>
-                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 6 (Age 45+)</span></div>
+                            <div class="stat"><span class="stat-label">Capital</span><span class="stat-value">KES
+                                    65M–130M+</span></div>
+                            <div class="stat"><span class="stat-label">Model</span><span
+                                    class="stat-value highlight-orange">Master Franchise</span></div>
+                            <div class="stat"><span class="stat-label">Operator</span><span class="stat-value">Kuku
+                                    Foods EA</span></div>
+                            <div class="stat"><span class="stat-label">Individual Access</span><span class="stat-value"
+                                    style="color: #ef4444;">Not Available</span></div>
+                            <div class="stat"><span class="stat-label">Global Range</span><span class="stat-value">USD
+                                    2.1–4M+</span></div>
+                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 6 (Age
+                                    45+)</span></div>
                         </div>
-                        <p class="instrument-desc">KFC Kenya is <strong>master-franchised by Kuku Foods East Africa</strong> — not open to individual single-unit franchisees. Entry would require high-level business development discussions with Yum! Brands International or acquiring partnership equity in Kuku Foods EA. Realistic only at C-Suite / Founder stage with KES 100M+ liquid capital.</p>
+                        <p class="instrument-desc">KFC Kenya is <strong>master-franchised by Kuku Foods East
+                                Africa</strong> — not open to individual single-unit franchisees. Entry would require
+                            high-level business development discussions with Yum! Brands International or acquiring
+                            partnership equity in Kuku Foods EA. Realistic only at C-Suite / Founder stage with KES
+                            100M+ liquid capital.</p>
                     </div>
 
                     <!-- Java House / Subway -->
                     <div class="instrument-card">
                         <div class="instrument-icon">☕</div>
-                        <h4>Java House / Subway <span style="font-size: 0.7rem; opacity: 0.7;">(Alternative Franchises)</span></h4>
+                        <h4>Java House / Subway <span style="font-size: 0.7rem; opacity: 0.7;">(Alternative
+                                Franchises)</span></h4>
                         <div class="instrument-stats">
-                            <div class="stat"><span class="stat-label">Capital</span><span class="stat-value">KES 25M–65M</span></div>
-                            <div class="stat"><span class="stat-label">Model</span><span class="stat-value highlight-green">Direct Franchise</span></div>
-                            <div class="stat"><span class="stat-label">Accessibility</span><span class="stat-value">More Open</span></div>
-                            <div class="stat"><span class="stat-label">Revenue</span><span class="stat-value highlight-green">KES 1.5–4M/mo</span></div>
-                            <div class="stat"><span class="stat-label">Net Margin</span><span class="stat-value highlight-blue">~10–18%</span></div>
-                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 4 (Age 32+)</span></div>
+                            <div class="stat"><span class="stat-label">Capital</span><span class="stat-value">KES
+                                    25M–65M</span></div>
+                            <div class="stat"><span class="stat-label">Model</span><span
+                                    class="stat-value highlight-green">Direct Franchise</span></div>
+                            <div class="stat"><span class="stat-label">Accessibility</span><span class="stat-value">More
+                                    Open</span></div>
+                            <div class="stat"><span class="stat-label">Revenue</span><span
+                                    class="stat-value highlight-green">KES 1.5–4M/mo</span></div>
+                            <div class="stat"><span class="stat-label">Net Margin</span><span
+                                    class="stat-value highlight-blue">~10–18%</span></div>
+                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 4 (Age
+                                    32+)</span></div>
                         </div>
-                        <p class="instrument-desc">More accessible franchise options with direct franchise application processes. Java House (Actis-backed) and Subway offer lower entry costs and more transparent application frameworks. Best entry point into the franchise world before scaling to Simbisa/KFC-tier brands.</p>
+                        <p class="instrument-desc">More accessible franchise options with direct franchise application
+                            processes. Java House (Actis-backed) and Subway offer lower entry costs and more transparent
+                            application frameworks. Best entry point into the franchise world before scaling to
+                            Simbisa/KFC-tier brands.</p>
                     </div>
                 </div>
                 <!-- Big Square Note -->
-                <div style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 0.85rem 1rem; margin-top: 0.5rem;">
+                <div
+                    style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 0.85rem 1rem; margin-top: 0.5rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
                         <span style="font-size: 1rem;">⚠️</span>
-                        <strong style="font-size: 0.88rem; color: var(--accent-warning, #f59e0b);">Big Square — Not Franchised</strong>
+                        <strong style="font-size: 0.88rem; color: var(--accent-warning, #f59e0b);">Big Square — Not
+                            Franchised</strong>
                     </div>
                     <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
-                        Big Square is a <strong>company-owned Kenyan restaurant chain</strong> that expands through corporate growth, not franchising. No franchise packages are available. Contact their corporate office (Unga House, Westlands, Nairobi) for potential partnership inquiries.
+                        Big Square is a <strong>company-owned Kenyan restaurant chain</strong> that expands through
+                        corporate growth, not franchising. No franchise packages are available. Contact their corporate
+                        office (Unga House, Westlands, Nairobi) for potential partnership inquiries.
                     </p>
                 </div>
             </div>
@@ -855,11 +966,17 @@
             <!-- Holiday Home at the Coast -->
             <div class="tier-card tier-medium" style="margin-top: 2rem;">
                 <div class="tier-header">
-                    <span class="tier-badge" style="background: rgba(34, 211, 238, 0.15); color: var(--accent-info); border: 1px solid rgba(34, 211, 238, 0.3);">LIFESTYLE INVESTMENT</span>
+                    <span class="tier-badge"
+                        style="background: rgba(34, 211, 238, 0.15); color: var(--accent-info); border: 1px solid rgba(34, 211, 238, 0.3);">LIFESTYLE
+                        INVESTMENT</span>
                     <h3>Holiday Home at the Kenyan Coast</h3>
                 </div>
                 <p class="section-desc" style="margin-bottom: 1.5rem; color: var(--text-secondary); line-height: 1.6;">
-                    Coastal property investment serves dual purposes: <strong>lifestyle asset</strong> (personal holiday retreat) and <strong>income-generating investment</strong> (Airbnb/short-term rentals at 6–10% yield). All coastal property is <strong>leasehold</strong> (99-year leases). Target acquisition: <strong>2040–2042</strong> (Stage 5) when net worth + business income can support KES 25M–40M capital deployment. Always verify titles via ArdhiSasa.
+                    Coastal property investment serves dual purposes: <strong>lifestyle asset</strong> (personal holiday
+                    retreat) and <strong>income-generating investment</strong> (Airbnb/short-term rentals at 6–10%
+                    yield). All coastal property is <strong>leasehold</strong> (99-year leases). Target acquisition:
+                    <strong>2040–2042</strong> (Stage 5) when net worth + business income can support KES 25M–40M
+                    capital deployment. Always verify titles via ArdhiSasa.
                 </p>
                 <div class="instrument-grid">
                     <!-- Diani -->
@@ -867,14 +984,22 @@
                         <div class="instrument-icon">🏖️</div>
                         <h4>Diani Beach</h4>
                         <div class="instrument-stats">
-                            <div class="stat"><span class="stat-label">Property Cost</span><span class="stat-value">KES 25M–100M+</span></div>
-                            <div class="stat"><span class="stat-label">Land (Beachfront)</span><span class="stat-value highlight-orange">KES 40M+</span></div>
-                            <div class="stat"><span class="stat-label">Rental Yield</span><span class="stat-value highlight-green">6–10% p.a.</span></div>
-                            <div class="stat"><span class="stat-label">Market</span><span class="stat-value">Premium, Mature</span></div>
-                            <div class="stat"><span class="stat-label">Infrastructure</span><span class="stat-value">Excellent</span></div>
-                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 5 (Age 38+)</span></div>
+                            <div class="stat"><span class="stat-label">Property Cost</span><span class="stat-value">KES
+                                    25M–100M+</span></div>
+                            <div class="stat"><span class="stat-label">Land (Beachfront)</span><span
+                                    class="stat-value highlight-orange">KES 40M+</span></div>
+                            <div class="stat"><span class="stat-label">Rental Yield</span><span
+                                    class="stat-value highlight-green">6–10% p.a.</span></div>
+                            <div class="stat"><span class="stat-label">Market</span><span class="stat-value">Premium,
+                                    Mature</span></div>
+                            <div class="stat"><span class="stat-label">Infrastructure</span><span
+                                    class="stat-value">Excellent</span></div>
+                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 5 (Age
+                                    38+)</span></div>
                         </div>
-                        <p class="instrument-desc">Most established coastal market with excellent infrastructure (Dongo Kundu Bypass, Ukunda airstrip upgrades). Highest immediate rental yields from international tourist demand. Best for income-focused investors. Prices have risen 70%+ since 2020.</p>
+                        <p class="instrument-desc">Most established coastal market with excellent infrastructure (Dongo
+                            Kundu Bypass, Ukunda airstrip upgrades). Highest immediate rental yields from international
+                            tourist demand. Best for income-focused investors. Prices have risen 70%+ since 2020.</p>
                     </div>
 
                     <!-- Watamu -->
@@ -882,14 +1007,22 @@
                         <div class="instrument-icon">🐠</div>
                         <h4>Watamu</h4>
                         <div class="instrument-stats">
-                            <div class="stat"><span class="stat-label">Property Cost</span><span class="stat-value">KES 25M–80M</span></div>
-                            <div class="stat"><span class="stat-label">Land (Prime)</span><span class="stat-value highlight-orange">KES 30M+</span></div>
-                            <div class="stat"><span class="stat-label">Rental Yield</span><span class="stat-value highlight-green">7–10% p.a.</span></div>
-                            <div class="stat"><span class="stat-label">Market</span><span class="stat-value">High-Growth</span></div>
-                            <div class="stat"><span class="stat-label">Appeal</span><span class="stat-value">Conservation, Scenic</span></div>
-                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 5 (Age 38+)</span></div>
+                            <div class="stat"><span class="stat-label">Property Cost</span><span class="stat-value">KES
+                                    25M–80M</span></div>
+                            <div class="stat"><span class="stat-label">Land (Prime)</span><span
+                                    class="stat-value highlight-orange">KES 30M+</span></div>
+                            <div class="stat"><span class="stat-label">Rental Yield</span><span
+                                    class="stat-value highlight-green">7–10% p.a.</span></div>
+                            <div class="stat"><span class="stat-label">Market</span><span
+                                    class="stat-value">High-Growth</span></div>
+                            <div class="stat"><span class="stat-label">Appeal</span><span
+                                    class="stat-value">Conservation, Scenic</span></div>
+                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 5 (Age
+                                    38+)</span></div>
                         </div>
-                        <p class="instrument-desc">Rapidly gaining popularity with strong capital appreciation potential. Marine conservation focus attracts eco-tourists. Best for investors seeking a mix of appreciation + lifestyle. Luxury villa market is developing fast.</p>
+                        <p class="instrument-desc">Rapidly gaining popularity with strong capital appreciation
+                            potential. Marine conservation focus attracts eco-tourists. Best for investors seeking a mix
+                            of appreciation + lifestyle. Luxury villa market is developing fast.</p>
                     </div>
 
                     <!-- Malindi -->
@@ -897,14 +1030,22 @@
                         <div class="instrument-icon">🌴</div>
                         <h4>Malindi</h4>
                         <div class="instrument-stats">
-                            <div class="stat"><span class="stat-label">Property Cost</span><span class="stat-value">KES 20M–60M</span></div>
-                            <div class="stat"><span class="stat-label">Land (Prime)</span><span class="stat-value highlight-green">KES 20M+</span></div>
-                            <div class="stat"><span class="stat-label">Rental Yield</span><span class="stat-value highlight-blue">6–8% p.a.</span></div>
-                            <div class="stat"><span class="stat-label">Market</span><span class="stat-value">Value-Oriented</span></div>
-                            <div class="stat"><span class="stat-label">Demand</span><span class="stat-value">European (Italian)</span></div>
-                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 5 (Age 38+)</span></div>
+                            <div class="stat"><span class="stat-label">Property Cost</span><span class="stat-value">KES
+                                    20M–60M</span></div>
+                            <div class="stat"><span class="stat-label">Land (Prime)</span><span
+                                    class="stat-value highlight-green">KES 20M+</span></div>
+                            <div class="stat"><span class="stat-label">Rental Yield</span><span
+                                    class="stat-value highlight-blue">6–8% p.a.</span></div>
+                            <div class="stat"><span class="stat-label">Market</span><span
+                                    class="stat-value">Value-Oriented</span></div>
+                            <div class="stat"><span class="stat-label">Demand</span><span class="stat-value">European
+                                    (Italian)</span></div>
+                            <div class="stat"><span class="stat-label">Entry</span><span class="stat-value">Phase 5 (Age
+                                    38+)</span></div>
                         </div>
-                        <p class="instrument-desc">Lowest entry cost of the three prime coastal locations. Strong European (Italian) tourist base. Best for "value" investors. Established cultural scene. Good for first-time coastal property investment before scaling to Diani-tier properties.</p>
+                        <p class="instrument-desc">Lowest entry cost of the three prime coastal locations. Strong
+                            European (Italian) tourist base. Best for "value" investors. Established cultural scene.
+                            Good for first-time coastal property investment before scaling to Diani-tier properties.</p>
                     </div>
                 </div>
             </div>
@@ -1442,14 +1583,20 @@
                                     <strong>NSE Equities & Global ETFs (30% - KES 1,393)</strong> for global compound
                                     growth, and <strong>CMA Special Funds (20% - KES 929)</strong> (e.g. SIB Mansa-X or
                                     Faida OAK) for actively managed absolute returns. High yield (blended ~14.2% p.a.)
-                                    under expert advisory.</p>
+                                    under expert advisory.
+                                </p>
                             </div>
                         </li>
                         <li style="grid-column: span 2;">
                             <span class="advice-check">💡</span>
                             <div>
                                 <strong>Actionable Steps during Stipend Period (Phase 1)</strong>
-                                <p><strong>Existing Capital Allocation:</strong> Your current <strong>KES 110,000 savings balance</strong> (in Etica MMF) is the source capital: reallocate <strong>KES 50,000 of this existing money</strong> into 91-day Treasury Bills via DhowCSD (capital reallocation, NOT a fresh savings target), while maintaining the remaining <strong>KES 60,000</strong> liquid in MMF as an emergency fund. Split your KES 4,644 monthly investment: KES 2,000 to SACCO deposits and KES 2,644 to MMF.</p>
+                                <p><strong>Existing Capital Allocation:</strong> Your current <strong>KES 110,000
+                                        savings balance</strong> (in Etica MMF) is the source capital: reallocate
+                                    <strong>KES 50,000 of this existing money</strong> into 91-day Treasury Bills via
+                                    DhowCSD (capital reallocation, NOT a fresh savings target), while maintaining the
+                                    remaining <strong>KES 60,000</strong> liquid in MMF as an emergency fund. Split your
+                                    KES 4,644 monthly investment: KES 2,000 to SACCO deposits and KES 2,644 to MMF.</p>
                             </div>
                         </li>
                     </ul>
@@ -1473,7 +1620,8 @@
                 <div class="advice-card">
                     <div class="advice-phase-badge">PHASE 1</div>
                     <h3>Foundation (Aug 2026 – Oct 2026)</h3>
-                    <div class="advice-subtitle">Stipend period - KES 15,480/month — All savings (KES 110,000) in Etica MMF</div>
+                    <div class="advice-subtitle">Stipend period - KES 15,480/month — All savings (KES 110,000) in Etica
+                        MMF</div>
                     <ul class="advice-list">
                         <li>
                             <span class="advice-check">✅</span>
@@ -1487,21 +1635,27 @@
                             <span class="advice-check">✅</span>
                             <div>
                                 <strong>Build Emergency Fund & Deploy Capital</strong>
-                                <p>Target 3 months of expenses (KES 45,000–60,000). Your existing KES 110,000 savings covers this — keep KES 60,000 liquid in Etica MMF and allocate KES 50,000 of this existing lump sum to purchase your first T-Bill.</p>
+                                <p>Target 3 months of expenses (KES 45,000–60,000). Your existing KES 110,000 savings
+                                    covers this — keep KES 60,000 liquid in Etica MMF and allocate KES 50,000 of this
+                                    existing lump sum to purchase your first T-Bill.</p>
                             </div>
                         </li>
                         <li>
                             <span class="advice-check">✅</span>
                             <div>
                                 <strong>Register on DhowCSD (For T-Bill Allocation)</strong>
-                                <p>Create your CBK Central Depository account now. This prepares you to deploy <strong>KES 50,000 from your existing KES 110,000 savings</strong> into 91-day T-Bills (capital reallocation, NOT a fresh savings target).</p>
+                                <p>Create your CBK Central Depository account now. This prepares you to deploy
+                                    <strong>KES 50,000 from your existing KES 110,000 savings</strong> into 91-day
+                                    T-Bills (capital reallocation, NOT a fresh savings target).</p>
                             </div>
                         </li>
                         <li>
                             <span class="advice-check">📈</span>
                             <div>
                                 <strong>Start Early NSE Stock Investing (October 2026)</strong>
-                                <p>Register on NSE via Ziidi (M-Pesa) and begin allocating KES 2,000–2,644/month from your stipend investment bucket directly into blue-chip stocks (Safaricom, Equity Group, KCB) starting as early as October 2026.</p>
+                                <p>Register on NSE via Ziidi (M-Pesa) and begin allocating KES 2,000–2,644/month from
+                                    your stipend investment bucket directly into blue-chip stocks (Safaricom, Equity
+                                    Group, KCB) starting as early as October 2026.</p>
                             </div>
                         </li>
                         <li>
@@ -1528,28 +1682,36 @@
                             <span class="advice-check">🎯</span>
                             <div>
                                 <strong>Handle immediate purchases</strong>
-                                <p>Dec paycheck: Buy KES 6,995 suit. Phone already purchased — no further top-up needed.</p>
+                                <p>Dec paycheck: Buy KES 6,995 suit. Phone already purchased — no further top-up needed.
+                                </p>
                             </div>
                         </li>
                         <li>
                             <span class="advice-check">👨‍👩‍👧‍👦</span>
                             <div>
                                 <strong>Pass-Through Relatives' Support Outflow (KES 350/wk)</strong>
-                                <p>From Jan 2027: KES 1,400/month family allocation begins. <em>FIRE Dashboard Cushion:</em> Deducted directly as an encumbered family expense so that your personal wealth calculations remain 100% clean and unencumbered.</p>
+                                <p>From Jan 2027: KES 1,400/month family allocation begins. <em>FIRE Dashboard
+                                        Cushion:</em> Deducted directly as an encumbered family expense so that your
+                                    personal wealth calculations remain 100% clean and unencumbered.</p>
                             </div>
                         </li>
                         <li>
                             <span class="advice-check">🎯</span>
                             <div>
                                 <strong>Invest in Treasury Bills (From Existing Savings)</strong>
-                                <p>Deploy KES 50,000 <em>derived directly from reallocating your existing KES 110,000 savings balance</em> into 91-day T-Bills (8.5% yield) via DhowCSD. This reallocates existing capital rather than accumulating a fresh KES 50,000 savings target. Keep rolling every quarter.</p>
+                                <p>Deploy KES 50,000 <em>derived directly from reallocating your existing KES 110,000
+                                        savings balance</em> into 91-day T-Bills (8.5% yield) via DhowCSD. This
+                                    reallocates existing capital rather than accumulating a fresh KES 50,000 savings
+                                    target. Keep rolling every quarter.</p>
                             </div>
                         </li>
                         <li>
                             <span class="advice-check">🎯</span>
                             <div>
                                 <strong>Scale Up NSE Stock Investments</strong>
-                                <p>Building on your October 2026 early entry, expand monthly stock purchases to KES 5,000+/month from full job income. Continue accumulating Safaricom, Equity Group, and KCB via Ziidi app.</p>
+                                <p>Building on your October 2026 early entry, expand monthly stock purchases to KES
+                                    5,000+/month from full job income. Continue accumulating Safaricom, Equity Group,
+                                    and KCB via Ziidi app.</p>
                             </div>
                         </li>
                         <li>
@@ -1626,7 +1788,9 @@
                             <span class="advice-check">🏠</span>
                             <div>
                                 <strong>Move out — rent at KES 60,000/month</strong>
-                                <p>Budget shift: 50% essentials now includes KES 60,000/month rent. <strong>REALITY FLAG:</strong> KES 60,000 rent requires net monthly salary &ge; KES 180,000 (Career Stage 3/4) to maintain the 33% max rent rule.</p>
+                                <p>Budget shift: 50% essentials now includes KES 60,000/month rent. <strong>REALITY
+                                        FLAG:</strong> KES 60,000 rent requires net monthly salary &ge; KES 180,000
+                                    (Career Stage 3/4) to maintain the 33% max rent rule.</p>
                             </div>
                         </li>
                         <li>
@@ -1812,8 +1976,7 @@
                 </div>
 
                 <!-- ==================== FIRE-BY-50 PRINCIPLES ADDENDUM ==================== -->
-                <div class="advice-card fire-addendum-card"
-                    style="grid-column: span 2; margin-top: 2rem;">
+                <div class="advice-card fire-addendum-card" style="grid-column: span 2; margin-top: 2rem;">
                     <div class="fire-addendum-header">
                         <div class="advice-phase-badge fire-addendum-badge">🔥 FIRE PRINCIPLES</div>
                         <h3>Absolute Principles for Financial Independence by Age 50</h3>
@@ -1832,29 +1995,37 @@
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Save a minimum of 30% of every income — escalate to 50%+ as earnings grow</strong>
-                                        <p>Your savings rate is the single most powerful lever for FIRE. Pay yourself first before any discretionary spend.</p>
+                                        <strong>Save a minimum of 30% of every income — escalate to 50%+ as earnings
+                                            grow</strong>
+                                        <p>Your savings rate is the single most powerful lever for FIRE. Pay yourself
+                                            first before any discretionary spend.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
                                         <strong>Invest immediately and consistently — never let cash sit idle</strong>
-                                        <p>Deploy savings into MMFs, T-Bills, equities, and SACCOs within 48 hours. Compounding rewards speed and consistency above all.</p>
+                                        <p>Deploy savings into MMFs, T-Bills, equities, and SACCOs within 48 hours.
+                                            Compounding rewards speed and consistency above all.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
                                         <strong>Diversify across asset classes and progressively shift with age</strong>
-                                        <p>Start equity-heavy (70/30 stocks/bonds) in your 20s, rebalance toward income-generating assets (bonds, REITs, rental) by your 40s. Never put all eggs in one basket.</p>
+                                        <p>Start equity-heavy (70/30 stocks/bonds) in your 20s, rebalance toward
+                                            income-generating assets (bonds, REITs, rental) by your 40s. Never put all
+                                            eggs in one basket.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Reinvest every dividend, coupon, and return — compound relentlessly</strong>
-                                        <p>Treat all investment returns as sacred capital. Automate reinvestment. The difference between reinvesting and spending returns is tens of millions by age 50.</p>
+                                        <strong>Reinvest every dividend, coupon, and return — compound
+                                            relentlessly</strong>
+                                        <p>Treat all investment returns as sacred capital. Automate reinvestment. The
+                                            difference between reinvesting and spending returns is tens of millions by
+                                            age 50.</p>
                                     </div>
                                 </li>
                             </ul>
@@ -1868,29 +2039,36 @@
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Live below your means at every income level — fight lifestyle inflation</strong>
-                                        <p>When your salary doubles, your spending should not. Keep fixed costs (rent, subscriptions, transport) under 40% of net income at all times.</p>
+                                        <strong>Live below your means at every income level — fight lifestyle
+                                            inflation</strong>
+                                        <p>When your salary doubles, your spending should not. Keep fixed costs (rent,
+                                            subscriptions, transport) under 40% of net income at all times.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Aggressively grow income — career progression, side hustles, and business income</strong>
-                                        <p>Target salary jumps every 2–3 years. Build at least one income stream outside employment. Your earning power is the fuel; savings rate is the engine.</p>
+                                        <strong>Aggressively grow income — career progression, side hustles, and
+                                            business income</strong>
+                                        <p>Target salary jumps every 2–3 years. Build at least one income stream outside
+                                            employment. Your earning power is the fuel; savings rate is the engine.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
                                         <strong>Track every shilling — use budgets, not guesswork</strong>
-                                        <p>A zero-based budget ensures no money leaks into unplanned expenses. Review monthly. What gets measured gets managed.</p>
+                                        <p>A zero-based budget ensures no money leaks into unplanned expenses. Review
+                                            monthly. What gets measured gets managed.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Eliminate high-interest debt immediately; avoid consumer debt entirely</strong>
-                                        <p>Debt is the anti-FIRE weapon. No credit card balances, no personal loans for depreciating items. Only leverage debt for income-producing assets.</p>
+                                        <strong>Eliminate high-interest debt immediately; avoid consumer debt
+                                            entirely</strong>
+                                        <p>Debt is the anti-FIRE weapon. No credit card balances, no personal loans for
+                                            depreciating items. Only leverage debt for income-producing assets.</p>
                                     </div>
                                 </li>
                             </ul>
@@ -1904,29 +2082,37 @@
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Calculate and track net worth monthly — it is your FIRE scoreboard</strong>
-                                        <p>Assets minus liabilities. Plot the trend. If the line isn't going up, diagnose immediately. Net worth growth is the only metric that matters.</p>
+                                        <strong>Calculate and track net worth monthly — it is your FIRE
+                                            scoreboard</strong>
+                                        <p>Assets minus liabilities. Plot the trend. If the line isn't going up,
+                                            diagnose immediately. Net worth growth is the only metric that matters.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
                                         <strong>Stay the course during market downturns — never panic-sell</strong>
-                                        <p>Bear markets are when millionaires are made. Continue investing through volatility. Time in the market beats timing the market, every time.</p>
+                                        <p>Bear markets are when millionaires are made. Continue investing through
+                                            volatility. Time in the market beats timing the market, every time.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Automate everything — investments, savings transfers, bill payments</strong>
-                                        <p>Remove willpower from the equation. Set up standing orders and auto-debit investment contributions on payday.</p>
+                                        <strong>Automate everything — investments, savings transfers, bill
+                                            payments</strong>
+                                        <p>Remove willpower from the equation. Set up standing orders and auto-debit
+                                            investment contributions on payday.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Conduct annual financial reviews — recalibrate goals, allocation, and FIRE number</strong>
-                                        <p>Inflation, family changes, and market shifts require adjustment. Review your FIRE number, withdrawal rate assumptions, and asset allocation every December.</p>
+                                        <strong>Conduct annual financial reviews — recalibrate goals, allocation, and
+                                            FIRE number</strong>
+                                        <p>Inflation, family changes, and market shifts require adjustment. Review your
+                                            FIRE number, withdrawal rate assumptions, and asset allocation every
+                                            December.</p>
                                     </div>
                                 </li>
                             </ul>
@@ -1940,29 +2126,37 @@
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Maintain 6 months of expenses in a liquid emergency fund at all times</strong>
-                                        <p>Park in a MMF or T-Bills. This is non-negotiable insurance — it prevents you from ever touching your investments during a crisis.</p>
+                                        <strong>Maintain 6 months of expenses in a liquid emergency fund at all
+                                            times</strong>
+                                        <p>Park in a MMF or T-Bills. This is non-negotiable insurance — it prevents you
+                                            from ever touching your investments during a crisis.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Maximize every tax-advantaged opportunity — NSSF, pension AVCs, insurance relief</strong>
-                                        <p>Use the KES 20,000/month pension relief cap. Claim SHIF and insurance premium tax relief. Every shilling saved from KRA compounds for you instead.</p>
+                                        <strong>Maximize every tax-advantaged opportunity — NSSF, pension AVCs,
+                                            insurance relief</strong>
+                                        <p>Use the KES 20,000/month pension relief cap. Claim SHIF and insurance premium
+                                            tax relief. Every shilling saved from KRA compounds for you instead.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
                                         <strong>Carry adequate insurance — health, life, and asset protection</strong>
-                                        <p>One medical emergency or liability event without cover can erase years of progress. Insure the catastrophic; self-insure the trivial.</p>
+                                        <p>One medical emergency or liability event without cover can erase years of
+                                            progress. Insure the catastrophic; self-insure the trivial.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">✅</span>
                                     <div>
-                                        <strong>Structure investments tax-efficiently — hold long-term to minimize capital gains tax</strong>
-                                        <p>Understand withholding tax on dividends (5%), interest (15%), and rental income brackets. Use tax-exempt instruments (infrastructure bonds) where available.</p>
+                                        <strong>Structure investments tax-efficiently — hold long-term to minimize
+                                            capital gains tax</strong>
+                                        <p>Understand withholding tax on dividends (5%), interest (15%), and rental
+                                            income brackets. Use tax-exempt instruments (infrastructure bonds) where
+                                            available.</p>
                                     </div>
                                 </li>
                             </ul>
@@ -1976,36 +2170,47 @@
                                 <li>
                                     <span class="advice-check">🏁</span>
                                     <div>
-                                        <strong>Age 24–25 → Foundation: Build emergency fund + first KES 500K invested</strong>
-                                        <p>Establish the savings habit. Open MMF, SACCO, and brokerage accounts. Learn by doing with small amounts.</p>
+                                        <strong>Age 24–25 → Foundation: Build emergency fund + first KES 500K
+                                            invested</strong>
+                                        <p>Establish the savings habit. Open MMF, SACCO, and brokerage accounts. Learn
+                                            by doing with small amounts.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">🏁</span>
                                     <div>
-                                        <strong>Age 26–30 → Acceleration: Hit KES 2M net worth + 40% savings rate</strong>
-                                        <p>First major salary, first real investing power. Diversify into equities and bonds. Compounding begins to show results.</p>
+                                        <strong>Age 26–30 → Acceleration: Hit KES 2M net worth + 40% savings
+                                            rate</strong>
+                                        <p>First major salary, first real investing power. Diversify into equities and
+                                            bonds. Compounding begins to show results.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">🏁</span>
                                     <div>
-                                        <strong>Age 31–37 → Growth Engine: Reach KES 15M+ portfolio + first passive income stream</strong>
-                                        <p>Career income peaks. Launch or acquire first income-generating asset (rental, business). Portfolio should be doubling every 4–5 years.</p>
+                                        <strong>Age 31–37 → Growth Engine: Reach KES 15M+ portfolio + first passive
+                                            income stream</strong>
+                                        <p>Career income peaks. Launch or acquire first income-generating asset (rental,
+                                            business). Portfolio should be doubling every 4–5 years.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">🏁</span>
                                     <div>
-                                        <strong>Age 38–44 → Wealth Building: Cross KES 50M+ net worth + multiple income streams</strong>
-                                        <p>Family expenses peak but so does income. Own your home. Have 3+ passive income sources. Begin de-risking equity allocation gradually.</p>
+                                        <strong>Age 38–44 → Wealth Building: Cross KES 50M+ net worth + multiple income
+                                            streams</strong>
+                                        <p>Family expenses peak but so does income. Own your home. Have 3+ passive
+                                            income sources. Begin de-risking equity allocation gradually.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">🏁</span>
                                     <div>
-                                        <strong>Age 45–50 → FIRE Glide Path: Reach KES 165M+ FIRE number + passive income ≥ expenses</strong>
-                                        <p>Shift to capital preservation. Build 2-year cash buffer. Passive income from all sources must cover 100%+ of family expenses. You are financially independent.</p>
+                                        <strong>Age 45–50 → FIRE Glide Path: Reach KES 165M+ FIRE number + passive
+                                            income ≥ expenses</strong>
+                                        <p>Shift to capital preservation. Build 2-year cash buffer. Passive income from
+                                            all sources must cover 100%+ of family expenses. You are financially
+                                            independent.</p>
                                     </div>
                                 </li>
                             </ul>
@@ -2020,35 +2225,45 @@
                                     <span class="advice-check">🔥</span>
                                     <div>
                                         <strong>FIRE is a 27-year marathon — consistency beats intensity</strong>
-                                        <p>Small, relentless actions over decades produce extraordinary results. Don't chase shortcuts or get-rich-quick schemes. Trust the compounding math.</p>
+                                        <p>Small, relentless actions over decades produce extraordinary results. Don't
+                                            chase shortcuts or get-rich-quick schemes. Trust the compounding math.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">🔥</span>
                                     <div>
-                                        <strong>Every financial decision must pass the FIRE filter: "Does this bring me closer to 50?"</strong>
-                                        <p>Before any major purchase or commitment, calculate the opportunity cost. A KES 90K phone today is KES 2M+ lost by age 50.</p>
+                                        <strong>Every financial decision must pass the FIRE filter: "Does this bring me
+                                            closer to 50?"</strong>
+                                        <p>Before any major purchase or commitment, calculate the opportunity cost. A
+                                            KES 90K phone today is KES 2M+ lost by age 50.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">🔥</span>
                                     <div>
-                                        <strong>Invest in yourself — skills, certifications, and relationships that compound earnings</strong>
-                                        <p>Your human capital is your greatest asset in your 20s and 30s. Every investment in career growth multiplies your lifetime investing capacity.</p>
+                                        <strong>Invest in yourself — skills, certifications, and relationships that
+                                            compound earnings</strong>
+                                        <p>Your human capital is your greatest asset in your 20s and 30s. Every
+                                            investment in career growth multiplies your lifetime investing capacity.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">🔥</span>
                                     <div>
-                                        <strong>Build a financial ecosystem, not just a portfolio — income streams, protection, and legacy</strong>
-                                        <p>True FIRE is holistic: diversified investments + recession-proof businesses + insurance + estate plan + tax strategy. No single point of failure.</p>
+                                        <strong>Build a financial ecosystem, not just a portfolio — income streams,
+                                            protection, and legacy</strong>
+                                        <p>True FIRE is holistic: diversified investments + recession-proof businesses +
+                                            insurance + estate plan + tax strategy. No single point of failure.</p>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="advice-check">🔥</span>
                                     <div>
-                                        <strong>Guard your time and energy — say no to financial distractions and social pressure spending</strong>
-                                        <p>Your peer group will not be on the FIRE path. Comparison is the thief of wealth. Stay focused on your own trajectory and let the numbers speak at 50.</p>
+                                        <strong>Guard your time and energy — say no to financial distractions and social
+                                            pressure spending</strong>
+                                        <p>Your peer group will not be on the FIRE path. Comparison is the thief of
+                                            wealth. Stay focused on your own trajectory and let the numbers speak at 50.
+                                        </p>
                                     </div>
                                 </li>
                             </ul>
@@ -2059,7 +2274,8 @@
                     <!-- Bottom motivational bar -->
                     <div class="fire-addendum-footer">
                         <span class="fire-footer-icon">⚡</span>
-                        <span>Strict adherence to these principles is <strong>essential</strong>. There are no shortcuts to FIRE — only discipline, time, and compounding.</span>
+                        <span>Strict adherence to these principles is <strong>essential</strong>. There are no shortcuts
+                            to FIRE — only discipline, time, and compounding.</span>
                     </div>
                 </div>
 
@@ -2331,6 +2547,626 @@
                 <button class="btn-primary" onclick="analyzeBuyVsRent()" style="margin-top:1rem;">📊 Compare</button>
                 <div class="bvr-verdict" id="bvrVerdict"></div>
             </div>
+        </section>
+
+        <!-- ==================== FORMULA COMPENDIUM SECTION ==================== -->
+        <section id="formulae" class="section">
+            <div class="formulae-header">
+                <h2>📐 Computational Formula Compendium</h2>
+                <p>Every formula driving the FIRE Kenya financial trajectory — from gross salary deductions to the final FIRE number. Trace how each computation feeds into the next.</p>
+            </div>
+
+            <!-- Dependency Flow Cascade -->
+            <div class="formula-flow-cascade">
+                <div class="flow-node">
+                    <span class="flow-node-icon">💰</span>
+                    <span class="flow-node-label">Gross Salary</span>
+                    <span class="flow-node-value" id="flowGross">—</span>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">
+                    <span class="flow-node-icon">🧾</span>
+                    <span class="flow-node-label">Tax Engine</span>
+                    <span class="flow-node-value">Layer 1 (F1–F9)</span>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">
+                    <span class="flow-node-icon">💵</span>
+                    <span class="flow-node-label">Net Pay</span>
+                    <span class="flow-node-value" id="flowNet">—</span>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">
+                    <span class="flow-node-icon">📊</span>
+                    <span class="flow-node-label">50 / 30 / 20</span>
+                    <span class="flow-node-value">Layer 2 (F10–F12)</span>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">
+                    <span class="flow-node-icon">📈</span>
+                    <span class="flow-node-label">Monthly Invest</span>
+                    <span class="flow-node-value" id="flowInvest2">—</span>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">
+                    <span class="flow-node-icon">🔄</span>
+                    <span class="flow-node-label">Compound Growth</span>
+                    <span class="flow-node-value">Layers 3–4</span>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">
+                    <span class="flow-node-icon">🔥</span>
+                    <span class="flow-node-label">FIRE Number</span>
+                    <span class="flow-node-value" id="flowFIRE">—</span>
+                </div>
+            </div>
+
+            <!-- Layer 1: Kenya 2026 Payroll Tax Engine -->
+            <div class="formula-layer layer-1 open">
+                <div class="formula-layer-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="formula-layer-left">
+                        <div class="formula-layer-number">L1</div>
+                        <div>
+                            <div class="formula-layer-title">Kenya 2026 Payroll Tax Engine</div>
+                            <div class="formula-layer-subtitle">computeNetSalary() · app.js:66–122</div>
+                        </div>
+                    </div>
+                    <div class="formula-layer-toggle">▼</div>
+                </div>
+                <div class="formula-layer-body">
+                    <div class="formula-layer-content">
+
+                        <!-- F1: NSSF Tier I -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F1</div>
+                            <div class="formula-details">
+                                <div class="formula-name">NSSF Contribution — Tier I</div>
+                                <div class="formula-math">
+                                    <span class="math-fn">min</span>(<span class="math-var">Gross</span>, <span class="math-num">9,000</span>) <span class="math-op">×</span> <span class="math-num">6%</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f1">—</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F3</span>
+                                    <span class="formula-source">max KES 540/mo</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F2: NSSF Tier II -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F2</div>
+                            <div class="formula-details">
+                                <div class="formula-name">NSSF Contribution — Tier II</div>
+                                <div class="formula-math">
+                                    <span class="math-fn">max</span>(<span class="math-num">0</span>, <span class="math-fn">min</span>(<span class="math-var">Gross</span>, <span class="math-num">108,000</span>) <span class="math-op">−</span> <span class="math-num">9,000</span>) <span class="math-op">×</span> <span class="math-num">6%</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f2">—</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F3</span>
+                                    <span class="formula-source">max KES 5,940/mo</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F3: Taxable Income -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F3</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Taxable Income</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Gross</span> <span class="math-op">−</span> (<span class="math-var">F1</span> <span class="math-op">+</span> <span class="math-var">F2</span>)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f3">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F1, F2</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F4</span>
+                                    <span class="formula-source">NSSF is tax-deductible; SHIF & Housing Levy are NOT</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F4: PAYE -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F4</div>
+                            <div class="formula-details">
+                                <div class="formula-name">PAYE — Progressive Tax Bands</div>
+                                <div class="formula-math">
+                                    <span class="math-var">PAYE</span> <span class="math-op">=</span> <span class="math-fn">Σ</span> <span class="math-fn">min</span>(<span class="math-var">remaining</span>, <span class="math-var">bandLimit</span>) <span class="math-op">×</span> <span class="math-var">bandRate</span><br>
+                                    &nbsp;&nbsp;Bands: <span class="math-num">0–24K</span> <span class="math-op">@</span> <span class="math-num">10%</span> | <span class="math-num">24K–32.3K</span> <span class="math-op">@</span> <span class="math-num">25%</span> | <span class="math-num">32.3K–500K</span> <span class="math-op">@</span> <span class="math-num">30%</span> | <span class="math-num">500K–800K</span> <span class="math-op">@</span> <span class="math-num">32.5%</span> | <span class="math-num">800K+</span> <span class="math-op">@</span> <span class="math-num">35%</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f4">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F3</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F5</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F5: PAYE After Relief -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F5</div>
+                            <div class="formula-details">
+                                <div class="formula-name">PAYE After Personal Relief</div>
+                                <div class="formula-math">
+                                    <span class="math-fn">max</span>(<span class="math-num">0</span>, <span class="math-var">F4</span> <span class="math-op">−</span> <span class="math-num">2,400</span>)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f5">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F4</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F8</span>
+                                    <span class="formula-source">Personal Relief: KES 2,400/month (KES 28,800/year)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F6: SHIF -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F6</div>
+                            <div class="formula-details">
+                                <div class="formula-name">SHIF (Social Health Insurance Fund)</div>
+                                <div class="formula-math">
+                                    <span class="math-fn">max</span>(<span class="math-num">300</span>, <span class="math-var">Gross</span> <span class="math-op">×</span> <span class="math-num">2.75%</span>)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f6">—</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F8</span>
+                                    <span class="formula-source">SHA Act 2023 · min KES 300, no cap</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F7: Housing Levy -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F7</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Housing Levy</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Gross</span> <span class="math-op">×</span> <span class="math-num">1.5%</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f7">—</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F8</span>
+                                    <span class="formula-source">NOT tax-deductible since Dec 2024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F8: Net Pay -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F8</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Net Pay (Take-Home)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Gross</span> <span class="math-op">−</span> (<span class="math-var">F5</span> <span class="math-op">+</span> <span class="math-var">F1</span> <span class="math-op">+</span> <span class="math-var">F2</span> <span class="math-op">+</span> <span class="math-var">F6</span> <span class="math-op">+</span> <span class="math-var">F7</span>)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f8">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F1–F7</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> Layer 2</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F9: Effective Tax Rate -->
+                        <div class="formula-entry">
+                            <div class="formula-id">F9</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Effective Tax Rate</div>
+                                <div class="formula-math">
+                                    (<span class="math-var">Total Deductions</span> <span class="math-op">÷</span> <span class="math-var">Gross</span>) <span class="math-op">×</span> <span class="math-num">100</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f9">—</span>
+                                    <span class="formula-source">Display metric only — does not feed into calculations</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 2: Budget Allocation -->
+            <div class="formula-layer layer-2">
+                <div class="formula-layer-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="formula-layer-left">
+                        <div class="formula-layer-number">L2</div>
+                        <div>
+                            <div class="formula-layer-title">Budget Allocation — 50/30/20 Rule</div>
+                            <div class="formula-layer-subtitle">updateFlowAmounts() · app.js:1419–1437</div>
+                        </div>
+                    </div>
+                    <div class="formula-layer-toggle">▼</div>
+                </div>
+                <div class="formula-layer-body">
+                    <div class="formula-layer-content">
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F10</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Essentials Bucket (50%)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Total Income</span> <span class="math-op">×</span> <span class="math-num">50%</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f10">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F8 (Net Pay)</span>
+                                    <span class="formula-source">Includes KES 1K airtime allocation</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F11</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Investment Bucket (30%)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Total Income</span> <span class="math-op">×</span> <span class="math-num">30%</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f11">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F8</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> Layer 3 (F13)</span>
+                                    <span class="formula-source">The engine of FIRE — fully preserved, never drawn from</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F12</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Entertainment Bucket (20%)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Total Income</span> <span class="math-op">×</span> <span class="math-num">20%</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f12">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F8</span>
+                                    <span class="formula-source">Hard cap — when balance hits 0, spending stops</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 3: Annual Investment Goal Projection -->
+            <div class="formula-layer layer-3">
+                <div class="formula-layer-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="formula-layer-left">
+                        <div class="formula-layer-number">L3</div>
+                        <div>
+                            <div class="formula-layer-title">Annual Investment Goal Projection</div>
+                            <div class="formula-layer-subtitle">buildTimeline() loop · app.js:558–616</div>
+                        </div>
+                    </div>
+                    <div class="formula-layer-toggle">▼</div>
+                </div>
+                <div class="formula-layer-body">
+                    <div class="formula-layer-content">
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F13</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Monthly Investable Amount</div>
+                                <div class="formula-math">
+                                    (<span class="math-var">Salary</span> <span class="math-op">−</span> <span class="math-var">Rent</span> <span class="math-op">−</span> <span class="math-var">Transport</span> <span class="math-op">−</span> <span class="math-var">Relatives</span>) <span class="math-op">×</span> <span class="math-num">30%</span><br>
+                                    &nbsp;&nbsp;where <span class="math-var">Transport</span> <span class="math-op">=</span> <span class="math-num">1,000</span> <span class="math-op">×</span> <span class="math-num">52</span> <span class="math-op">÷</span> <span class="math-num">12</span> <span class="math-op">=</span> <span class="math-num">KES 4,333/mo</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f13">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> Salary phase, F11</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F14</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F14</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Annual Investment</div>
+                                <div class="formula-math">
+                                    <span class="math-var">F13</span> <span class="math-op">×</span> <span class="math-var">Effective Months</span><br>
+                                    &nbsp;&nbsp;where <span class="math-var">Effective Months</span> <span class="math-op">=</span> <span class="math-num">4.5</span> (2026 pro-rata) <span class="math-op">|</span> <span class="math-num">12</span> (full year)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F13</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F15</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F15</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Portfolio Balance (Year n)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Bal<sub>n</sub></span> <span class="math-op">=</span> <span class="math-var">Bal<sub>n-1</sub></span> <span class="math-op">×</span> (<span class="math-num">1</span> <span class="math-op">+</span> <span class="math-var">r</span>) <span class="math-op">+</span> <span class="math-var">F14</span> <span class="math-op">−</span> <span class="math-var">Purchases</span><br>
+                                    &nbsp;&nbsp;where <span class="math-var">r</span> <span class="math-op">=</span> <span class="math-num">12%</span> (blended portfolio return)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F14, prior year balance</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F16</span>
+                                    <span class="formula-source">Purchases: Suit + Phone (age 24), Car KES 1.25M (age 28)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F16</div>
+                            <div class="formula-details">
+                                <div class="formula-name">FIRE Progress Percentage</div>
+                                <div class="formula-math">
+                                    <span class="math-fn">min</span>(<span class="math-num">100</span>, <span class="math-var">Portfolio</span> <span class="math-op">÷</span> <span class="math-var">FIRE Target</span> <span class="math-op">×</span> <span class="math-num">100</span>)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F15, F20</span>
+                                    <span class="formula-source">Displayed in the Annual Investment Goals table progress bar</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 4: Net Worth Projection -->
+            <div class="formula-layer layer-4">
+                <div class="formula-layer-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="formula-layer-left">
+                        <div class="formula-layer-number">L4</div>
+                        <div>
+                            <div class="formula-layer-title">Net Worth Projection (Chart Engine)</div>
+                            <div class="formula-layer-subtitle">projectNetWorth() · app.js:784–836</div>
+                        </div>
+                    </div>
+                    <div class="formula-layer-toggle">▼</div>
+                </div>
+                <div class="formula-layer-body">
+                    <div class="formula-layer-content">
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F17</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Annual Contribution</div>
+                                <div class="formula-math">
+                                    <span class="math-fn">max</span>(<span class="math-num">0</span>, (<span class="math-var">Salary</span> <span class="math-op">+</span> <span class="math-var">OffBook</span> <span class="math-op">−</span> <span class="math-var">Rent</span> <span class="math-op">−</span> <span class="math-var">Relatives</span>)) <span class="math-op">×</span> <span class="math-num">30%</span> <span class="math-op">×</span> <span class="math-var">Months</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> Salary phase, savings rate</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F18</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F18</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Net Worth (Year n)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">NW<sub>n</sub></span> <span class="math-op">=</span> <span class="math-var">NW<sub>n-1</sub></span> <span class="math-op">×</span> (<span class="math-num">1</span> <span class="math-op">+</span> <span class="math-num">12%</span> <span class="math-op">×</span> <span class="math-var">proRata</span>) <span class="math-op">+</span> <span class="math-var">F17</span> <span class="math-op">−</span> <span class="math-var">Airtime</span> <span class="math-op">−</span> <span class="math-var">Purchases</span><br>
+                                    &nbsp;&nbsp;<span class="math-var">proRata</span> <span class="math-op">=</span> <span class="math-num">4.5/12</span> (2026) <span class="math-op">|</span> <span class="math-num">1.0</span> (full year)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F17, prior year NW</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> Overview chart</span>
+                                    <span class="formula-source">Salary phases: Stipend → 80K → 100K → 150K → 250K → 350K → 450K</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 5: FIRE Number Derivation -->
+            <div class="formula-layer layer-5">
+                <div class="formula-layer-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="formula-layer-left">
+                        <div class="formula-layer-number">L5</div>
+                        <div>
+                            <div class="formula-layer-title">FIRE Number Derivation</div>
+                            <div class="formula-layer-subtitle">recalculateFIRE() · app.js:1031–1114</div>
+                        </div>
+                    </div>
+                    <div class="formula-layer-toggle">▼</div>
+                </div>
+                <div class="formula-layer-body">
+                    <div class="formula-layer-content">
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F19</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Inflation-Adjusted Annual Expenses</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Expenses<sub>future</sub></span> <span class="math-op">=</span> <span class="math-var">Expenses<sub>today</sub></span> <span class="math-op">×</span> (<span class="math-num">1</span> <span class="math-op">+</span> <span class="math-var">inflation</span>)<sup><span class="math-var">years</span></sup>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f19">—</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F20</span>
+                                    <span class="formula-source">Default inflation: 6% p.a. (Kenya CPI average)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F20</div>
+                            <div class="formula-details">
+                                <div class="formula-name">FIRE Number (Nominal Target)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">FIRE#</span> <span class="math-op">=</span> <span class="math-var">F19</span> <span class="math-op">÷</span> <span class="math-var">SWR</span><br>
+                                    &nbsp;&nbsp;equivalently: <span class="math-var">Expenses<sub>future</sub></span> <span class="math-op">×</span> (<span class="math-num">1</span> <span class="math-op">÷</span> <span class="math-var">SWR</span>)
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f20">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F19</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F16, crossover</span>
+                                    <span class="formula-source">Default SWR: 4% (Trinity Study / Bengen Rule)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F21</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Real Return (Inflation-Adjusted)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">r<sub>real</sub></span> <span class="math-op">=</span> (<span class="math-num">1</span> <span class="math-op">+</span> <span class="math-var">r<sub>nominal</sub></span>) <span class="math-op">÷</span> (<span class="math-num">1</span> <span class="math-op">+</span> <span class="math-var">inflation</span>) <span class="math-op">−</span> <span class="math-num">1</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f21">—</span>
+                                    <span class="formula-source">Fisher equation — used in FIRE crossover simulation</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F22</div>
+                            <div class="formula-details">
+                                <div class="formula-name">FIRE Type Targets</div>
+                                <div class="formula-math">
+                                    <span class="math-var">Lean</span> <span class="math-op">=</span> <span class="math-num">0.6</span> <span class="math-op">×</span> <span class="math-var">Expenses</span> <span class="math-op">×</span> <span class="math-num">25</span><br>
+                                    <span class="math-var">Regular</span> <span class="math-op">=</span> <span class="math-var">F20</span><br>
+                                    <span class="math-var">Fat</span> <span class="math-op">=</span> <span class="math-num">1.5</span> <span class="math-op">×</span> <span class="math-var">Expenses</span> <span class="math-op">×</span> <span class="math-num">25</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F19, F20</span>
+                                    <span class="formula-source">25x = inverse of 4% SWR</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 6: Reverse FIRE Engineering -->
+            <div class="formula-layer layer-6">
+                <div class="formula-layer-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="formula-layer-left">
+                        <div class="formula-layer-number">L6</div>
+                        <div>
+                            <div class="formula-layer-title">Reverse FIRE Engineering</div>
+                            <div class="formula-layer-subtitle">reverseEngineerFIRE() · app.js:1675–1762</div>
+                        </div>
+                    </div>
+                    <div class="formula-layer-toggle">▼</div>
+                </div>
+                <div class="formula-layer-body">
+                    <div class="formula-layer-content">
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F23</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Required Monthly Savings (Annuity Inversion)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">PMT</span> <span class="math-op">=</span> (<span class="math-var">FIRE#</span> <span class="math-op">−</span> <span class="math-var">PV</span> <span class="math-op">×</span> (<span class="math-num">1</span><span class="math-op">+</span><span class="math-var">r</span>)<sup><span class="math-var">n</span></sup>) <span class="math-op">÷</span> ((<span class="math-num">1</span><span class="math-op">+</span><span class="math-var">r</span>)<sup><span class="math-var">n</span></sup> <span class="math-op">−</span> <span class="math-num">1</span>) <span class="math-op">÷</span> <span class="math-var">r</span><br>
+                                    &nbsp;&nbsp;where <span class="math-var">r</span> = monthly rate, <span class="math-var">n</span> = months to retire, <span class="math-var">PV</span> = current savings
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f23">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F20 (FIRE#)</span>
+                                    <span class="formula-source">Future Value of Annuity formula, solved for PMT</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F24</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Portfolio at Age 28 (Interpolation)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">P<sub>28</sub></span> <span class="math-op">=</span> <span class="math-var">PV</span> <span class="math-op">×</span> (<span class="math-num">1</span><span class="math-op">+</span><span class="math-var">r</span>)<sup><span class="math-var">m</span></sup> <span class="math-op">+</span> <span class="math-var">PMT</span> <span class="math-op">×</span> ((<span class="math-num">1</span><span class="math-op">+</span><span class="math-var">r</span>)<sup><span class="math-var">m</span></sup> <span class="math-op">−</span> <span class="math-num">1</span>) <span class="math-op">÷</span> <span class="math-var">r</span><br>
+                                    &nbsp;&nbsp;where <span class="math-var">m</span> = (28 − currentAge) × 12 months
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f24">—</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F23</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F25</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Required Return Rate (Newton's Method)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">r</span> <span class="math-op">←</span> <span class="math-var">r</span> <span class="math-op">−</span> <span class="math-var">f</span>(<span class="math-var">r</span>) <span class="math-op">÷</span> <span class="math-var">f′</span>(<span class="math-var">r</span>)&nbsp;&nbsp;(iterate until |error| < <span class="math-num">1,000</span>)<br>
+                                    &nbsp;&nbsp;<span class="math-var">f(r)</span> <span class="math-op">=</span> <span class="math-var">PMT</span> <span class="math-op">×</span> Annuity(<span class="math-var">r</span>,<span class="math-var">n</span>) <span class="math-op">+</span> <span class="math-var">PV</span> <span class="math-op">×</span> (<span class="math-num">1</span><span class="math-op">+</span><span class="math-var">r</span>)<sup><span class="math-var">n</span></sup> <span class="math-op">−</span> <span class="math-var">FIRE#</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-live-value" id="fv-f25">—</span>
+                                    <span class="formula-source">Newton-Raphson root-finding — converges in &lt;50 iterations</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 7: What-If Simulator -->
+            <div class="formula-layer layer-7">
+                <div class="formula-layer-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="formula-layer-left">
+                        <div class="formula-layer-number">L7</div>
+                        <div>
+                            <div class="formula-layer-title">What-If Scenario Simulator</div>
+                            <div class="formula-layer-subtitle">runSimulation() · app.js:1251–1322</div>
+                        </div>
+                    </div>
+                    <div class="formula-layer-toggle">▼</div>
+                </div>
+                <div class="formula-layer-body">
+                    <div class="formula-layer-content">
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F26</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Monthly Savings (Simulator)</div>
+                                <div class="formula-math">
+                                    (<span class="math-var">Salary</span> <span class="math-op">+</span> <span class="math-var">OffBook</span> <span class="math-op">−</span> <span class="math-var">Rent</span>) <span class="math-op">×</span> <span class="math-var">Savings Rate</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-dep-badge">User-configurable inputs</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F27</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F27</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Simulated Portfolio (Year n)</div>
+                                <div class="formula-math">
+                                    <span class="math-var">P<sub>n</sub></span> <span class="math-op">=</span> <span class="math-var">P<sub>n-1</sub></span> <span class="math-op">×</span> (<span class="math-num">1</span> <span class="math-op">+</span> <span class="math-var">Return</span> <span class="math-op">×</span> <span class="math-var">proRata</span>) <span class="math-op">+</span> <span class="math-var">F26</span> <span class="math-op">×</span> <span class="math-var">Months</span> <span class="math-op">−</span> <span class="math-var">Airtime</span> <span class="math-op">−</span> <span class="math-var">Purchases</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F26</span>
+                                    <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> Sim chart</span>
+                                    <span class="formula-source">Salary grows annually by user-set growth rate</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-entry">
+                            <div class="formula-id">F28</div>
+                            <div class="formula-details">
+                                <div class="formula-name">Simulator FIRE Number</div>
+                                <div class="formula-math">
+                                    (<span class="math-num">60,000</span> <span class="math-op">+</span> <span class="math-var">Children</span> <span class="math-op">×</span> <span class="math-num">15,000</span>) <span class="math-op">×</span> <span class="math-num">12</span> <span class="math-op">×</span> <span class="math-num">25</span>
+                                </div>
+                                <div class="formula-meta">
+                                    <span class="formula-source">Family-of-5 baseline: KES 60K base + KES 15K per child, annualized × 25x (4% SWR)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         <!-- ==================== MARKET TRENDS SECTION ==================== -->

@@ -311,6 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recalculateFIRE();
         runSimulation();
         reverseEngineerFIRE();
+        populateFormulaeSection();
         simulateMarketScenario();
         calculateInsuranceImpact();
         forecastTuition();
@@ -1434,6 +1435,88 @@ function updateFlowAmounts(income) {
     document.getElementById('essentialsBalance').textContent = formatKES(essentials);
     document.getElementById('entertainBalance').textContent = formatKES(fun);
     document.getElementById('investMonthlyAlloc').textContent = formatKES(invest);
+}
+
+// ==================== FORMULA COMPENDIUM ====================
+function populateFormulaeSection() {
+    const gross = PERSONAL.jobSalary; // KES 80,000
+    const pay = computeNetSalary(gross);
+
+    // Helper
+    const fk = (v) => 'KES ' + Math.round(v).toLocaleString();
+
+    // Flow cascade (top diagram)
+    const el = (id) => document.getElementById(id);
+    if (el('flowGross')) el('flowGross').textContent = fk(gross);
+    if (el('flowNet')) el('flowNet').textContent = fk(pay.netPay);
+
+    const totalIncome = pay.netPay;
+    const invest30 = Math.round(totalIncome * 0.30);
+    if (el('flowInvest2')) el('flowInvest2').textContent = fk(invest30);
+
+    // FIRE number (default inputs)
+    const annualExpenses = 720000;
+    const withdrawalRate = 0.04;
+    const inflationRate = 0.06;
+    const yearsToRetire = PERSONAL.retireAge - PERSONAL.currentAge;
+    const inflatedExpenses = annualExpenses * Math.pow(1 + inflationRate, yearsToRetire);
+    const fireNumber = inflatedExpenses / withdrawalRate;
+    if (el('flowFIRE')) el('flowFIRE').textContent = fk(fireNumber);
+
+    // Layer 1: Payroll Tax
+    if (el('fv-f1')) el('fv-f1').textContent = fk(pay.nssf > 0 ? Math.min(gross, 9000) * 0.06 : 0);
+    if (el('fv-f2')) el('fv-f2').textContent = fk(Math.max(0, Math.min(gross, 108000) - 9000) * 0.06);
+    if (el('fv-f3')) el('fv-f3').textContent = fk(pay.taxableIncome);
+    if (el('fv-f4')) el('fv-f4').textContent = fk(pay.payeGross);
+    if (el('fv-f5')) el('fv-f5').textContent = fk(pay.paye);
+    if (el('fv-f6')) el('fv-f6').textContent = fk(pay.shif);
+    if (el('fv-f7')) el('fv-f7').textContent = fk(pay.housingLevy);
+    if (el('fv-f8')) el('fv-f8').textContent = fk(pay.netPay);
+    if (el('fv-f9')) el('fv-f9').textContent = pay.effectiveTaxRate + '%';
+
+    // Layer 2: Budget
+    if (el('fv-f10')) el('fv-f10').textContent = fk(totalIncome * 0.50);
+    if (el('fv-f11')) el('fv-f11').textContent = fk(invest30);
+    if (el('fv-f12')) el('fv-f12').textContent = fk(totalIncome * 0.20);
+
+    // Layer 3: Annual Investment Goals (current phase)
+    const moTransport = Math.round(1000 * 52 / 12);
+    const monthlyInvestable = Math.max(0, (gross - 0 - moTransport - PERSONAL.monthlyRelativesOutflow) * 0.30);
+    if (el('fv-f13')) el('fv-f13').textContent = fk(monthlyInvestable) + '/mo';
+
+    // Layer 5: FIRE Number
+    if (el('fv-f19')) el('fv-f19').textContent = fk(inflatedExpenses) + '/yr';
+    if (el('fv-f20')) el('fv-f20').textContent = fk(fireNumber);
+    const realReturn = (1 + 0.12) / (1 + inflationRate) - 1;
+    if (el('fv-f21')) el('fv-f21').textContent = (realReturn * 100).toFixed(2) + '% p.a.';
+
+    // Layer 6: Reverse FIRE
+    const monthlyRate = 0.12 / 12;
+    const months = yearsToRetire * 12;
+    const pvGrown = PERSONAL.currentSavings * Math.pow(1 + monthlyRate, months);
+    const annuityFactor = (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
+    const requiredMonthly = Math.max(0, (fireNumber - pvGrown) / annuityFactor);
+    if (el('fv-f23')) el('fv-f23').textContent = fk(requiredMonthly) + '/mo';
+
+    const yearsTo28 = 28 - PERSONAL.currentAge;
+    const monthsTo28 = yearsTo28 * 12;
+    const pvAt28 = PERSONAL.currentSavings * Math.pow(1 + monthlyRate, monthsTo28);
+    const contributionsTo28 = requiredMonthly * ((Math.pow(1 + monthlyRate, monthsTo28) - 1) / monthlyRate);
+    const portfolioAt28 = pvAt28 + contributionsTo28;
+    if (el('fv-f24')) el('fv-f24').textContent = fk(portfolioAt28);
+
+    // Newton's method for required return
+    const currentMonthlySaving = PERSONAL.currentStipend * 0.30;
+    let rGuess = 0.01;
+    for (let i = 0; i < 50; i++) {
+        const fvGuess = currentMonthlySaving * ((Math.pow(1 + rGuess, months) - 1) / rGuess) + PERSONAL.currentSavings * Math.pow(1 + rGuess, months);
+        const fvDeriv = currentMonthlySaving * (months * Math.pow(1 + rGuess, months - 1) * rGuess - (Math.pow(1 + rGuess, months) - 1)) / (rGuess * rGuess) + PERSONAL.currentSavings * months * Math.pow(1 + rGuess, months - 1);
+        const error = fvGuess - fireNumber;
+        rGuess -= error / fvDeriv;
+        if (Math.abs(error) < 1000) break;
+    }
+    const requiredAnnualReturn = ((1 + Math.max(0, rGuess)) ** 12 - 1) * 100;
+    if (el('fv-f25')) el('fv-f25').textContent = requiredAnnualReturn.toFixed(1) + '% p.a.';
 }
 
 // ==================== 1. DECISION IMPACT LAB ====================
