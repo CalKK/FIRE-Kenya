@@ -3573,6 +3573,1043 @@ body {
 .layer-6 .formula-layer-number, .layer-6 .formula-id { background: linear-gradient(135deg, #ec4899, #db2777); }
 .layer-7 .formula-layer-number, .layer-7 .formula-id { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
+/* ============================================================
+   RENTAL INVESTMENT READINESS SECTION
+   ============================================================ */
+
+/* --- Readiness Tiers Grid --- */
+.readiness-tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+}
+
+.readiness-tier-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.readiness-tier-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.readiness-tier-card.tier-active {
+    border-color: var(--accent-success);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+}
+
+.readiness-tier-card.tier-locked {
+    opacity: 0.7;
+}
+
+.tier-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.tier-icon {
+    font-size: 1.8rem;
+}
+
+.tier-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tier-status.status-ready {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-success);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tier-status.status-building {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--accent-warning);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.tier-status.status-locked {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color-light);
+}
+
+.tier-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.tier-period {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.tier-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.tier-progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-success));
+}
+
+.tier-progress-fill.fill-ready {
+    background: linear-gradient(90deg, var(--accent-success), #34d399);
+}
+
+.tier-progress-fill.fill-building {
+    background: linear-gradient(90deg, var(--accent-warning), #fbbf24);
+}
+
+.tier-progress-text {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+}
+
+.tier-requirements {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.tier-req-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.tier-req-item .req-check {
+    font-size: 0.9rem;
+}
+
+/* --- Property Investment Roadmap --- */
+.roadmap-timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.roadmap-phase {
+    display: flex;
+    gap: 1.5rem;
+    position: relative;
+}
+
+.roadmap-phase-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 48px;
+}
+
+.phase-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    color: var(--text-secondary);
+    z-index: 2;
+    transition: all var(--transition-fast);
+}
+
+.active-phase .phase-number {
+    background: linear-gradient(135deg, var(--accent-success), #34d399);
+    border-color: var(--accent-success);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+.phase-connector {
+    width: 3px;
+    flex: 1;
+    min-height: 20px;
+    background: linear-gradient(180deg, var(--border-color), var(--border-color-light));
+}
+
+.roadmap-phase-content {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+    flex: 1;
+    margin-bottom: 1rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.active-phase .roadmap-phase-content {
+    border-color: rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.08);
+}
+
+.roadmap-phase-content:hover {
+    border-color: var(--accent-primary-light);
+    box-shadow: var(--shadow-card);
+}
+
+.phase-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.65rem;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.65rem;
+}
+
+.phase-now {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-success);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.phase-upcoming {
+    background: rgba(251, 191, 36, 0.12);
+    color: var(--accent-secondary);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+.phase-future {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--accent-primary-light);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.roadmap-phase-content h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+.phase-period {
+    font-size: 0.82rem;
+    color: var(--accent-secondary);
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+}
+
+.phase-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.phase-stats {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.phase-stat {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color-light);
+    flex: 1;
+    min-width: 130px;
+}
+
+.phase-stat .stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2rem;
+}
+
+.phase-stat .stat-value {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+}
+
+/* --- Rental Yield Calculator --- */
+.rental-calc-grid,
+.crypto-calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.rental-calc-inputs,
+.crypto-calc-inputs {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+}
+
+.rental-calc-inputs h3,
+.rental-calc-results h3,
+.crypto-calc-inputs h3,
+.crypto-calc-results h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary);
+}
+
+.calc-input-group {
+    margin-bottom: 1rem;
+}
+
+.calc-input-group label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+}
+
+.calc-input-group input {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.calc-input-group input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.rental-calc-results,
+.crypto-calc-results {
+    display: flex;
+    flex-direction: column;
+}
+
+.yield-result-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.yield-result-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    border: 1px solid var(--border-color-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.yield-result-card:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
+}
+
+.yield-result-card.crypto-card {
+    border-color: rgba(139, 92, 246, 0.2);
+}
+
+.yield-result-card.crypto-card:hover {
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+}
+
+.yield-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.yield-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+}
+
+.yield-value.highlight-green {
+    color: var(--accent-success);
+}
+
+.yield-verdict {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    border: 1px solid var(--border-color-light);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+/* --- Requirements Grid --- */
+.requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.requirement-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+}
+
+.requirement-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.req-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.req-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.req-item .req-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.req-item.req-met {
+    color: var(--accent-success);
+}
+
+.req-item.req-pending {
+    color: var(--text-muted);
+}
+
+/* --- Market Insights Grid --- */
+.market-insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.insight-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+}
+
+.insight-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.insight-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.insight-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.insight-row:last-child {
+    border-bottom: none;
+}
+
+.insight-row span:first-child {
+    color: var(--text-secondary);
+}
+
+.insight-yield {
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+}
+
+.insight-yield.highlight-green {
+    color: var(--accent-success);
+}
+
+/* ============================================================
+   CRYPTO & WEB3 MARKET SECTION
+   ============================================================ */
+
+/* --- Evolution Timeline --- */
+.evolution-timeline {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+    padding: 1rem 0;
+}
+
+.evolution-timeline::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--text-muted), var(--accent-primary), var(--accent-success));
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.evo-phase {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+.evo-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 3px solid var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.evo-past .evo-dot {
+    background: var(--text-muted);
+    border-color: var(--text-muted);
+}
+
+.evo-current .evo-dot {
+    width: 24px;
+    height: 24px;
+    background: var(--accent-success);
+    border-color: var(--accent-success);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    animation: evoPulse 2s ease-in-out infinite;
+}
+
+.evo-future .evo-dot {
+    background: var(--bg-card);
+    border-color: var(--accent-primary-light);
+    border-style: dashed;
+}
+
+@keyframes evoPulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
+}
+
+.evo-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.evo-year {
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+}
+
+.evo-current .evo-year {
+    color: var(--accent-success);
+}
+
+.evo-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.evo-past .evo-label {
+    color: var(--text-muted);
+}
+
+.evo-desc {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    max-width: 200px;
+    margin: 0 auto;
+    line-height: 1.4;
+}
+
+.evo-past .evo-desc {
+    color: var(--text-muted);
+}
+
+/* --- Sector Grid --- */
+.sector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.sector-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    border: 1px solid var(--border-color-light);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.sector-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card);
+}
+
+.sector-card.sector-bull {
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.sector-card.sector-bull:hover {
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 24px rgba(16, 185, 129, 0.1);
+}
+
+.sector-card.sector-neutral {
+    border-color: rgba(251, 191, 36, 0.2);
+}
+
+.sector-card.sector-neutral:hover {
+    border-color: rgba(251, 191, 36, 0.4);
+    box-shadow: 0 4px 24px rgba(251, 191, 36, 0.1);
+}
+
+.sector-card.sector-bear {
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.sector-card.sector-bear:hover {
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 4px 24px rgba(239, 68, 68, 0.1);
+}
+
+.sector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.sector-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.sector-signal {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.signal-bull {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-success);
+}
+
+.signal-neutral {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--accent-warning);
+}
+
+.signal-bear {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-danger);
+}
+
+.sector-meta {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.sector-meta-item {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.sector-meta-item span {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.sector-desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* --- Low-Hanging Fruit Ranking --- */
+.fruit-ranking {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.fruit-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.fruit-card:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-card);
+}
+
+.fruit-rank {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    color: #fff;
+}
+
+.fruit-rank.rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+.fruit-rank.rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
+.fruit-rank.rank-3 { background: linear-gradient(135deg, #cd7f32, #a0522d); }
+.fruit-rank.rank-4 { background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-light)); }
+.fruit-rank.rank-5 { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+
+.fruit-content {
+    flex: 1;
+}
+
+.fruit-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.fruit-subtitle {
+    font-size: 0.82rem;
+    color: var(--accent-secondary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.fruit-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.fruit-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.fruit-meta-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--accent-primary-light);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.fruit-meta-badge.badge-yield {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--accent-success);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.fruit-meta-badge.badge-risk-low {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--accent-success);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.fruit-meta-badge.badge-risk-medium {
+    background: rgba(251, 191, 36, 0.1);
+    color: var(--accent-warning);
+    border-color: rgba(251, 191, 36, 0.2);
+}
+
+/* --- Crypto Strategy Cards --- */
+.crypto-strategy-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+}
+
+.strategy-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.strategy-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.strategy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-primary), #8b5cf6);
+}
+
+.strategy-card.strategy-now::before {
+    background: linear-gradient(90deg, var(--accent-success), #34d399);
+}
+
+.strategy-phase {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-primary-light);
+    margin-bottom: 0.5rem;
+}
+
+.strategy-card.strategy-now .strategy-phase {
+    color: var(--accent-success);
+}
+
+.strategy-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.strategy-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.strategy-allocation {
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--accent-secondary);
+    padding: 0.35rem 0.75rem;
+    background: rgba(251, 191, 36, 0.08);
+    border-radius: var(--radius-sm);
+    display: inline-block;
+}
+
+/* --- Warning Grid --- */
+.warning-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.warning-card {
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.warning-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.warning-card h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--accent-danger);
+    margin-bottom: 0.3rem;
+}
+
+.warning-card p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* --- Disclaimer Card --- */
+.disclaimer-card {
+    background: rgba(251, 191, 36, 0.06);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.disclaimer-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.disclaimer-card strong {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--accent-warning);
+    margin-bottom: 0.35rem;
+}
+
+.disclaimer-card p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* --- Rental & Crypto Responsive --- */
+@media (max-width: 768px) {
+    .rental-calc-grid,
+    .crypto-calc-grid {
+        grid-template-columns: 1fr;
+    }
+    .yield-result-cards {
+        grid-template-columns: 1fr;
+    }
+    .evolution-timeline {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .evolution-timeline::before {
+        top: 0;
+        bottom: 0;
+        left: 9px;
+        right: auto;
+        width: 3px;
+        height: auto;
+        transform: none;
+    }
+    .evo-phase {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+    .evo-content {
+        text-align: left;
+    }
+    .evo-desc {
+        margin: 0;
+    }
+    .roadmap-phase-marker {
+        width: 36px;
+    }
+    .phase-number {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    .phase-stats {
+        flex-direction: column;
+    }
+    .readiness-tiers-grid {
+        grid-template-columns: 1fr;
+    }
+    .sector-grid {
+        grid-template-columns: 1fr;
+    }
+    .fruit-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .fruit-rank {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    .market-insights-grid {
+        grid-template-columns: 1fr;
+    }
+    .crypto-strategy-cards {
+        grid-template-columns: 1fr;
+    }
+    .warning-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Formula Compendium responsive */
 @media (max-width: 768px) {
     .formula-flow-cascade {

@@ -301,6 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
     populateWealthAvenues();
     initFeeDragCalculator();
     populateCareerTrajectory();
+    populateRentalReadiness();
+    populateCryptoWeb3();
 
     // Initialize all charts after a small delay to ensure DOM is ready
     setTimeout(() => {
@@ -3385,3 +3387,425 @@ async function exportToPDF() {
     }
 }
 
+// ==================== RENTAL INVESTMENT READINESS ====================
+
+function populateRentalReadiness() {
+    const P = PERSONAL;
+    const currentSavings = P.currentSavings;
+    const currentIncome = P.currentStipend;
+    const netJobIncome = computeNetSalary(P.jobSalary).netPay;
+
+    const tiers = [
+        {
+            icon: '🏢',
+            name: 'D-REITs & I-REITs',
+            period: '2026 – 2028 (Now)',
+            minSavings: 5000,
+            minIncome: 0,
+            description: 'Indirect real estate exposure via Acorn D-REIT or Green USD I-REITs',
+            requirements: [
+                { text: 'KES 5,000+ savings', met: currentSavings >= 5000 },
+                { text: 'DhowCSD / USP account', met: false },
+                { text: 'No income minimum', met: true },
+            ]
+        },
+        {
+            icon: '🏘️',
+            name: 'Satellite Town Property',
+            period: '2030 – 2032 (Age 28–30)',
+            minSavings: 500000,
+            minIncome: 120000,
+            description: 'Ruiru, Syokimau, Juja — SACCO mortgage with KMRC backing',
+            requirements: [
+                { text: `KES 500K+ down payment (have ${formatKES(currentSavings)})`, met: currentSavings >= 500000 },
+                { text: 'KES 120K+ gross income (Stage 3)', met: P.jobSalary >= 120000 },
+                { text: 'SACCO membership (12+ months)', met: false },
+                { text: 'KES 1M portfolio milestone', met: false },
+            ]
+        },
+        {
+            icon: '🏠',
+            name: 'Nairobi Mid-Tier Apartment',
+            period: '2035 – 2038 (Age 33–36)',
+            minSavings: 1600000,
+            minIncome: 250000,
+            description: 'Kilimani, Kileleshwa — build equity, eliminate rent',
+            requirements: [
+                { text: `KES 1.6M+ down payment (have ${formatKES(currentSavings)})`, met: currentSavings >= 1600000 },
+                { text: 'KES 250K+ gross income (Stage 4)', met: P.jobSalary >= 250000 },
+                { text: 'Mortgage pre-approval', met: false },
+                { text: 'Active business income streams', met: false },
+            ]
+        },
+        {
+            icon: '🏖️',
+            name: 'Coastal Holiday Home',
+            period: '2040+ (Age 38+)',
+            minSavings: 25000000,
+            minIncome: 450000,
+            description: 'Diani / Watamu villa — lifestyle + Airbnb passive income',
+            requirements: [
+                { text: `KES 25M+ capital (have ${formatKES(currentSavings)})`, met: currentSavings >= 25000000 },
+                { text: 'KES 450K+ gross income (Stage 5)', met: P.jobSalary >= 450000 },
+                { text: '5+ recession-resistant businesses', met: false },
+                { text: 'Title verification via ArdhiSasa', met: false },
+            ]
+        },
+    ];
+
+    const container = document.getElementById('readinessTiersGrid');
+    if (!container) return;
+
+    container.innerHTML = tiers.map((tier, i) => {
+        const metCount = tier.requirements.filter(r => r.met).length;
+        const totalReqs = tier.requirements.length;
+        const overallProgress = Math.round((metCount / totalReqs) * 100);
+
+        let statusClass, statusText, fillClass, cardClass;
+        if (overallProgress >= 75) {
+            statusClass = 'status-ready';
+            statusText = '✅ Ready';
+            fillClass = 'fill-ready';
+            cardClass = 'tier-active';
+        } else if (overallProgress >= 25) {
+            statusClass = 'status-building';
+            statusText = '🔨 Building';
+            fillClass = 'fill-building';
+            cardClass = '';
+        } else {
+            statusClass = 'status-locked';
+            statusText = '🔒 Locked';
+            fillClass = '';
+            cardClass = 'tier-locked';
+        }
+
+        return `
+            <div class="readiness-tier-card ${cardClass}" style="animation: fadeInUp 0.5s ${i * 0.1}s both">
+                <div class="tier-header">
+                    <span class="tier-icon">${tier.icon}</span>
+                    <span class="tier-status ${statusClass}">${statusText}</span>
+                </div>
+                <div class="tier-name">${tier.name}</div>
+                <div class="tier-period">${tier.period}</div>
+                <div class="tier-progress-bar">
+                    <div class="tier-progress-fill ${fillClass}" style="width: ${overallProgress}%"></div>
+                </div>
+                <div class="tier-progress-text">${metCount}/${totalReqs} requirements met (${overallProgress}%)</div>
+                <div class="tier-requirements">
+                    ${tier.requirements.map(r => `
+                        <div class="tier-req-item">
+                            <span class="req-check">${r.met ? '✅' : '⏳'}</span>
+                            <span>${r.text}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    populateRequirementsGrid(tiers);
+}
+
+function populateRequirementsGrid(tiers) {
+    const container = document.getElementById('requirementsGrid');
+    if (!container) return;
+
+    container.innerHTML = tiers.map(tier => `
+        <div class="requirement-card">
+            <h3>${tier.icon} ${tier.name}</h3>
+            <div class="req-list">
+                ${tier.requirements.map(r => `
+                    <div class="req-item ${r.met ? 'req-met' : 'req-pending'}">
+                        <span class="req-icon">${r.met ? '✅' : '⏳'}</span>
+                        <span>${r.text}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+function calculateRentalYield() {
+    const propertyPrice = parseFloat(document.getElementById('ryPropertyPrice').value) || 3000000;
+    const monthlyRent = parseFloat(document.getElementById('ryMonthlyRent').value) || 20000;
+    const vacancyRate = (parseFloat(document.getElementById('ryVacancyRate').value) || 8) / 100;
+    const mgmtFee = (parseFloat(document.getElementById('ryMgmtFee').value) || 10) / 100;
+    const annualMaintenance = parseFloat(document.getElementById('ryMaintenance').value) || 50000;
+    const downPaymentPct = (parseFloat(document.getElementById('ryDownPayment').value) || 20) / 100;
+
+    const annualGrossRent = monthlyRent * 12;
+    const effectiveGrossIncome = annualGrossRent * (1 - vacancyRate);
+    const managementCost = effectiveGrossIncome * mgmtFee;
+    const annualNetIncome = effectiveGrossIncome - managementCost - annualMaintenance;
+    const monthlyCashFlow = annualNetIncome / 12;
+
+    const grossYield = (annualGrossRent / propertyPrice) * 100;
+    const netYield = (annualNetIncome / propertyPrice) * 100;
+
+    const downPayment = propertyPrice * downPaymentPct;
+    const cashOnCash = downPayment > 0 ? (annualNetIncome / downPayment) * 100 : 0;
+
+    const paybackYears = annualNetIncome > 0 ? propertyPrice / annualNetIncome : Infinity;
+
+    document.getElementById('ryGrossYield').textContent = `${grossYield.toFixed(1)}%`;
+    document.getElementById('ryNetYield').textContent = `${netYield.toFixed(1)}%`;
+    document.getElementById('ryCashOnCash').textContent = `${cashOnCash.toFixed(1)}%`;
+    document.getElementById('ryAnnualNet').textContent = formatKES(Math.round(annualNetIncome));
+    document.getElementById('ryMonthlyCash').textContent = formatKES(Math.round(monthlyCashFlow));
+    document.getElementById('ryPayback').textContent = paybackYears < 100 ? `${paybackYears.toFixed(1)} years` : 'N/A';
+
+    let verdict = `<strong>📊 Rental Analysis:</strong><br><br>`;
+    verdict += `<strong>Property:</strong> ${formatKES(propertyPrice)} | <strong>Down Payment (${(downPaymentPct * 100).toFixed(0)}%):</strong> ${formatKES(Math.round(downPayment))}<br>`;
+    verdict += `<strong>Effective Rent:</strong> ${formatKES(Math.round(effectiveGrossIncome / 12))}/month (after ${(vacancyRate * 100).toFixed(0)}% vacancy)<br><br>`;
+
+    if (grossYield >= 8) {
+        verdict += `✅ <strong>Excellent yield.</strong> Gross yield of ${grossYield.toFixed(1)}% exceeds the Kenya average. `;
+    } else if (grossYield >= 6) {
+        verdict += `👍 <strong>Good yield.</strong> Gross yield of ${grossYield.toFixed(1)}% is competitive. `;
+    } else if (grossYield >= 4) {
+        verdict += `⚠️ <strong>Below average yield.</strong> Gross yield of ${grossYield.toFixed(1)}% is below the Kenya average of 6–8%. `;
+    } else {
+        verdict += `🔴 <strong>Poor yield.</strong> At ${grossYield.toFixed(1)}% gross yield, your capital may perform better in T-Bonds (12.5%). `;
+    }
+
+    if (netYield > PERSONAL.tBillRate) {
+        verdict += `Net yield of ${netYield.toFixed(1)}% beats T-Bills (${PERSONAL.tBillRate}%). Strong investment case.`;
+    } else {
+        verdict += `Net yield of ${netYield.toFixed(1)}% is below T-Bills (${PERSONAL.tBillRate}%). Consider if capital appreciation justifies the spread.`;
+    }
+
+    verdict += `<br><br>💡 <strong>Pro Tip:</strong> For satellite town properties (Ruiru, Syokimau), target gross yields of 7%+ to outperform paper assets after accounting for property management overhead.`;
+
+    document.getElementById('ryVerdict').innerHTML = verdict;
+}
+
+
+// ==================== CRYPTO & WEB3 MARKET ====================
+
+function populateCryptoWeb3() {
+    populateSectorGrid();
+    populateFruitRanking();
+    populateCryptoStrategy();
+    populateCryptoWarnings();
+}
+
+function populateSectorGrid() {
+    const sectors = [
+        { name: 'Tokenized RWA', signal: 'bull', signalText: '🟢 Strong Bull', maturity: 'Institutional', risk: 'Low–Med', desc: 'Real-world assets on-chain — treasuries, equities, commodities. $33B+ market. BlackRock BUIDL and Franklin FOBXX lead.' },
+        { name: 'Stablecoins', signal: 'bull', signalText: '🟢 Infrastructure', maturity: 'Fully Mature', risk: 'Low', desc: "The internet's dollar. USDC/USDT used for payments, treasury ops, and DeFi collateral. Post-GENIUS Act compliance era." },
+        { name: 'DeFi Lending', signal: 'bull', signalText: '🟢 Steady Growth', maturity: 'Proven', risk: 'Medium', desc: 'Aave, Compound on L2s. Transparent, composable, low gas. Core yield source for stablecoin holders.' },
+        { name: 'Token Derivatives', signal: 'neutral', signalText: '🟡 Growing', maturity: 'Institutional', risk: 'High', desc: 'Sophisticated products for professional investors. Stablecoins as collateral. Requires deep market knowledge.' },
+        { name: 'AI × Web3', signal: 'neutral', signalText: '🟡 Early Promise', maturity: 'Experimental', risk: 'High', desc: 'Autonomous on-chain agents, AI-powered smart contract security, development optimization. High potential, unproven at scale.' },
+        { name: 'Layer 2 Scaling', signal: 'bull', signalText: '🟢 Standard Infra', maturity: 'Mature', risk: 'Low–Med', desc: 'Arbitrum, Base, Optimism. Sub-penny fees enable mass adoption. Now standard for DeFi deployment.' },
+        { name: 'NFTs / Speculative', signal: 'bear', signalText: '🔴 Dead/Dying', maturity: 'Speculative', risk: 'Very High', desc: 'Profile picture and art NFTs collapsed. Utility NFTs (identity, tickets) evolving but niche. Avoid speculative plays.' },
+    ];
+
+    const container = document.getElementById('sectorGrid');
+    if (!container) return;
+
+    container.innerHTML = sectors.map((s, i) => `
+        <div class="sector-card sector-${s.signal}" style="animation: fadeInUp 0.4s ${i * 0.08}s both">
+            <div class="sector-header">
+                <span class="sector-name">${s.name}</span>
+                <span class="sector-signal signal-${s.signal}">${s.signalText}</span>
+            </div>
+            <div class="sector-meta">
+                <span class="sector-meta-item">Maturity: <span>${s.maturity}</span></span>
+                <span class="sector-meta-item">Risk: <span>${s.risk}</span></span>
+            </div>
+            <p class="sector-desc">${s.desc}</p>
+        </div>
+    `).join('');
+}
+
+function populateFruitRanking() {
+    const fruits = [
+        {
+            rank: 1,
+            title: 'Stablecoin Yield',
+            subtitle: 'Aave on Arbitrum/Base, RWA-backed vaults',
+            desc: "Park USDC/USDT in established lending protocols. No crypto speculation needed — you're earning interest on dollar-pegged assets. Doubles as your KES depreciation hedge aligned with your 2034 USD diversification milestone.",
+            yield: '4 – 8% APY (USD)',
+            risk: 'Low',
+            badges: ['USD Hedge', 'No Speculation']
+        },
+        {
+            rank: 2,
+            title: 'Tokenized Treasuries',
+            subtitle: 'BlackRock BUIDL, Franklin FOBXX',
+            desc: 'On-chain US Treasury Bills — institutional-grade, regulated. Near-zero crypto risk, backed by actual government debt. Can be used as yield-bearing collateral in DeFi.',
+            yield: '4 – 5% (mirrors US T-Bill)',
+            risk: 'Low',
+            badges: ['Gov-Backed', 'Regulated']
+        },
+        {
+            rank: 3,
+            title: 'Private Credit Protocols',
+            subtitle: 'Centrifuge, Maple Finance, Goldfinch',
+            desc: 'Lend to real businesses via tokenized credit markets. Higher yield than treasuries, diversifies away from Kenyan instruments. KYC required. Protocols have loss reserves.',
+            yield: '8 – 15% APY',
+            risk: 'Medium',
+            badges: ['Higher Yield', 'KYC Required']
+        },
+        {
+            rank: 4,
+            title: 'Tokenized Gold & Commodities',
+            subtitle: 'PAXG, Tether Gold (XAUT)',
+            desc: 'On-chain gold backed 1:1 by physical reserves. Classic inflation hedge with 24/7 tradeability and no vault storage needed. Capital appreciation only.',
+            yield: 'Capital appreciation only',
+            risk: 'Low-Med',
+            badges: ['Inflation Hedge', 'Physical-Backed']
+        },
+        {
+            rank: 5,
+            title: 'L2 Ecosystem Participation',
+            subtitle: 'Arbitrum, Base, Optimism DEX LPs',
+            desc: 'Provide liquidity on established DEXs (Uniswap V3 on L2s) for stablecoin pairs. Mature tech, pennies in fees, many protocols offer incentives for early liquidity.',
+            yield: '10 – 30% APY (variable)',
+            risk: 'Medium',
+            badges: ['Active Management', 'Variable Returns']
+        },
+    ];
+
+    const container = document.getElementById('fruitRanking');
+    if (!container) return;
+
+    container.innerHTML = fruits.map((f, i) => `
+        <div class="fruit-card" style="animation: fadeInUp 0.4s ${i * 0.1}s both">
+            <div class="fruit-rank rank-${f.rank}">${f.rank}</div>
+            <div class="fruit-content">
+                <div class="fruit-title">${f.title}</div>
+                <div class="fruit-subtitle">${f.subtitle}</div>
+                <p class="fruit-desc">${f.desc}</p>
+                <div class="fruit-meta">
+                    <span class="fruit-meta-badge badge-yield">Yield: ${f.yield}</span>
+                    <span class="fruit-meta-badge badge-risk-${f.risk.toLowerCase().includes('low') ? 'low' : 'medium'}">Risk: ${f.risk}</span>
+                    ${f.badges.map(b => `<span class="fruit-meta-badge">${b}</span>`).join('')}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function populateCryptoStrategy() {
+    const strategies = [
+        {
+            phase: '2026 (Now)',
+            title: '🧪 Learn & Experiment',
+            desc: 'Allocate KES 5,000 – 20,000 for hands-on learning. Set up a wallet (MetaMask), explore L2 testnets, try small stablecoin deposits. Education is the investment at this stage.',
+            allocation: 'Max KES 20K (learning budget)',
+            isNow: true,
+        },
+        {
+            phase: '2027 – 2029',
+            title: '🛡️ Stablecoin Yield (USD Hedge)',
+            desc: 'With job income, begin systematic stablecoin deposits. Earn 4–8% APY in USD terms while hedging against KES depreciation. Complements your T-Bill / T-Bond core holdings.',
+            allocation: '2 – 5% of portfolio',
+            isNow: false,
+        },
+        {
+            phase: '2030 – 2033',
+            title: '📊 RWA Diversification',
+            desc: 'Expand into tokenized treasuries and private credit protocols. Your growing portfolio and business income supports meaningful allocation. Focus on regulated, institutional-grade products.',
+            allocation: '5 – 8% of portfolio',
+            isNow: false,
+        },
+        {
+            phase: '2034+',
+            title: '🌐 Full USD Allocation',
+            desc: "Aligned with your dashboard's USD Special Fund Diversification milestone. Full integration of regulated Web3 products into your 10% USD allocation bucket. Tokenized assets become standard portfolio components.",
+            allocation: '10% of portfolio (USD bucket)',
+            isNow: false,
+        },
+    ];
+
+    const container = document.getElementById('cryptoStrategyCards');
+    if (!container) return;
+
+    container.innerHTML = strategies.map((s, i) => `
+        <div class="strategy-card ${s.isNow ? 'strategy-now' : ''}" style="animation: fadeInUp 0.4s ${i * 0.1}s both">
+            <div class="strategy-phase">${s.phase}</div>
+            <h3>${s.title}</h3>
+            <p class="strategy-desc">${s.desc}</p>
+            <span class="strategy-allocation">${s.allocation}</span>
+        </div>
+    `).join('');
+}
+
+function populateCryptoWarnings() {
+    const warnings = [
+        { icon: '🎰', title: 'Meme Coins & Speculative Tokens', desc: 'Pure gambling with no fundamentals. No place in a FIRE portfolio. Zero expected value long-term.' },
+        { icon: '🔓', title: 'Unaudited DeFi Protocols', desc: 'Smart contract risk = total loss. Only use protocols with $1B+ TVL, mainnet track record, and multiple audits.' },
+        { icon: '📈', title: 'Leveraged Derivatives Trading', desc: 'Crypto volatility + leverage = liquidation. Even professional traders lose money. Never use borrowed funds.' },
+        { icon: '🦄', title: '"100x" Narratives', desc: 'If it sounds too good to be true, it is. Legitimate yield comes from real economic activity, not promises.' },
+    ];
+
+    const container = document.getElementById('cryptoWarningGrid');
+    if (!container) return;
+
+    container.innerHTML = warnings.map((w, i) => `
+        <div class="warning-card" style="animation: fadeInUp 0.3s ${i * 0.08}s both">
+            <span class="warning-icon">${w.icon}</span>
+            <div>
+                <h4>${w.title}</h4>
+                <p>${w.desc}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function calculateCryptoVsTBill() {
+    const investAmount = parseFloat(document.getElementById('ccInvestAmount').value) || 100000;
+    const stablecoinAPY = (parseFloat(document.getElementById('ccStablecoinAPY').value) || 6) / 100;
+    const tBillRate = (parseFloat(document.getElementById('ccTBillRate').value) || 8.5) / 100;
+    const depreciation = (parseFloat(document.getElementById('ccDepreciation').value) || 5) / 100;
+    const horizon = parseInt(document.getElementById('ccHorizon').value) || 5;
+
+    // T-Bill return (KES)
+    const tBillFV = investAmount * Math.pow(1 + tBillRate, horizon);
+    const tBillReturn = tBillFV - investAmount;
+
+    // Stablecoin path: KES → USD → earn APY → convert back at depreciated rate
+    const stableFV_USD = investAmount * Math.pow(1 + stablecoinAPY, horizon);
+    const kesToUsdFactor = Math.pow(1 + depreciation, horizon);
+    const stableFV_KES = stableFV_USD * kesToUsdFactor;
+    const stableReturn_KES = stableFV_KES - investAmount;
+
+    // Effective KES rate: r_KES = (1 + r_USD) * (1 + depreciation) - 1
+    const effectiveKESRate = ((1 + stablecoinAPY) * (1 + depreciation) - 1) * 100;
+
+    const advantage = stableReturn_KES - tBillReturn;
+
+    // Update UI
+    document.getElementById('ccStableUSD').textContent = formatKES(Math.round(stableFV_USD));
+    document.getElementById('ccStableKES').textContent = formatKES(Math.round(stableFV_KES));
+    document.getElementById('ccTBillReturn').textContent = formatKES(Math.round(tBillFV));
+    document.getElementById('ccEffectiveRate').textContent = `${effectiveKESRate.toFixed(1)}% p.a.`;
+
+    const advEl = document.getElementById('ccAdvantage');
+    if (advantage > 0) {
+        advEl.textContent = `+${formatKES(Math.round(advantage))}`;
+        advEl.style.color = 'var(--accent-success)';
+    } else {
+        advEl.textContent = `${formatKES(Math.round(advantage))}`;
+        advEl.style.color = 'var(--accent-danger)';
+    }
+
+    let verdict = `<strong>📊 Yield Comparison (${horizon}-year horizon):</strong><br><br>`;
+    verdict += `<strong>Investment:</strong> ${formatKES(investAmount)}<br>`;
+    verdict += `<strong>🇰🇪 T-Bill Final Value:</strong> ${formatKES(Math.round(tBillFV))} (${(tBillRate * 100).toFixed(1)}% nominal)<br>`;
+    verdict += `<strong>🪙 Stablecoin Final Value (KES):</strong> ${formatKES(Math.round(stableFV_KES))} (${effectiveKESRate.toFixed(1)}% effective)<br><br>`;
+
+    if (effectiveKESRate > tBillRate * 100) {
+        verdict += `✅ <strong>Stablecoin wins</strong> when factoring in ${(depreciation * 100).toFixed(1)}% annual KES depreciation. `;
+        verdict += `The effective KES return of ${effectiveKESRate.toFixed(1)}% beats T-Bills at ${(tBillRate * 100).toFixed(1)}%. `;
+        verdict += `Currency hedge adds ${(depreciation * 100).toFixed(1)}pp to your real return.`;
+    } else {
+        verdict += `⚠️ <strong>T-Bills win</strong> in this scenario. Kenya's high T-Bill rate of ${(tBillRate * 100).toFixed(1)}% exceeds the stablecoin effective rate. `;
+        verdict += `However, stablecoins still provide valuable USD diversification — don't optimize purely on yield.`;
+    }
+
+    verdict += `<br><br>💡 <strong>Fisher equation used:</strong> <code style="font-family:var(--font-mono);background:rgba(99,102,241,0.1);padding:0.15rem 0.4rem;border-radius:4px;">r_KES = (1 + r_USD) × (1 + depreciation) − 1</code>`;
+
+    document.getElementById('ccVerdict').innerHTML = verdict;
+}
