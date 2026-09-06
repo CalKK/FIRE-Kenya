@@ -561,7 +561,6 @@ function populateTimeline() {
     // ── Graduated Annual Investment Goals Breakdown ──
     const P = PERSONAL;
     const expectedReturn = 0.12; // blended portfolio return
-    const moTransport = Math.round(1000 * 52 / 12);
     const fireTarget = 18000000;
     let bal = P.currentSavings;
     let cumInvested = 0;
@@ -570,18 +569,41 @@ function populateTimeline() {
 
     for (let age = P.currentAge; age <= P.retireAge; age++) {
         const year = P.birthYear + age;
-        let sal = P.currentStipend;
-        if (age >= 24) sal = P.jobSalary;
-        if (age >= 27) sal = 100000;
-        if (age >= 29) sal = 150000;
-        if (age >= 33) sal = 250000;
-        if (age >= 38) sal = 350000;
-        if (age >= 44) sal = 450000;
+        let gross = P.currentStipend;
+        let netSalary = P.currentStipend;
+        let phase = 'Stipend';
 
-        let rent = 0;
-        if (age >= 29 && age < 38) rent = 60000;
+        if (year === 2026) {
+            gross = P.currentStipend;
+            netSalary = P.currentStipend; // stipend below PAYE threshold
+            phase = 'Stipend';
+        } else if (age < 27) {
+            gross = P.jobSalary; // 80,000 (starts Jan 2027)
+            netSalary = computeNetSalary(gross).netPay; // 56,857
+            phase = 'First Job';
+        } else if (age < 29) {
+            gross = 100000;
+            netSalary = computeNetSalary(gross).netPay;
+            phase = 'Career Growth';
+        } else if (age < 33) {
+            gross = 150000;
+            netSalary = computeNetSalary(gross).netPay;
+            phase = 'Mid-Career';
+        } else if (age < 38) {
+            gross = 250000;
+            netSalary = computeNetSalary(gross).netPay;
+            phase = 'Senior Role';
+        } else if (age < 44) {
+            gross = 350000;
+            netSalary = computeNetSalary(gross).netPay;
+            phase = 'Leadership';
+        } else {
+            gross = 450000;
+            netSalary = computeNetSalary(gross).netPay;
+            phase = 'Peak Career';
+        }
 
-        const monthlyInvest = Math.max(0, (sal - rent - moTransport - P.monthlyRelativesOutflow) * 0.30);
+        const monthlyInvest = Math.round(netSalary * 0.30);
         // Pro-rata 2026: only ~4.5 months of contributions
         const effectiveMonths = (year === 2026) ? P.proRata2026Months : 12;
         const annualInvest = Math.round(monthlyInvest * effectiveMonths);
@@ -596,21 +618,11 @@ function populateTimeline() {
         bal = Math.max(0, bal);
         const pctOfFire = Math.min(100, (bal / fireTarget) * 100);
 
-        // Determine income phase label
-        let phase = '';
-        if (age < 24) phase = 'Stipend';
-        else if (age < 27) phase = 'First Job';
-        else if (age < 29) phase = 'Career Growth';
-        else if (age < 33) phase = 'Mid-Career';
-        else if (age < 38) phase = 'Senior Role';
-        else if (age < 44) phase = 'Leadership';
-        else phase = 'Peak Career';
-
         goalRows.push({
             year,
             age,
             phase,
-            monthlyInvest: Math.round(monthlyInvest),
+            monthlyInvest,
             annualInvest,
             cumInvested,
             portfolio: Math.round(bal),
@@ -824,7 +836,8 @@ function projectNetWorth() {
         // Annual investment growth + monthly contributions (pro-rata for 2026)
         const effectiveMonths = (year === 2026) ? PERSONAL.proRata2026Months : 12;
         const proRataFactor = effectiveMonths / 12;
-        const annualContribution = Math.max(0, (monthlySalary + activeOffBook - rent - PERSONAL.monthlyRelativesOutflow)) * savingsRate * effectiveMonths;
+        const relativesOutflow = (year >= 2027) ? PERSONAL.monthlyRelativesOutflow : 0;
+        const annualContribution = Math.max(0, (monthlySalary + activeOffBook - rent - relativesOutflow)) * savingsRate * effectiveMonths;
         netWorth = netWorth * (1 + investReturn * proRataFactor) + annualContribution - (PERSONAL.monthlyAirtime * effectiveMonths);
 
         // Big purchases
@@ -1481,9 +1494,8 @@ function populateFormulaeSection() {
     if (el('fv-f11')) el('fv-f11').textContent = fk(invest30);
     if (el('fv-f12')) el('fv-f12').textContent = fk(totalIncome * 0.20);
 
-    // Layer 3: Annual Investment Goals (current phase)
-    const moTransport = Math.round(1000 * 52 / 12);
-    const monthlyInvestable = Math.max(0, (gross - 0 - moTransport - PERSONAL.monthlyRelativesOutflow) * 0.30);
+    // Layer 3: Annual Investment Goals (Stage 2 benchmark)
+    const monthlyInvestable = invest30; // KES 17,057/mo (30% of KES 56,857 Net Pay)
     if (el('fv-f13')) el('fv-f13').textContent = fk(monthlyInvestable) + '/mo';
 
     // Layer 5: FIRE Number
@@ -1535,24 +1547,26 @@ function computeBaselineTrajectory() {
     const savingsRate = 0.30;
 
     for (let age = PERSONAL.currentAge; age <= 55; age++) {
-        if (age >= 24) salary = PERSONAL.jobSalary;
-        if (age >= 27) salary = 100000;
-        if (age >= 29) salary = 150000;
-        if (age >= 33) salary = 250000;
-        if (age >= 38) salary = 350000;
-        if (age >= 44) salary = 450000;
+        const year = PERSONAL.birthYear + age;
+        if (year === 2026) salary = PERSONAL.currentStipend;
+        else if (age < 27) salary = PERSONAL.jobSalary;
+        else if (age < 29) salary = 100000;
+        else if (age < 33) salary = 150000;
+        else if (age < 38) salary = 250000;
+        else if (age < 44) salary = 350000;
+        else salary = 450000;
 
         let rent = 0;
         if (age >= 29) rent = 60000;
         if (age >= 38) rent = 0; // own property
 
         // Pro-rata 2026 (age 24): only ~4.5 months remain
-        const year = PERSONAL.birthYear + age;
         const effectiveMonths = (year === 2026) ? PERSONAL.proRata2026Months : 12;
         const proRataFactor = effectiveMonths / 12;
+        const relativesOutflow = (year >= 2027) ? PERSONAL.monthlyRelativesOutflow : 0;
 
         const activeOffBook = (offBookType === 'monthly') ? offBookIncome : 0;
-        portfolio = portfolio * (1 + returnRate * proRataFactor) + Math.max(0, (salary + activeOffBook - rent - PERSONAL.monthlyRelativesOutflow)) * savingsRate * effectiveMonths - (PERSONAL.monthlyAirtime * effectiveMonths);
+        portfolio = portfolio * (1 + returnRate * proRataFactor) + Math.max(0, (salary + activeOffBook - rent - relativesOutflow)) * savingsRate * effectiveMonths - (PERSONAL.monthlyAirtime * effectiveMonths);
 
         if (age === 24) portfolio -= (PERSONAL.suitCost + PERSONAL.phoneCost);
         if (age === 28) portfolio -= 1250000;

@@ -2855,15 +2855,16 @@
                         <div class="formula-entry">
                             <div class="formula-id">F13</div>
                             <div class="formula-details">
-                                <div class="formula-name">Monthly Investable Amount</div>
+                                <div class="formula-name">Monthly Investment Target (Phase Rate)</div>
                                 <div class="formula-math">
-                                    (<span class="math-var">Salary</span> <span class="math-op">−</span> <span class="math-var">Rent</span> <span class="math-op">−</span> <span class="math-var">Transport</span> <span class="math-op">−</span> <span class="math-var">Relatives</span>) <span class="math-op">×</span> <span class="math-num">30%</span><br>
-                                    &nbsp;&nbsp;where <span class="math-var">Transport</span> <span class="math-op">=</span> <span class="math-num">1,000</span> <span class="math-op">×</span> <span class="math-num">52</span> <span class="math-op">÷</span> <span class="math-num">12</span> <span class="math-op">=</span> <span class="math-num">KES 4,333/mo</span>
+                                    <span class="math-var">Net Salary</span> <span class="math-op">×</span> <span class="math-num">30%</span><br>
+                                    &nbsp;&nbsp;where <span class="math-var">Net Salary</span> <span class="math-op">=</span> <span class="math-var">computeNetSalary</span>(<span class="math-var">Gross</span>).<span class="math-var">netPay</span> <span class="math-op">|</span> <span class="math-var">Stipend</span> (2026)
                                 </div>
                                 <div class="formula-meta">
                                     <span class="formula-live-value" id="fv-f13">—</span>
-                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> Salary phase, F11</span>
+                                    <span class="formula-dep-badge">Uses <span class="dep-arrow">←</span> F8 (Net Pay), F11</span>
                                     <span class="formula-dep-badge">Feeds <span class="dep-arrow">→</span> F14</span>
+                                    <span class="formula-source">Stage 2 Benchmark: KES 17,057/mo | 2026 Stipend: KES 4,644/mo</span>
                                 </div>
                             </div>
                         </div>
