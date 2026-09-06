@@ -3573,6 +3573,218 @@ body {
 .layer-6 .formula-layer-number, .layer-6 .formula-id { background: linear-gradient(135deg, #ec4899, #db2777); }
 .layer-7 .formula-layer-number, .layer-7 .formula-id { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
+/* --- Worked-Out Example Cards in Formula Compendium --- */
+.formula-worked-example {
+    margin-top: 1.15rem;
+    padding: 1.15rem 1.25rem;
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+}
+
+.formula-worked-example::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--example-accent, #6366f1);
+}
+
+.layer-3 .formula-worked-example { --example-accent: #10b981; border-color: rgba(16, 185, 129, 0.22); background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(15, 23, 42, 0.5)); }
+.layer-4 .formula-worked-example { --example-accent: #6366f1; border-color: rgba(99, 102, 241, 0.22); background: linear-gradient(135deg, rgba(99, 102, 241, 0.04), rgba(15, 23, 42, 0.5)); }
+.layer-5 .formula-worked-example { --example-accent: #f59e0b; border-color: rgba(245, 158, 11, 0.22); background: linear-gradient(135deg, rgba(245, 158, 11, 0.04), rgba(15, 23, 42, 0.5)); }
+.layer-6 .formula-worked-example { --example-accent: #ec4899; border-color: rgba(236, 72, 153, 0.22); background: linear-gradient(135deg, rgba(236, 72, 153, 0.04), rgba(15, 23, 42, 0.5)); }
+.layer-7 .formula-worked-example { --example-accent: #8b5cf6; border-color: rgba(139, 92, 246, 0.22); background: linear-gradient(135deg, rgba(139, 92, 246, 0.04), rgba(15, 23, 42, 0.5)); }
+
+.example-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.example-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.example-icon {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.example-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+}
+
+.example-tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.example-params {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+
+.example-param-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.72rem;
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    color: var(--text-secondary);
+}
+
+.example-param-chip strong {
+    color: var(--text-primary);
+}
+
+.example-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.example-step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    padding: 0.65rem 0.85rem;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.example-step:hover {
+    background: rgba(0, 0, 0, 0.35);
+    border-left-color: var(--example-accent, #6366f1);
+}
+
+.example-step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.example-step-body {
+    min-width: 0;
+}
+
+.example-step-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.3rem;
+}
+
+.example-step-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.example-step-ref {
+    font-size: 0.68rem;
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    color: var(--accent-primary-light, #818cf8);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+}
+
+.example-step-calc {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.78rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.example-step-calc .calc-math {
+    color: #94a3b8;
+}
+
+.example-step-calc .calc-result {
+    color: #34d399;
+    font-weight: 700;
+}
+
+.example-step-calc .calc-highlight {
+    color: #fbbf24;
+    font-weight: 700;
+}
+
+.example-verdict {
+    margin-top: 0.85rem;
+    padding: 0.75rem 0.95rem;
+    border-radius: 8px;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
+.layer-3 .example-verdict { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.25); }
+.layer-4 .example-verdict { background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.25); }
+.layer-5 .example-verdict { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.25); }
+.layer-6 .example-verdict { background: rgba(236, 72, 153, 0.08); border-color: rgba(236, 72, 153, 0.25); }
+.layer-7 .example-verdict { background: rgba(139, 92, 246, 0.08); border-color: rgba(139, 92, 246, 0.25); }
+
+.example-verdict-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    line-height: 1.2;
+}
+
+.example-verdict strong {
+    color: var(--text-primary);
+}
+
 /* ============================================================
    RENTAL INVESTMENT READINESS SECTION
    ============================================================ */
